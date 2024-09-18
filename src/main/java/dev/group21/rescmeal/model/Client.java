@@ -21,7 +21,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idClient;
+    private Integer idClient;
 
 
     /*El uso de la anotación @Column en JPA es importante para definir cómo se mapea un atributo de una entidad a una columna
@@ -69,7 +69,7 @@ public class Client {
 
 
     // Getters
-    public Long getIdClient() {
+    public Integer getIdClient() {
         return idClient;
     }
 
@@ -114,7 +114,7 @@ public class Client {
     }
 
     //Setters
-    public void setIdClient(Long idClient) {
+    public void setIdClient(Integer idClient) {
         this.idClient = idClient;
     }
 
