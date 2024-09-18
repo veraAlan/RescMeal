@@ -1,32 +1,17 @@
 package dev.group21.rescmeal.model;
-/*
- * import jakarta.persistence.Entity;
- * import jakarta.persistence.GeneratedValue;
- * import jakarta.persistence.GenerationType;
- * import jakarta.persistence.Id;
- * import java.math.BigDecimal;
- * import java.time.LocalDate;
- */
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/*Usamos el Getter y Setter con Lockc.lock?????????*/
 
 @Entity
 public class Client {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idClient;
 
-
-    /*El uso de la anotación @Column en JPA es importante para definir cómo se mapea un atributo de una entidad a una columna
-    en la base de datos.La anotación @Column no es estrictamente necesaria si estás satisfecho con los valores predeterminados,
-    pero proporciona control adicional sobre el mapeo .*/
     @Column(nullable = false, length = 50)
     private String name;
 
