@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NonNull;
-import org.hibernate.validator.constraints.UUID;
 
 @Entity
 @Table(name = "business")
