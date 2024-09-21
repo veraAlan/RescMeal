@@ -13,11 +13,11 @@ public class Business {
     @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id_business;
+    private Long id_business;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte [] business_photo;
+    // TODO Relationship not working, check
+//    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+//    private BusinessPhoto businessPhoto;
 
     @NonNull
     private String business_name;
@@ -48,7 +48,6 @@ public class Business {
     protected Business() {}
 
     public Business(
-            byte @NonNull [] business_photo,
             @NonNull String business_name,
             @NonNull String business_type,
             @NonNull String address,
@@ -57,7 +56,6 @@ public class Business {
             @NonNull String phone,
             @NonNull String business_time,
             @NonNull String cvu) {
-         this.business_photo = business_photo;
          this.business_name = business_name;
          this.business_type = business_type;
          this.address = address;
