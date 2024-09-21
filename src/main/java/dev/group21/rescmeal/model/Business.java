@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.UUID;
 
 @Entity
 @Table(name = "business")
@@ -12,11 +13,11 @@ import lombok.NonNull;
 public class Business {
     @NonNull
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_business;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id_business;
 
     // TODO Relationship not working, check
-//    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+//    @OneToOne(mappedBy = "business", cascade=CascadeType.ALL)
 //    private BusinessPhoto businessPhoto;
 
     @NonNull

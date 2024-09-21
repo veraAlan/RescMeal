@@ -2,16 +2,15 @@ package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.repository.BusinessRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Service
 @RestController
-@RequestMapping("/api/tables/business")
+@RequestMapping("/api/business")
 public class BusinessController {
     private final BusinessRepository businessRepository;
 

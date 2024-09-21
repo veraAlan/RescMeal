@@ -7,17 +7,18 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "business_photo")
+@Table(name = "photo")
 // The error found a: Unknown column 'b1_0.business_photo_id_business'
 public class BusinessPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_business;
-
-    @Lob
-    private byte [] business_photo;
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     @JoinColumn(name = "id_business") // Posible culprit, its 5 am, I need sleep.
     private Business business;
+
+    @Lob
+    private byte [] photo;
 }
