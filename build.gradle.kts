@@ -58,12 +58,6 @@ hibernate {
 	}
 }
 
-/*tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
-	jvmArgs = listOf("-XX:+EnableDynamicAgentLoading")
-}*/
-
-
 tasks.withType<Test> {
 	useJUnitPlatform()
-	/*jvmArgs = listOf("-Xshare:off")*/
 }
