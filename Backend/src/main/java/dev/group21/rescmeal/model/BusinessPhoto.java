@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,15 +9,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "business_photo")
-// The error found a: Unknown column 'b1_0.business_photo_id_business'
 public class BusinessPhoto {
     @Id
-    private Integer id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    private Business business;
+    private Integer business_id;
 
     @Lob
     private byte [] photo;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_id")
+    @JsonBackReference
+    private Business business;
 }

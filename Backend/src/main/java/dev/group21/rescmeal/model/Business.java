@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -13,11 +14,11 @@ public class Business {
     @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_business;
+    private Integer id;
 
-    // TODO Relationship not working, check
-//    @OneToOne(mappedBy = "business", cascade=CascadeType.ALL)
-//    private BusinessPhoto businessPhoto;
+    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private BusinessPhoto businessPhoto;
 
     @NonNull
     private String business_name;

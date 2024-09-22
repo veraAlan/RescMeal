@@ -1,7 +1,7 @@
 package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.Business;
-import dev.group21.rescmeal.repository.BusinessRepository;
+import dev.group21.rescmeal.services.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,23 +11,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/business")
 public class BusinessController {
-    private final BusinessRepository businessRepository;
+    private final BusinessService businessService;
 
     @Autowired
-    public BusinessController(BusinessRepository businessRepository) {
-        this.businessRepository = businessRepository;
+    public BusinessController(BusinessService businessService) {
+        this.businessService = businessService;
     }
 
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@RequestBody Business business){
-        Business storedBusiness = businessRepository.save(business);
-        return ResponseEntity.ok(storedBusiness);
+    public ResponseEntity<Business> createBusiness(@RequestBody Business business) {
+        Business createdBusiness = businessService.creteBusiness(business);
+        return ResponseEntity.ok(createdBusiness);
     }
 
-    @GetMapping("/{id_business}")
-    public ResponseEntity<Business> getBusiness(@PathVariable Long id_business) {
-        Business business = businessRepository.findById(id_business)
-                .orElse(null);
+    @GetMapping("/{id}")
+    public ResponseEntity<Business> getBusiness(@PathVariable Integer id) {
+        Business business = businessService.getBusiness(id);
         if(business != null) {
             return ResponseEntity.ok(business);
         } else {
@@ -37,7 +36,7 @@ public class BusinessController {
 
     @GetMapping("/list")
     public ResponseEntity<List<Business>> getAllBussiness() {
-        List<Business> businessList = businessRepository.findAll();
+        List<Business> businessList = businessService.getAllBusiness();
 
         if(!businessList.isEmpty()) {
             return ResponseEntity.ok(businessList);
@@ -45,4 +44,6 @@ public class BusinessController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // TODO implement endpoint for update table methods.
 }
