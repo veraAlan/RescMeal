@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequestMapping("/clients")
 public class ClientController {
 
-
+    @Autowired
     private ClientRepository clientRepository;
 
     @GetMapping
