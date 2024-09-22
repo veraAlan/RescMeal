@@ -24,6 +24,29 @@ public class BusinessController {
         return ResponseEntity.ok(createdBusiness);
     }
 
+    @PutMapping
+    public ResponseEntity<Business> updateBusiness(@RequestBody Business newBusiness) {
+        if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestBody Business newBusiness) {
+        Business oldBusiness = businessService.getBusiness(newBusiness.getId());
+        if(oldBusiness == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBusiness(@PathVariable Integer id) {
+        if(id != null) {
+            businessService.deleteBusiness(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Business> getBusiness(@PathVariable Integer id) {
         Business business = businessService.getBusiness(id);
@@ -44,6 +67,4 @@ public class BusinessController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    // TODO implement endpoint for update table methods.
 }
