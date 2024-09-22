@@ -1,6 +1,7 @@
 /*
 package dev.group21.rescmeal.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,8 +35,9 @@ public class Food {
 
     private LocalDate productionDate;
 
-    @Lob
-    private byte[] image;
+    @OneToOne(mappedBy = "food", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private FoodImage foodImage;
 
     // Constructor
     protected Food() {
