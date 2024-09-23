@@ -5,8 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### Config Secrets ###
-src/main/resources/application-secrets.properties
+### Config ###
+src/main/resources/application-dev.properties
 
 ### STS ###
 .apt_generated
