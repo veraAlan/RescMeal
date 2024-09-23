@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import axios from '../api/axiosConfig';
+import axios from '../../api/axiosConfig';
 
 const DeleteClient = () => {
     const { id } = useParams();

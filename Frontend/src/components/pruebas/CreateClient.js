@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../api/axiosConfig';
+import axios from '../../api/axiosConfig';
 
 const CreateClient = () => {
     const [client, setClient] = useState({
