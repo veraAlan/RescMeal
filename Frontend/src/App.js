@@ -29,6 +29,7 @@ import Footer from './components/common/Footer/Footer';
 import RegisterClient from './pages/RegisterClient';
 import RegisterCarrier from './pages/RegisterCarrier';
 import RegisterBusiness from './pages/RegisterBusiness';
+import ListBusiness from './pages/ListBusiness';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/register-carrier" element={<RegisterCarrier />} />
             <Route path="/register-business" element={<RegisterBusiness />} />
           </Routes>
+          <ListBusiness/>
         </main>
         <Footer />
       </div>
