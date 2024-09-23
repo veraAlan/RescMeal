@@ -31,7 +31,6 @@ public class BusinessService {
      * @return Business entity
      */
     public Business createBusiness(Business business) {
-        // TODO Prevent infinite recursion on creation, and a proper creation of Photo and Business.
         BusinessPhoto businessPhoto = business.getBusinessPhoto();
         business.setBusinessPhoto(null);
         Business newBusiness = businessRepository.save(business);
