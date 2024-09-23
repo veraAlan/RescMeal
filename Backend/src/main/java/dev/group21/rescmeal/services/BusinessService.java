@@ -1,6 +1,7 @@
 package dev.group21.rescmeal.services;
 
 import dev.group21.rescmeal.model.Business;
+import dev.group21.rescmeal.model.BusinessPhoto;
 import dev.group21.rescmeal.repository.BusinessPhotoRepository;
 import dev.group21.rescmeal.repository.BusinessRepository;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,14 @@ public class BusinessService {
      * @return Business entity
      */
     public Business createBusiness(Business business) {
-        businessPhotoRepository.save(business.getBusinessPhoto());
-        return businessRepository.save(business);
+        // TODO Prevent infinite recursion on creation, and a proper creation of Photo and Business.
+        BusinessPhoto businessPhoto = business.getBusinessPhoto();
+        business.setBusinessPhoto(null);
+        Business newBusiness = businessRepository.save(business);
+        businessPhoto.setBusiness_id(newBusiness.getId());
+        businessPhotoRepository.save(businessPhoto);
+
+        return newBusiness;
     }
 
     /**

@@ -32,7 +32,7 @@ public class BusinessController {
 
     @PutMapping
     public ResponseEntity<Business> updateBusiness(@RequestBody Business newBusiness) {
-        try{
+        try {
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
             return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
         } catch (Exception e) {
@@ -53,7 +53,7 @@ public class BusinessController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBusiness(@PathVariable Integer id) {
-        try{
+        try {
             if(id != null) {
                 businessService.deleteBusiness(id);
                 return ResponseEntity.noContent().build();
