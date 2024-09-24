@@ -25,10 +25,8 @@ function RegisterCarrier() {
         try {
             const response = await axios.post('/carriers', formData);
             console.log('Carrier registrado:', response.data);
-            // Puedes agregar lógica adicional aquí, como redirigir al usuario o mostrar un mensaje de éxito.
         } catch (error) {
             console.error('Error registrando carrier:', error);
-            // Puedes manejar el error aquí, como mostrar un mensaje de error al usuario.
         }
     };
 
@@ -38,76 +36,35 @@ function RegisterCarrier() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block">Nombre:</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                        required
-                    />
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} className="border p-2 w-full" required/>
                 </div>
                 <div>
                     <label className="block">Apellido:</label>
-                    <input
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
+                    <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="border p-2 w-full"/>
                 </div>
                 <div>
                     <label className="block">Email:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                        required
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="border p-2 w-full" required
                     />
                 </div>
                 <div>
                     <label className="block">Contraseña:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                        required
-                    />
+                    <input type="password" name="password" value={formData.password} onChange={handleChange} className="border p-2 w-full" required/>
                 </div>
                 <div>
                     <label className="block">Tipo de Vehículo:</label>
-                    <input
-                        type="text"
-                        name="vehicleType"
-                        value={formData.vehicleType}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
+                    <select id='vehicleType' name='vehicleType' className="border p-2 w-full" onChange={handleChange}>
+                        <option value='Moto'> Moto </option>
+                        <option value='Auto'> Auto </option>
+                    </select>
                 </div>
                 <div>
                     <label className="block">Teléfono:</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
+                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="border p-2 w-full"/>
                 </div>
                 <div>
                     <label className="block">Fecha:</label>
-                    <input
-                        type="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
+                    <input type="date" name="date" value={formData.date} onChange={handleChange} className="border p-2 w-full"/>
                 </div>
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded">Registrar</button>
             </form>
