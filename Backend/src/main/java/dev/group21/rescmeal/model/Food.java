@@ -1,8 +1,8 @@
-/*
 package dev.group21.rescmeal.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -11,7 +11,7 @@ public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idFoot;
+    private Integer idFood;
 
     @ManyToOne
     @JoinColumn(name = "id_business", nullable = false)
@@ -37,14 +37,14 @@ public class Food {
 
     @OneToOne(mappedBy = "food", fetch = FetchType.LAZY)
     @JsonManagedReference
-    private FoodImage foodImage;
+    private FoodPhoto foodPhoto;
 
     // Constructor
     protected Food() {
     }
 
-    public Food(Business business, String foodName, String category, BigDecimal price, String description, Integer quantity, LocalDate expirationDate, LocalDate productionDate, byte[] image) {
-        this.business = business;
+    public Food(Business idBusiness, String foodName, String category, BigDecimal price, String description, Integer quantity, LocalDate expirationDate, LocalDate productionDate, FoodPhoto foodPhoto) {
+        this.idBusiness = idBusiness;
         this.foodName = foodName;
         this.category = category;
         this.price = price;
@@ -52,13 +52,13 @@ public class Food {
         this.quantity = quantity;
         this.expirationDate = expirationDate;
         this.productionDate = productionDate;
-        this.image = image;
+        this.foodPhoto = foodPhoto;
     }
 
 
     // Getters
-    public Integer getIdFoot() {
-        return idFoot;
+    public Integer getIdFood() {
+        return idFood;
     }
 
 
@@ -75,7 +75,6 @@ public class Food {
     public String getCategory() {
         return category;
     }
-
 
 
     public BigDecimal getPrice() {
@@ -103,14 +102,14 @@ public class Food {
     }
 
 
-    public byte[] getImage() {
-        return image;
+    public FoodPhoto getFoodPhoto() {
+        return foodPhoto;
     }
 
 
     //Setters
-    public void setIdFoot(Integer idFoot) {
-        this.idFoot = idFoot;
+    public void setIdFood(Integer idFood) {
+        this.idFood = idFood;
     }
 
 
@@ -154,8 +153,7 @@ public class Food {
     }
 
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setFoodPhoto(FoodPhoto foodPhoto) {
+        this.foodPhoto = foodPhoto;
     }
 }
-*/
