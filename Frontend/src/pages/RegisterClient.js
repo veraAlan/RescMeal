@@ -8,7 +8,6 @@ function RegisterClient() {
         email: '',
         phone: '',
         password: '',
-        balance: '',
         address: '',
         birthdate: ''
     });
@@ -89,16 +88,6 @@ function RegisterClient() {
                     />
                 </div>
                 <div>
-                    <label className="block">Saldo:</label>
-                    <input
-                        type="number"
-                        name="balance"
-                        value={formData.balance}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
-                </div>
-                <div>
                     <label className="block">Dirección:</label>
                     <input
                         type="text"
@@ -122,6 +111,6 @@ function RegisterClient() {
             </form>
         </div>
     );
-}
+};
 
 export default RegisterClient;
