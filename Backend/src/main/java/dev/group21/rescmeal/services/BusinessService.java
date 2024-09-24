@@ -34,7 +34,7 @@ public class BusinessService {
         BusinessPhoto businessPhoto = business.getBusinessPhoto();
         business.setBusinessPhoto(null);
         Business newBusiness = businessRepository.save(business);
-        businessPhoto.setBusiness_id(newBusiness.getId());
+        businessPhoto.setBusiness_id(newBusiness.getId_business());
         businessPhotoRepository.save(businessPhoto);
 
         return newBusiness;

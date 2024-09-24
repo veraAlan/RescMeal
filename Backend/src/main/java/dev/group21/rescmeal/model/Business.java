@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Business {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id_business;
     @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
     @JsonManagedReference
     private BusinessPhoto businessPhoto;

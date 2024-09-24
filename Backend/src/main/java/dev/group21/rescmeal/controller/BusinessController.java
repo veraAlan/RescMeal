@@ -33,7 +33,7 @@ public class BusinessController {
     @PutMapping
     public ResponseEntity<Business> updateBusiness(@RequestBody Business newBusiness) {
         try {
-            if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
+            if(businessService.getBusiness(newBusiness.getId_business()) == null) return ResponseEntity.notFound().build();
             return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
@@ -43,7 +43,7 @@ public class BusinessController {
     @PatchMapping
     public ResponseEntity<Business> dynamicUpdateBusiness(@RequestBody Business newBusiness) {
         try {
-        Business oldBusiness = businessService.getBusiness(newBusiness.getId());
+        Business oldBusiness = businessService.getBusiness(newBusiness.getId_business());
         if(oldBusiness == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
         } catch (Exception e) {
