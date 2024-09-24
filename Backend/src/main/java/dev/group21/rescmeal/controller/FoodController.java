@@ -1,66 +1,102 @@
-/*package dev.group21.rescmeal.controller;
+package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.Food;
-import dev.group21.rescmeal.repository.FoodRepository;
+import dev.group21.rescmeal.services.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/foods")
 public class FoodController {
+    private final FoodService foodService;
 
     @Autowired
-    private FoodRepository foodRepository;
-
-    @GetMapping
-    public List<Food> getAllFoods() {
-        return foodRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Food> getFoodById(@PathVariable Integer id) {
-        Optional<Food> food = foodRepository.findById(id);
-        return food.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public FoodController(FoodService foodService) {
+        this.foodService = foodService;
     }
 
     @PostMapping
-    public Food createFood(@RequestBody Food food) {
-        return foodRepository.save(food);
+    public ResponseEntity<Food> createFood(@RequestBody Food food) {
+        try {
+            Food createdFood = foodService.createFood(food);
+            return ResponseEntity.ok(createdFood);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Food> updateFood(@PathVariable Integer id, @RequestBody Food foodDetails) {
-        Optional<Food> foodOptional = foodRepository.findById(id);
-        if (foodOptional.isPresent()) {
-            Food food = foodOptional.get();
-            food.setFoodName(foodDetails.getFoodName());
-            food.setCategory(foodDetails.getCategory());
-            food.setPrice(foodDetails.getPrice());
-            food.setDescription(foodDetails.getDescription());
-            food.setQuantity(foodDetails.getQuantity());
-            food.setExpirationDate(foodDetails.getExpirationDate());
-            food.setProductionDate(foodDetails.getProductionDate());
-            food.setImage(foodDetails.getImage());
-            Food updatedFood = foodRepository.save(food);
-            return ResponseEntity.ok(updatedFood);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PutMapping
+    public ResponseEntity<Food> updateFood(@RequestBody Food newFood) {
+        try {
+            if(foodService.getFood(newFood.getIdFood()) == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(foodService.updateFood(newFood));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @PatchMapping
+    public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food newFood) {
+        try {
+            Food oldFood = foodService.getFood(newFood.getIdFood());
+            if(oldFood == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(foodService.dynamicUpdateFood(oldFood, newFood));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFood(@PathVariable Integer id) {
-        Optional<Food> food = foodRepository.findById(id);
-        if (food.isPresent()) {
-            foodRepository.delete(food.get());
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            if(id != null) {
+                foodService.deleteFood(id);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
-}*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Food> getFood(@PathVariable Integer id) {
+        try {
+            Food food = foodService.getFood(id);
+            if (food != null) {
+                return ResponseEntity.ok(food);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Food>> getAllFood() {
+        try {
+            List<Food> foodList = foodService.getAllFood();
+            if (foodList.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(foodList);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    private HttpHeaders errorHeader(Exception e) {
+        System.getLogger(e.toString());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Error-Message", e.getMessage());
+        return headers;
+    }
+}

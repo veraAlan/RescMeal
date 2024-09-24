@@ -30,8 +30,7 @@ import RegisterClient from './pages/RegisterClient';
 import RegisterCarrier from './pages/RegisterCarrier';
 import RegisterBusiness from './pages/RegisterBusiness';
 import ListBusiness from './pages/ListBusiness';
-import CarrierList from './pages/ListCarriers';
-import UpdateCarrier from './pages/UpdateCarrier';
+import ListFood from './pages/ListFood';
 
 function App() {
   return (
@@ -44,9 +43,9 @@ function App() {
             <Route path="/register-client" element={<RegisterClient />} />
             <Route path="/register-carrier" element={<RegisterCarrier />} />
             <Route path="/register-business" element={<RegisterBusiness />} />
-            <Route path="/Update/:id" element={<UpdateCarrier/>}/>
           </Routes>
-          <CarrierList/>
+          <ListBusiness />
+          <ListFood />
         </main>
         <Footer />
       </div>
