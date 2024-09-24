@@ -7,14 +7,14 @@ function ListBusiness() {
   useEffect(() => {
     setLoading(true);
 
-    fetch('http://localhost:8080/api/business/list')
+    fetch("http://localhost:8080/api/business/list")
       .then(response => response.json())
       .then(data => {
         setBusinessList(data);
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching business list:', error);
+        console.error("Error fetching business list:", error);
         setLoading(false);
       });
   }, []);
@@ -34,8 +34,8 @@ function ListBusiness() {
           <h3>{business.email}</h3>
           {business.businessPhoto && (
             <img
-              src={`data:image/jpeg;base64,${business.businessPhoto.photo}`}
-              alt={`${business.business_name}`}
+              src={"data:image;base64," + business.businessPhoto.photo}
+              alt={business.business_name + " logo."}
             />
           )}
         </div>
