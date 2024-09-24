@@ -30,6 +30,7 @@ import RegisterClient from './pages/RegisterClient';
 import RegisterCarrier from './pages/RegisterCarrier';
 import RegisterBusiness from './pages/RegisterBusiness';
 import ListBusiness from './pages/ListBusiness';
+import ListFood from './pages/ListFood';
 
 function App() {
   return (
@@ -43,7 +44,8 @@ function App() {
             <Route path="/register-carrier" element={<RegisterCarrier />} />
             <Route path="/register-business" element={<RegisterBusiness />} />
           </Routes>
-          <ListBusiness/>
+          <ListBusiness />
+          <ListFood />
         </main>
         <Footer />
       </div>
