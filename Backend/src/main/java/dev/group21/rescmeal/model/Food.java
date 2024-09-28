@@ -24,12 +24,12 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "business_id")
     private Business business;
-    private String food_name;
+    private String name;
     private String category;
     private BigDecimal price;
     private String image;
     private String description;
     private Integer quantity;
-    private LocalDate expirationDate;
-    private LocalDate productionDate;
+    private LocalDate expiration_date;
+    private LocalDate production_date;
 }

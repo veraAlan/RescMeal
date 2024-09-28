@@ -45,13 +45,13 @@ public class FoodService {
      * @return Food entity
      */
     public Food dynamicUpdateFood(Food existingFood, Food updateFood) {
-        if (updateFood.getFood_name() == null) updateFood.setFood_name(existingFood.getFood_name());
+        if (updateFood.getName() == null) updateFood.setName(existingFood.getName());
         if (updateFood.getCategory() == null) updateFood.setCategory(existingFood.getCategory());
         if (updateFood.getPrice() == null) updateFood.setPrice(existingFood.getPrice());
         if (updateFood.getDescription() == null) updateFood.setDescription(existingFood.getDescription());
         if (updateFood.getQuantity() == null) updateFood.setQuantity(existingFood.getQuantity());
-        if (updateFood.getExpirationDate() == null) updateFood.setExpirationDate(existingFood.getExpirationDate());
-        if (updateFood.getProductionDate() == null) updateFood.setProductionDate(existingFood.getProductionDate());
+        if (updateFood.getExpiration_date() == null) updateFood.setExpiration_date(existingFood.getExpiration_date());
+        if (updateFood.getProduction_date() == null) updateFood.setProduction_date(existingFood.getProduction_date());
         if (updateFood.getImage() == null) updateFood.setImage(existingFood.getImage());
         return foodRepository.saveAndFlush(updateFood);
     }
