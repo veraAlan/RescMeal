@@ -14,7 +14,7 @@ const UpdateCarrier = () => {
     });
 
     useEffect(() => {
-        axios.get(`/carriers/${id}`)
+        axios.get(`/api/carrier/${id}`)
             .then(Response => setCarrier(Response.data))
             .catch(error => console.error('Error repartidor no encontrado', error));
     }, []);
@@ -26,14 +26,14 @@ const UpdateCarrier = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`/carriers/${id}`, carrier)
+        axios.put(`/api/carrier/${id}`, carrier)
             .then(Response => console.log('Carrier Updated:', Response.data))
             .catch(error => console.error('Error updating carrier', error));
     };
 
 
     const handleDelete = () => {
-        axios.delete(`/carriers/${id}`)
+        axios.delete(`/api/carrier/${id}`)
             .then(Response => console.log('Carrier deleted', Response.data))
             .catch(error => console.error('Error deleting carrier;', error));
     }
@@ -52,10 +52,11 @@ const UpdateCarrier = () => {
             <input type="text" id="phone" name="phone" className="border p-2 w-full" value={carrier.phone} onChange={handleChange} />
             <button type="submit" className="bg-blue-500 text-white p-2 rounded">Update</button>
         </form>
+
+        <div>
+            <button onClick={handleDelete()}> Eliminar Cuenta </button>
         </div>
-        // <div>
-        //     <button onClick={handleDelete()}> Eliminar Cuenta </button>
-        // </div>
+    </div>
     );
 };
 
