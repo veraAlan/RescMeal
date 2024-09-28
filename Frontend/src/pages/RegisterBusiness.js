@@ -3,23 +3,25 @@ import axios from '../api/axiosConfig';
 
 function RegisterBusiness() {
     const [formData, setFormData] = useState({
-        businessName: '',
-        businessType: '',
-        direction: '',
+        name: '',
+        type: '',
+        address: '',
         email: '',
         password: '',
-        businessPhoto: null,
         phone: '',
-        businessTime: '',
+        schedule: '',
         CVU: ''
     });
 
+    const [imageInput, setImage] = useState();
+
     const handleChange = (e) => {
-        const { name, value, files } = e.target;
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: files ? files[0] : value
+            [name]: value
         });
+        if(e.target.name == "image") setImage(e.target);
     };
 
     const handleSubmit = async (e) => {
@@ -29,12 +31,18 @@ function RegisterBusiness() {
             formDataToSend.append(key, formData[key]);
         }
 
+        const imageData = new FormData();
+        imageData.append("image", imageInput.files[0]);
+
+        console.log("Image: ", imageInput);
+
         try {
-            const response = await axios.post('/businesses', formDataToSend, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            const resImage = await fetch('http://localhost:8080/api/business/image', {
+                method: "POST",
+                body: imageData
             });
+            console.log('Image:', imageInput.files[0], " || Response: ", resImage.data);
+            const response = await fetch('http://localhost:8080/api/business', formDataToSend);
             console.log('Negocio registrado:', response.data);
         } catch (error) {
             console.error('Error registrando negocio:', error);
@@ -44,13 +52,13 @@ function RegisterBusiness() {
     return (
         <div className="container mx-auto p-4">
             <h2 className="text-2xl mb-4">Registrar Negocio</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" encType='multipart/form-data'>
                 <div>
                     <label className="block">Nombre del Negocio:</label>
                     <input
                         type="text"
-                        name="businessName"
-                        value={formData.businessName}
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         required
@@ -60,8 +68,8 @@ function RegisterBusiness() {
                     <label className="block">Tipo de Negocio:</label>
                     <input
                         type="text"
-                        name="businessType"
-                        value={formData.businessType}
+                        name="type"
+                        value={formData.type}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -70,8 +78,8 @@ function RegisterBusiness() {
                     <label className="block">Dirección:</label>
                     <input
                         type="text"
-                        name="direction"
-                        value={formData.direction}
+                        name="address"
+                        value={formData.address}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -102,7 +110,7 @@ function RegisterBusiness() {
                     <label className="block">Foto del Negocio:</label>
                     <input
                         type="file"
-                        name="businessPhoto"
+                        name="image"
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -121,8 +129,8 @@ function RegisterBusiness() {
                     <label className="block">Horario del Negocio:</label>
                     <input
                         type="text"
-                        name="businessTime"
-                        value={formData.businessTime}
+                        name="schedule"
+                        value={formData.schedule}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />

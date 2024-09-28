@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,13 +25,30 @@ public class BusinessController {
         this.businessService = businessService;
     }
 
-    @PostMapping
-    public ResponseEntity<Business> createBusiness(@RequestBody Business business, @RequestParam("image")MultipartFile image) {
-        try {
-            String imagePath = System.getProperty("user.dir") + "/Images" + File.separator + image.getOriginalFilename();
+    // TODO Check image "upload"
+    // Got to here with POST, still not working properly right-after request.
+    @RequestMapping("/image")
+    public ResponseEntity<MultipartFile> loadImage(@RequestParam("image") MultipartFile imageData) {
+        try{
+            System.out.println("Image" + imageData);
+            String imagePath = System.getProperty("user.dir") + "/Images" + File.separator + imageData.getName();
             FileOutputStream fout = new FileOutputStream(imagePath);
-            fout.write(image.getBytes());
-            Business createdBusiness = businessService.createBusiness(business);
+            fout.write(imageData.getBytes());
+            return ResponseEntity.ok(imageData);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    // TODO After image upload, set path to business.image
+    @PostMapping
+    public ResponseEntity<Business> createBusiness(@RequestBody Business business) {
+        try {
+            System.out.println(business);
+//            String imagePath = System.getProperty("user.dir") + "/Images" + File.separator + business.getImage();
+//            FileOutputStream fout = new FileOutputStream(imagePath);
+//            fout.write(business.getImage().getBytes());
+            Business createdBusiness = new Business();
             return ResponseEntity.ok(createdBusiness);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
