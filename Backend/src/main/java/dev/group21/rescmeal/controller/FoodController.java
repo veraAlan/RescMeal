@@ -33,7 +33,9 @@ public class FoodController {
     @PutMapping
     public ResponseEntity<Food> updateFood(@RequestBody Food newFood) {
         try {
-            if(foodService.getFood(newFood.getIdFood()) == null) return ResponseEntity.notFound().build();
+            if (foodService.getFood(newFood.getId()) == null) {
+                return ResponseEntity.notFound().build();
+            }
             return ResponseEntity.ok(foodService.updateFood(newFood));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
@@ -43,8 +45,10 @@ public class FoodController {
     @PatchMapping
     public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food newFood) {
         try {
-            Food oldFood = foodService.getFood(newFood.getIdFood());
-            if(oldFood == null) return ResponseEntity.notFound().build();
+            Food oldFood = foodService.getFood(newFood.getId());
+            if (oldFood == null) {
+                return ResponseEntity.notFound().build();
+            }
             return ResponseEntity.ok(foodService.dynamicUpdateFood(oldFood, newFood));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
@@ -54,7 +58,7 @@ public class FoodController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFood(@PathVariable Integer id) {
         try {
-            if(id != null) {
+            if (id != null) {
                 foodService.deleteFood(id);
                 return ResponseEntity.noContent().build();
             } else {
@@ -80,9 +84,9 @@ public class FoodController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Food>> getAllFood() {
+    public ResponseEntity<List<Food>> getAllFoods() {
         try {
-            List<Food> foodList = foodService.getAllFood();
+            List<Food> foodList = foodService.getAllFoods();
             if (foodList.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
