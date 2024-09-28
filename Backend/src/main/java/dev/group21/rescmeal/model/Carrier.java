@@ -2,114 +2,49 @@ package dev.group21.rescmeal.model;
 
 
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+
 
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "carrier")
+@Data
+@DynamicUpdate
+@NoArgsConstructor
+@AllArgsConstructor
 public class Carrier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_carrier;
 
-    @Column(length = 50)
+    @NotBlank(message = "Required name")
     private String name;
 
-    @Column(length = 50)
+    @NotBlank(message = "Required last name")
     private String lastName;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Email
+    @NotBlank(message = "Email is required")
     private String email;
 
-    @Column(length = 100, nullable = false)
+    @NotBlank(message = "Required password")
     private String password;
 
-    @Column(length = 30)
     private String vehicleType;
 
-    @Column(length = 15)
+    @Pattern(regexp= "\\d{10}", message = "El numero de telefono debe tener menos de 10 digitos")
     private String phone;
 
+    @NotBlank(message = "Required date")
+
+    @Past(message = "La fecha ingresada no es valida")
+    @Min(value = 18, message = "Debes ser mayor de dieciocho años para poder registrarte")
     private LocalDate date;
 
-
-    protected Carrier() {
-    }
-
-    public Carrier(String name, String lastName, String email, String password, String vehicleType, String phone, LocalDate date) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.vehicleType = vehicleType;
-        this.phone = phone;
-        this.date = date;
-    }
-    //Getters
-
-    public Integer getIdCarrier() {
-        return id_carrier;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public String getPassword() {
-        return password;
-    }
-
-    public String getVehicleType() {
-        return vehicleType;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    //Setters
-    public void setIdCarrier(Integer idCarrier) {
-        this.id_carrier = idCarrier;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 }
-
