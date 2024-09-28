@@ -7,7 +7,7 @@ function CarrierList() {
     useEffect(() => {
         setLoading(true);
 
-        fetch('http://localhost:8080/carriers')
+        fetch('http://localhost:8080/api/carrier/list')
             .then(response => response.json())
             .then(data => { console.log(data);
                 setCarriers(data);

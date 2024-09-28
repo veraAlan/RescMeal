@@ -22,13 +22,18 @@ function RegisterCarrier() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('/carriers', formData);
-            console.log('Carrier registrado:', response.data);
-        } catch (error) {
-            console.error('Error registrando carrier:', error);
+        const formDataToSend = new FormData();
+        for (const key in formData) {
+            formDataToSend.append(key, formData[key]);
         }
-    };
+        try {
+            const response = await axios.post('/api/carrier', formDataToSend, {
+            });
+            console.log('Repartidor Registrado:', response.data);
+        } catch (error) {
+            console.error('Error registrando repartidor:', error);
+        }
+    }
 
     return (
         <div className="container mx-auto p-4">
