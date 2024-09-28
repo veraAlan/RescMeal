@@ -7,7 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 @RestController
@@ -21,8 +24,11 @@ public class BusinessController {
     }
 
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@RequestBody Business business) {
+    public ResponseEntity<Business> createBusiness(@RequestBody Business business, @RequestParam("image")MultipartFile image) {
         try {
+            String imagePath = System.getProperty("user.dir") + "/Images" + File.separator + image.getOriginalFilename();
+            FileOutputStream fout = new FileOutputStream(imagePath);
+            fout.write(image.getBytes());
             Business createdBusiness = businessService.createBusiness(business);
             return ResponseEntity.ok(createdBusiness);
         } catch (Exception e) {
@@ -40,16 +46,16 @@ public class BusinessController {
         }
     }
 
-    @PatchMapping
-    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestBody Business newBusiness) {
-        try {
-        Business oldBusiness = businessService.getBusiness(newBusiness.getId());
-        if(oldBusiness == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
-        }
-    }
+//    @PatchMapping
+//    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestBody Business newBusiness) {
+//        try {
+//        Business oldBusiness = businessService.getBusiness(newBusiness.getId());
+//        if(oldBusiness == null) return ResponseEntity.notFound().build();
+//        return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+//        }
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBusiness(@PathVariable Integer id) {
