@@ -26,16 +26,17 @@ function ListBusiness() {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl mb-4">Lista de Negocios</h2>
+      {console.log("Businesses: ", businesses)}
       {businesses.map(business =>
         <div className="text-2xl mb-4" key={business.id}>
-          <h1>{business.business_name}</h1>
-          <h3>{business.business_type}</h3>
+          <h1>{business.name}</h1>
+          <h3>{business.type}</h3>
           <h3>{business.phone}</h3>
           <h3>{business.email}</h3>
-          {business.businessPhoto && (
+          {business.image && (
             <img
-              src={"data:image;base64," + business.businessPhoto.photo}
-              alt={business.business_name + " logo."}
+              src={business.image}
+              alt={business.name + " logo."}
             />
           )}
         </div>
