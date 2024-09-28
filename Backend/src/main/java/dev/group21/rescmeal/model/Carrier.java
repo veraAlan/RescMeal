@@ -21,7 +21,7 @@ public class Carrier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_carrier;
+    private Integer id;
 
     @NotBlank(message = "Required name")
     private String name;
