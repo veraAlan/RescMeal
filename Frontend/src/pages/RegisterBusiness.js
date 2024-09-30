@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
 
 function RegisterBusiness() {
-    const [formData, setFormData] = useState({
+    const [businessData, setBusiness] = useState({
         name: '',
         type: '',
         address: '',
@@ -10,55 +10,35 @@ function RegisterBusiness() {
         password: '',
         phone: '',
         schedule: '',
-        CVU: '',
-        image: ''
+        cvu: ''
     });
+
+    const [imageData, setImage] = useState(null)
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setBusiness({
+            ...businessData,
             [name]: value
         });
     };
 
-    // Handle auto-upload of photo in form.
-    // TODO Set correct string to formData.image
+    // Handle image update.
     const handlePhoto = async (e) => {
-        const imageData = new FormData();
-        imageData.append("image", e.target.files[0]);
-
-        try {
-            const resImage = await fetch('http://localhost:8080/api/business/image', {
-                method: "POST",
-                body: imageData
-            }).then((resImage) => {
-                resImage.json().then( data => setFormData.image = data);
-            }).catch(err => {
-               console.log(err);
-            });
-        } catch (error) {
-            console.log("Cannot load image.");
-        }
-
+        setImage(e.target.files[0]);
     }
 
-    // Not Working, Content-Type: Multipart/Form-Data not supported.
-    // TODO check actual info sent, check logic in BusinessController.
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formDataToSend = new FormData();
-        for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-        }
+        const formData = new FormData();
+        formData.append("business", JSON.stringify(businessData));
+        formData.append("image", imageData);
 
-        console.log('Form to Send:', formDataToSend);
-
-        try {
-            
-            const response = await fetch('http://localhost:8080/api/business', {
-                method: "POST",
-                body: formDataToSend
+        try { 
+            const response = await axios.post('http://localhost:8080/api/business', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
             console.log('Negocio registrado:', response.data);
         } catch (error) {
@@ -69,7 +49,7 @@ function RegisterBusiness() {
     return (
         <div className="container mx-auto p-4">
             <h2 className="text-2xl mb-4">Registrar Negocio</h2>
-            <form className="space-y-4" encType='multipart/form-data'>
+            <form className="space-y-4">
                 <div>
                     <label className="block">Foto del Negocio:</label>
                     <input
@@ -86,7 +66,7 @@ function RegisterBusiness() {
                     <input
                         type="text"
                         name="name"
-                        value={formData.name}
+                        value={businessData.name}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         required
@@ -97,7 +77,7 @@ function RegisterBusiness() {
                     <input
                         type="text"
                         name="type"
-                        value={formData.type}
+                        value={businessData.type}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -107,7 +87,7 @@ function RegisterBusiness() {
                     <input
                         type="text"
                         name="address"
-                        value={formData.address}
+                        value={businessData.address}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -117,7 +97,7 @@ function RegisterBusiness() {
                     <input
                         type="email"
                         name="email"
-                        value={formData.email}
+                        value={businessData.email}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         required
@@ -128,7 +108,7 @@ function RegisterBusiness() {
                     <input
                         type="password"
                         name="password"
-                        value={formData.password}
+                        value={businessData.password}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         required
@@ -139,7 +119,7 @@ function RegisterBusiness() {
                     <input
                         type="text"
                         name="phone"
-                        value={formData.phone}
+                        value={businessData.phone}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -149,7 +129,7 @@ function RegisterBusiness() {
                     <input
                         type="text"
                         name="schedule"
-                        value={formData.schedule}
+                        value={businessData.schedule}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
@@ -158,8 +138,8 @@ function RegisterBusiness() {
                     <label className="block">CVU:</label>
                     <input
                         type="text"
-                        name="CVU"
-                        value={formData.CVU}
+                        name="cvu"
+                        value={businessData.cvu}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         required

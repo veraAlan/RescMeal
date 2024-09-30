@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.services.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/business")
@@ -27,32 +26,22 @@ public class BusinessController {
         this.businessService = businessService;
     }
 
-    @RequestMapping("/image")
-    public ResponseEntity<Set<String>> loadImage(@RequestParam("image") MultipartFile image) {
-        try{
-            String imagePath = businessImagesPath + image.getOriginalFilename();
+    @PostMapping
+    public ResponseEntity<Business> createBusiness(@RequestPart("business") String businessJson, @RequestPart("image") MultipartFile image) {
+        try {
+            Business business = new ObjectMapper().readValue(businessJson, Business.class);
+            String imagePath = businessImagesPath + business.getName() + image.getContentType().replace("image/", ".");
             FileOutputStream fout = new FileOutputStream(imagePath);
             fout.write(image.getBytes());
-            Set<String> outputImage = new HashSet<>();
-            outputImage.add(image.getOriginalFilename());
-            return ResponseEntity.ok(outputImage);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
-        }
-    }
-
-    // TODO After image upload, set path to business.image
-    @PostMapping
-    public ResponseEntity<Business> createBusiness(@RequestBody Business business) {
-        try {
-            System.out.println(business);
-            Business createdBusiness = new Business();
+            business.setImage(business.getName() + image.getContentType().replace("image/", "."));
+            Business createdBusiness = businessService.createBusiness(business);
             return ResponseEntity.ok(createdBusiness);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
+    // TODO Test relative position of images, maybe inside rescmeal root but ignored by git.
     @PutMapping
     public ResponseEntity<Business> updateBusiness(@RequestBody Business newBusiness) {
         try {
@@ -63,6 +52,7 @@ public class BusinessController {
         }
     }
 
+    // TODO Update function to request images and replace the one located at the businessImages.path
 //    @PatchMapping
 //    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestBody Business newBusiness) {
 //        try {
