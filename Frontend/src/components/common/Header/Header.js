@@ -11,6 +11,7 @@ function Header() {
                         <li><Link to="/register-client" className="hover:underline">Registrar Cliente</Link></li>
                         <li><Link to="/register-carrier" className="hover:underline">Registrar Repartidor</Link></li>
                         <li><Link to="/register-business" className="hover:underline">Registrar Local</Link></li>
+                        <li><Link to="/register-food" className="hover:underline">Registrar Platillo</Link></li>
                     </ul>
                 </nav>
             </div>

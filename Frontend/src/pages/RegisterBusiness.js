@@ -10,10 +10,9 @@ function RegisterBusiness() {
         password: '',
         phone: '',
         schedule: '',
-        CVU: ''
+        CVU: '',
+        image: ''
     });
-
-    const [imageInput, setImage] = useState();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,9 +20,31 @@ function RegisterBusiness() {
             ...formData,
             [name]: value
         });
-        if(e.target.name == "image") setImage(e.target);
     };
 
+    // Handle auto-upload of photo in form.
+    // TODO Set correct string to formData.image
+    const handlePhoto = async (e) => {
+        const imageData = new FormData();
+        imageData.append("image", e.target.files[0]);
+
+        try {
+            const resImage = await fetch('http://localhost:8080/api/business/image', {
+                method: "POST",
+                body: imageData
+            }).then((resImage) => {
+                resImage.json().then( data => setFormData.image = data);
+            }).catch(err => {
+               console.log(err);
+            });
+        } catch (error) {
+            console.log("Cannot load image.");
+        }
+
+    }
+
+    // Not Working, Content-Type: Multipart/Form-Data not supported.
+    // TODO check actual info sent, check logic in BusinessController.
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formDataToSend = new FormData();
@@ -31,18 +52,14 @@ function RegisterBusiness() {
             formDataToSend.append(key, formData[key]);
         }
 
-        const imageData = new FormData();
-        imageData.append("image", imageInput.files[0]);
-
-        console.log("Image: ", imageInput);
+        console.log('Form to Send:', formDataToSend);
 
         try {
-            const resImage = await fetch('http://localhost:8080/api/business/image', {
+            
+            const response = await fetch('http://localhost:8080/api/business', {
                 method: "POST",
-                body: imageData
+                body: formDataToSend
             });
-            console.log('Image:', imageInput.files[0], " || Response: ", resImage.data);
-            const response = await fetch('http://localhost:8080/api/business', formDataToSend);
             console.log('Negocio registrado:', response.data);
         } catch (error) {
             console.error('Error registrando negocio:', error);
@@ -52,7 +69,18 @@ function RegisterBusiness() {
     return (
         <div className="container mx-auto p-4">
             <h2 className="text-2xl mb-4">Registrar Negocio</h2>
-            <form onSubmit={handleSubmit} className="space-y-4" encType='multipart/form-data'>
+            <form className="space-y-4" encType='multipart/form-data'>
+                <div>
+                    <label className="block">Foto del Negocio:</label>
+                    <input
+                        type="file"
+                        name="image"
+                        onChange={handlePhoto}
+                        className="border p-2 w-full"
+                    />
+                </div>
+            </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block">Nombre del Negocio:</label>
                     <input
@@ -104,15 +132,6 @@ function RegisterBusiness() {
                         onChange={handleChange}
                         className="border p-2 w-full"
                         required
-                    />
-                </div>
-                <div>
-                    <label className="block">Foto del Negocio:</label>
-                    <input
-                        type="file"
-                        name="image"
-                        onChange={handleChange}
-                        className="border p-2 w-full"
                     />
                 </div>
                 <div>
