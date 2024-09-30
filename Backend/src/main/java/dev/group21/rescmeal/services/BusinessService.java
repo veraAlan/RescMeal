@@ -39,12 +39,12 @@ public class BusinessService {
     }
 
     // TODO Refactor for new Business Model
-    /**
-     * Update method, works even while sending a partially different Business entity.
-     * @param existingBusiness old Business entity without changed values.
-     * @param updateBusiness updated Business entity, may have null properties.
-     * @return Business entity
-     */
+//    /**
+//     * Update method, works even while sending a partially different Business entity.
+//     * @param existingBusiness old Business entity without changed values.
+//     * @param updateBusiness updated Business entity, may have null properties.
+//     * @return Business entity
+//     */
 //    public Business dynamicUpdateBusiness(Business existingBusiness, Business updateBusiness) {
 //        // Update fields that were sent with some value.
 //        if(updateBusiness.getBusiness_name() == null) updateBusiness.setBusiness_name(existingBusiness.getBusiness_name());
