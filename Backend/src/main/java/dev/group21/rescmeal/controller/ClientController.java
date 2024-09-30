@@ -2,6 +2,7 @@ package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
+    public ResponseEntity<Client> createClient(@Valid @RequestBody Client client) {
         try {
             Client createdClient = clientService.createClient(client);
             return ResponseEntity.ok(createdClient);
@@ -31,7 +32,7 @@ public class ClientController {
     }
 
     @PutMapping
-    public ResponseEntity<Client> updateClient(@RequestBody Client newClient) {
+    public ResponseEntity<Client> updateClient(@Valid @RequestBody Client newClient) {
         try {
             if (clientService.getClient(newClient.getId()) == null) {
                 return ResponseEntity.notFound().build();
@@ -43,7 +44,7 @@ public class ClientController {
     }
 
     @PatchMapping
-    public ResponseEntity<Client> dynamicUpdateClient(@RequestBody Client newClient) {
+    public ResponseEntity<Client> dynamicUpdateClient(@Valid @RequestBody Client newClient) {
         try {
             Client oldClient = clientService.getClient(newClient.getId());
             if (oldClient == null) {
@@ -103,7 +104,7 @@ public class ClientController {
      * @return HttpHeader
      */
     private HttpHeaders errorHeader(Exception e) {
-        System.getLogger(e.toString());
+        System.err.println(e.toString());
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Error-Message", e.getMessage());
         return headers;
