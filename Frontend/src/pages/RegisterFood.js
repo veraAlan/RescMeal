@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
+import axios from '../api/axiosConfig';
 
 function RegisterFood() {
     const [formData, setFormData] = useState({
         name: '',
         category: '',
         price: '',
-        image: '',
         description: '',
         quantity: '',
         expiration_date: '',
         production_date: ''
     });
 
+    const [imageData, setImageData] = useState(null);
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
     const [generalError, setGeneralError] = useState('');
@@ -24,23 +25,8 @@ function RegisterFood() {
         });
     };
 
-    const handlePhoto = async (e) => {
-        const imageData = new FormData();
-        imageData.append("image", e.target.files[0]);
-
-        try {
-            const resImage = await fetch('http://localhost:8080/api/foods/image', {
-                method: "POST",
-                body: imageData
-            });
-            const data = await resImage.json();
-            setFormData({
-                ...formData,
-                image: data.imageUrl // Ajusta esto según la respuesta de tu API
-            });
-        } catch (error) {
-            console.log("Cannot load image.");
-        }
+    const handlePhoto = (e) => {
+        setImageData(e.target.files[0]);
     };
 
     const validate = () => {
@@ -52,6 +38,7 @@ function RegisterFood() {
         if (!formData.quantity) tempErrors.quantity = "La cantidad es obligatoria";
         if (!formData.expiration_date) tempErrors.expiration_date = "La fecha de vencimiento es obligatoria";
         if (!formData.production_date) tempErrors.production_date = "La fecha de producción es obligatoria";
+        if (!imageData) tempErrors.image = "La imagen es obligatoria";
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
@@ -59,39 +46,44 @@ function RegisterFood() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validate()) {
+            const formDataToSend = new FormData();
+            formDataToSend.append("food", JSON.stringify(formData));
+            formDataToSend.append("image", imageData);
+
             try {
-                const response = await fetch('http://localhost:8080/api/foods', {
-                    method: 'POST',
+                const formDataToSend = new FormData();
+                formDataToSend.append("food", JSON.stringify(formData));
+                formDataToSend.append("image", imageData);
+
+                await axios.post('/api/foods', formDataToSend, {
                     headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
+                        'Content-Type': 'multipart/form-data'
+                    }
                 });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    setErrors(errorData);
-                    setGeneralError('Error registrando alimento. Por favor, inténtelo de nuevo.');
-                } else {
-                    setSuccessMessage('Alimento registrado exitosamente.');
-                    setFormData({
-                        name: '',
-                        category: '',
-                        price: '',
-                        image: '',
-                        description: '',
-                        quantity: '',
-                        expiration_date: '',
-                        production_date: ''
-                    });
-                    setErrors({});
-                    setGeneralError('');
-                }
+
+                setSuccessMessage('Alimento registrado exitosamente.');
+                setFormData({
+                    name: '',
+                    category: '',
+                    price: '',
+                    description: '',
+                    quantity: '',
+                    expiration_date: '',
+                    production_date: ''
+                });
+                setImageData(null);
+                setErrors({});
+                setGeneralError('');
             } catch (error) {
-                console.error('Error registrando alimento:', error);
-                setGeneralError('Error registrando alimento. Por favor, inténtelo de nuevo.');
+                if (error.response && error.response.data) {
+                    setErrors(error.response.data);
+                } else {
+                    setGeneralError('Error registrando alimento. Por favor, inténtelo de nuevo.');
+                }
             }
         }
-    };
+    }
+
 
     return (
         <div className="container mx-auto p-4">
@@ -111,14 +103,19 @@ function RegisterFood() {
                 </div>
                 <div>
                     <label className="block">Categoría:</label>
-                    <input
-                        type="text"
+                    <select
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
                         className="border p-2 w-full"
-                        maxLength="30"
-                    />
+                    >
+                        <option value="">Seleccione una categoría</option>
+                        <option value="frutas">Frutas</option>
+                        <option value="verduras">Verduras</option>
+                        <option value="carnes">Carnes</option>
+                        <option value="lacteos">Lácteos</option>
+                        <option value="bebidas">Bebidas</option>
+                    </select>
                     {errors.category && <p className="text-red-500">{errors.category}</p>}
                 </div>
                 <div>
