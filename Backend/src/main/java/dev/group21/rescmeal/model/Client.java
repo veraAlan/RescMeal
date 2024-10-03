@@ -33,6 +33,7 @@ public class Client {
     @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
     private String last_name;
 
+    //TODO Falta validad si el email existe en la Base de Datos.
     @Email(message = "Debe ser un correo electrónico válido")
     @NotNull(message = "El correo electrónico no puede estar vacío")
     private String email;

@@ -5,6 +5,7 @@ import dev.group21.rescmeal.repository.BusinessRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -59,12 +60,25 @@ public class BusinessService {
 //    }
 
     /**
-     * Delete a Business entity by id and its BusinessPhoto relation.
-     * @param id Integer id of Business entity.
+     *
+     *
      */
     public void deleteBusiness(Integer id) {
-        businessRepository.deleteById(id);
+        Business business = businessRepository.findById(id).orElse(null);
+        if (business != null) {
+            // Ruta al directorio public de tu proyecto Next.js
+            String publicDir = System.getProperty("user.dir") + "/../Frontend/public/Business/";
+            String imagePath = publicDir + business.getImage();
+            // Eliminar la imagen si existe
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+            // Eliminar el negocio de la base de datos
+            businessRepository.deleteById(id);
+        }
     }
+
 
     /**
      * Get method for Business entity, finds by entity id.

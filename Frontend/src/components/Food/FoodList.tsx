@@ -1,5 +1,5 @@
 import React from 'react';
-import { useListFoods } from '../../hooks/useListFoods';
+import { useListFoods } from '../../hooks/Food/useListFoods';
 import { Food } from '../../types/Food';
 
 const FoodList: React.FC = () => {

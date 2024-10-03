@@ -1,7 +1,7 @@
 import React from 'react';
-import { useRegisterClient } from '../../hooks/Client/useRegisterClient';
+import { useRegisterCarrier } from '../../hooks/Carrier/useRegisterCarrier';
 
-const RegisterClient: React.FC = () => {
+const RegisterCarrier: React.FC = () => {
     const {
         formData,
         errors,
@@ -9,11 +9,11 @@ const RegisterClient: React.FC = () => {
         generalError,
         handleChange,
         handleSubmit
-    } = useRegisterClient();
+    } = useRegisterCarrier();
 
     return (
         <div id="myElement" className="container mx-auto p-4">
-            <h2 className="text-2xl mb-4">Registrar Cliente</h2>
+            <h2 className="text-2xl mb-4">Registrar Carrier</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block">Nombre:</label>
@@ -31,13 +31,13 @@ const RegisterClient: React.FC = () => {
                     <label className="block">Apellido:</label>
                     <input
                         type="text"
-                        name="last_name"
-                        value={formData.last_name}
+                        name="lastName"
+                        value={formData.lastName}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         maxLength={20}
                     />
-                    {errors.last_name && <p className="text-red-500">{errors.last_name}</p>}
+                    {errors.lastName && <p className="text-red-500">{errors.lastName}</p>}
                 </div>
                 <div>
                     <label className="block">Correo Electrónico:</label>
@@ -52,18 +52,6 @@ const RegisterClient: React.FC = () => {
                     {errors.email && <p className="text-red-500">{errors.email}</p>}
                 </div>
                 <div>
-                    <label className="block">Teléfono:</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                        maxLength={15}
-                    />
-                    {errors.phone && <p className="text-red-500">{errors.phone}</p>}
-                </div>
-                <div>
                     <label className="block">Contraseña:</label>
                     <input
                         type="password"
@@ -76,27 +64,42 @@ const RegisterClient: React.FC = () => {
                     {errors.password && <p className="text-red-500">{errors.password}</p>}
                 </div>
                 <div>
-                    <label className="block">Dirección:</label>
-                    <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
+                    <label className="block">Tipo de Vehículo:</label>
+                    <select
+                        id="vehicleType"
+                        name="vehicleType"
+                        value={formData.vehicleType}
                         onChange={handleChange}
                         className="border p-2 w-full"
-                        maxLength={50}
-                    />
-                    {errors.address && <p className="text-red-500">{errors.address}</p>}
+                    >
+                        <option value="">Selecciona un tipo de vehículo</option>
+                        <option value="Moto">Moto</option>
+                        <option value="Auto">Auto</option>
+                    </select>
+                    {errors.vehicleType && <p className="text-red-500">{errors.vehicleType}</p>}
                 </div>
                 <div>
-                    <label className="block">Fecha de Nacimiento:</label>
+                    <label className="block">Teléfono:</label>
+                    <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="border p-2 w-full"
+                        maxLength={15}
+                    />
+                    {errors.phone && <p className="text-red-500">{errors.phone}</p>}
+                </div>
+                <div>
+                    <label className="block">Fecha:</label>
                     <input
                         type="date"
-                        name="birthdate"
-                        value={formData.birthdate}
+                        name="date"
+                        value={formData.date}
                         onChange={handleChange}
                         className="border p-2 w-full"
                     />
-                    {errors.birthdate && <p className="text-red-500">{errors.birthdate}</p>}
+                    {errors.date && <p className="text-red-500">{errors.date}</p>}
                 </div>
                 {successMessage && <p className="text-green-500">{successMessage}</p>}
                 {generalError && <p className="text-red-500">{generalError}</p>}
@@ -106,4 +109,5 @@ const RegisterClient: React.FC = () => {
     );
 };
 
-export default RegisterClient;
+export default RegisterCarrier;
+

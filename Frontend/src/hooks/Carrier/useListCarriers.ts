@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Food } from '../types/Food';
+import { Carrier } from '../../types/Carrier';
 
-export function useListFoods() {
-    const [foods, setFoods] = useState<Food[] | null>(null);
+export function useListCarriers() {
+    const [carriers, setCarriers] = useState<Carrier[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function fetchFoods() {
+        async function fetchCarriers() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods/list`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carrier/list`);
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
-                const data: Food[] = await res.json();
-                setFoods(data);
+                const data: Carrier[] = await res.json();
+                setCarriers(data);
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -25,8 +25,8 @@ export function useListFoods() {
                 setLoading(false);
             }
         }
-        fetchFoods();
+        fetchCarriers();
     }, []);
 
-    return { foods, loading, error };
+    return { carriers, loading, error };
 }

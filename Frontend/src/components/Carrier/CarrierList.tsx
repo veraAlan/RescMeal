@@ -1,5 +1,5 @@
 import React from 'react';
-import { useListCarriers } from '../../hooks/useListCarriers';
+import { useListCarriers } from '../../hooks/Carrier/useListCarriers';
 import { Carrier } from '../../types/Carrier';
 
 interface CarrierListProps {

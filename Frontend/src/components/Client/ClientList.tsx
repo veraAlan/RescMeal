@@ -1,5 +1,5 @@
 import React from 'react';
-import { useListClients } from '../../hooks/useListClients';
+import { useListClients } from '../../hooks/Client/useListClients';
 import { Client } from '../../types/Client';
 
 interface ClientListProps {

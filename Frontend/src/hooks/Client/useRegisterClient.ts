@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Client, ClientErrors } from '../types/Client';
+import { Client, ClientErrors } from '../../types/Client';
 
 export const useRegisterClient = () => {
     const [formData, setFormData] = useState<Client>({
@@ -41,7 +41,7 @@ export const useRegisterClient = () => {
         e.preventDefault();
         if (validate()) {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/clients`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/client`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

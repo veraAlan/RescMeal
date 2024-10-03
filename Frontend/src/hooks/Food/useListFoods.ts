@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Business } from '../types/Business';
+import { Food } from '../../types/Food';
 
-export function useListBusinesses() {
-    const [businesses, setBusinesses] = useState<Business[] | null>(null);
+export function useListFoods() {
+    const [foods, setFoods] = useState<Food[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function fetchBusinesses() {
+        async function fetchFoods() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/business/list`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods/list`);
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
-                const data: Business[] = await res.json();
-                setBusinesses(data);
+                const data: Food[] = await res.json();
+                setFoods(data);
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -25,8 +25,8 @@ export function useListBusinesses() {
                 setLoading(false);
             }
         }
-        fetchBusinesses();
+        fetchFoods();
     }, []);
 
-    return { businesses, loading, error };
+    return { foods, loading, error };
 }

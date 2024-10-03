@@ -1,5 +1,5 @@
 import React from 'react';
-import { useListBusinesses } from '../../hooks/useListBusinesses';
+import { useListBusinesses } from '../../hooks/Business/useListBusinesses';
 import { Business } from '../../types/Business';
 
 interface BusinessListProps {
@@ -25,17 +25,18 @@ const BusinessList: React.FC<BusinessListProps> = () => {
         <div className="container mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4">Lista de Negocios</h2>
             <ul className="space-y-2">
-                {businesses.map(({ id, name, type, phone, email, image }) => (
-                    <li key={id} className="border p-2 rounded shadow-sm">
-                        <p><strong>Nombre:</strong> {name}</p>
-                        <p><strong>Tipo:</strong> {type}</p>
-                        <p><strong>Teléfono:</strong> {phone || 'N/A'}</p>
-                        <p><strong>Correo Electrónico:</strong> {email}</p>
-                        {image && (
+                {businesses.map((business) => (
+                    <li key={business.id} className="border p-2 rounded shadow-sm">
+                        <p><strong>Nombre:</strong> {business.name}</p>
+                        <p><strong>Tipo:</strong> {business.type}</p>
+                        <p><strong>Teléfono:</strong> {business.phone || 'N/A'}</p>
+                        <p><strong>Correo Electrónico:</strong> {business.email}</p>
+                        {business.image && (
                             <img
-                                src={image}
-                                alt={`${name} logo.`}
-                                className="mt-2"
+                                src={`/Business/${business.image}`}
+                                alt={`${business.name} logo.`}
+                                className="mt-2 w-32 h-32 object-cover rounded"
+                                loading="lazy"
                             />
                         )}
                     </li>

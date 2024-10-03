@@ -2,12 +2,12 @@ package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.Carrier;
 import dev.group21.rescmeal.services.CarrierService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class CarrierController {
         }
 
         @PostMapping
-        public ResponseEntity<Carrier> createCarrier(@RequestBody Carrier carrier) {
+        public ResponseEntity<Carrier> createCarrier(@Valid @RequestBody Carrier carrier) {
             try {
                 Carrier createdCarrier = carrierService.createCarrier(carrier);
                 return ResponseEntity.ok(createdCarrier);
@@ -61,7 +61,7 @@ public class CarrierController {
         }
 
         @PutMapping
-        public ResponseEntity<Carrier> updateCarrier(@RequestBody Carrier newCarrier) {
+        public ResponseEntity<Carrier> updateCarrier(@Valid @RequestBody Carrier newCarrier) {
             try{
                 if (carrierService.getCarrier(newCarrier.getId()) == null) return ResponseEntity.notFound().build();
                 return ResponseEntity.ok(carrierService.updateCarrier(newCarrier));
@@ -71,7 +71,7 @@ public class CarrierController {
         }
 
         @PatchMapping
-        public ResponseEntity<Carrier> dynamicUpdateCarrier(@RequestBody Carrier newCarrier) {
+        public ResponseEntity<Carrier> dynamicUpdateCarrier(@Valid @RequestBody Carrier newCarrier) {
             try {
                 Carrier oldCarrier = carrierService.getCarrier(newCarrier.getId());
                 if(oldCarrier == null) return ResponseEntity.notFound().build();

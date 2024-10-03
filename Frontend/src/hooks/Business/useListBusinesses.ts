@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Client } from '../types/Client';
+import { Business } from '../../types/Business';
 
-export function useListClients() {
-    const [clients, setClients] = useState<Client[] | null>(null);
+export function useListBusinesses() {
+    const [businesses, setBusinesses] = useState<Business[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function fetchClients() {
+        async function fetchBusinesses() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/client/list`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/business/list`);
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
-                const data: Client[] = await res.json();
-                setClients(data);
+                const data: Business[] = await res.json();
+                setBusinesses(data);
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -25,8 +25,8 @@ export function useListClients() {
                 setLoading(false);
             }
         }
-        fetchClients();
+        fetchBusinesses();
     }, []);
 
-    return { clients, loading, error };
+    return { businesses, loading, error };
 }

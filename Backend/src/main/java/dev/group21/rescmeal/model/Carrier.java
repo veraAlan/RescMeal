@@ -1,12 +1,14 @@
 package dev.group21.rescmeal.model;
 
 
+import dev.group21.rescmeal.validation.MinAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.time.LocalDate;
@@ -23,28 +25,33 @@ public class Carrier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Required name")
+    @NotBlank(message = "Este campo es obligatorio")
+    @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")
     private String name;
 
-    @NotBlank(message = "Required last name")
+    @NotBlank(message = "Este campo es obligatorio")
+    @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
     private String lastName;
 
-    @Email
+    //TODO Falta validad si el email existe en la Base de Datos.
+    @Email(message = "Debe ser un correo electrónico válido")
     @NotBlank(message = "Email is required")
     private String email;
 
-    @NotBlank(message = "Required password")
+    @NotBlank(message = "Este campo es obligatorio")
+    @Size(min = 8, max = 30, message = "La contraseña debe tener entre 8 y 30 caracteres")
     private String password;
 
     private String vehicleType;
 
-    @Pattern(regexp= "\\d{10}", message = "El numero de telefono debe tener menos de 10 digitos")
+    @NotNull(message = "Este campo es obligatorio")
+    @Size(min = 10, max = 15, message = "El teléfono debe tener entre 10 y 15 caracteres")
     private String phone;
 
-    @NotBlank(message = "Required date")
-
-    @Past(message = "La fecha ingresada no es valida")
-    @Min(value = 18, message = "Debes ser mayor de dieciocho años para poder registrarte")
+    @NotNull(message = "Este campo es obligatorio")
+    @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @MinAge(value = 18, message = "El cliente debe tener al menos 18 años")
     private LocalDate date;
 
 }
