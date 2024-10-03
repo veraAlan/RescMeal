@@ -1,31 +1,10 @@
-'use client'
+const HomePage: React.FC = () => {
 
-import { useState, useEffect } from "react"
+    return (
+        <div>
 
-export default function Home() {
-  const [carriers, setCarriers] = useState(null)
+        </div>
+    );
+};
 
-  useEffect(() => {
-    async function fetchCarriers() {
-      let res = await fetch("http://localhost:8080/api/carrier/list")
-      let data = await res.json();
-      console.log(data)
-      setCarriers(data)
-    }
-    fetchCarriers()
-  }, [])
-
-    
-
-  if (!carriers) return <div>Loading...</div>
-
-  return (
-    <div>
-      <ul>
-        {carriers.map((carrier) => (
-          <li key={carrier.id}>{carrier.name} <br></br> {carrier.lastName}</li>
-        ))}
-      </ul>
-    </div>
-  )
-}
+export default HomePage;
