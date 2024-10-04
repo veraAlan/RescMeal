@@ -1,11 +1,13 @@
 package dev.group21.rescmeal.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "business_id")
     private Business business;
@@ -49,10 +52,11 @@ public class Food {
     private Integer quantity;
 
     @NotNull(message = "La fecha de expiración es obligatoria")
-    @Future(message = "La fecha de expiración debe ser una fecha futura")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate expiration_date;
 
     @NotNull(message = "La fecha de producción es obligatoria")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "La fecha de producción debe ser una fecha pasada o presente")
     private LocalDate production_date;
 }
