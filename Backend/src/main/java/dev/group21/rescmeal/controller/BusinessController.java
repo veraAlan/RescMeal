@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.services.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-
 
 @RestController
 @RequestMapping("/api/business")
 public class BusinessController {
- //   @Value("${businessImages.path}")
-//    private String businessImagesPath;
+    private final String businessImages = System.getProperty("user.dir") + "/../Frontend/public/Business/";
     private final BusinessService businessService;
 
     @Autowired
@@ -35,37 +29,17 @@ public class BusinessController {
     }
 
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             Business business = new ObjectMapper().readValue(businessJson, Business.class);
-
-            // Ruta absoluta al directorio public/Business en Next.js
-            String frontendDir = System.getProperty("user.dir") + "/../Frontend/public/Business/";
-
-            // Asegúrate de que el directorio exista
-            File dir = new File(frontendDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
+            if(image != null) {
+                BufferedImage originalImage = ImageIO.read(image.getInputStream());
+                BufferedImage resizedImage = Scalr.resize(originalImage, 800);
+                String extension = image.getContentType().split("/")[1];
+                String imagePath = businessImages + business.getName() + "." + extension;
+                ImageIO.write(resizedImage, extension, new File(imagePath));
+                business.setImage(business.getName() + "." + extension);
             }
-
-            // Leer la imagen
-            BufferedImage originalImage = ImageIO.read(image.getInputStream());
-
-            // Redimensionar la imagen
-            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-
-            // Obtener la extensión
-            String extension = image.getContentType().split("/")[1];
-
-            // Ruta completa de la imagen
-            String imagePath = frontendDir + business.getName() + "." + extension;
-
-            // Guardar la imagen redimensionada
-            ImageIO.write(resizedImage, extension, new File(imagePath));
-
-            // Establecer la ruta de la imagen en el objeto Business
-            business.setImage(business.getName() + "." + extension);
-
             Business createdBusiness = businessService.createBusiness(business);
             return ResponseEntity.ok(createdBusiness);
         } catch (Exception e) {
@@ -73,41 +47,74 @@ public class BusinessController {
         }
     }
 
-
-    // TODO Test relative position of images, maybe inside rescmeal root but ignored by git.
+    // Requires All info to be updated
     @PutMapping
-    public ResponseEntity<Business> updateBusiness(@RequestBody Business newBusiness) {
+    public ResponseEntity<Business> updateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image") MultipartFile image) {
         try {
+            Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
+            // TODO Refactor
+            BufferedImage originalImage = ImageIO.read(image.getInputStream());
+            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
+            String extension = image.getContentType().split("/")[1];
+            String imagePath = businessImages + newBusiness.getName() + "." + extension;
+            ImageIO.write(resizedImage, extension, new File(imagePath));
+            newBusiness.setImage(newBusiness.getName() + "." + extension);
             return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
-    // TODO Update function to request images and replace the one located at the businessImages.path
-//    @PatchMapping
-//    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestBody Business newBusiness) {
-//        try {
-//        Business oldBusiness = businessService.getBusiness(newBusiness.getId());
-//        if(oldBusiness == null) return ResponseEntity.notFound().build();
-//        return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
-//        }
-//    }
+    // Updates only needed entries
+    @PatchMapping
+    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
+        try {
+            System.out.println(image);
+            Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
+            // TODO Refactor
 
+            Business oldBusiness = businessService.getBusiness(newBusiness.getId());
+            if(oldBusiness == null) return ResponseEntity.notFound().build();
+            if(image != null){
+                if(oldBusiness.getImage() != null) {
+                    File oldImage = new File(businessImages + oldBusiness.getImage());
+                    oldImage.delete();
+                }
+                BufferedImage originalImage = ImageIO.read(image.getInputStream());
+                BufferedImage resizedImage = Scalr.resize(originalImage, 800);
+                String extension = image.getContentType().split("/")[1];
+                String fileName;
+                // TODO Refactor
+                if (newBusiness.getName() != null) {
+                    fileName = newBusiness.getName() + "." + image.getContentType().split("/")[1];
+                } else {
+                    fileName = oldBusiness.getName() + "." + image.getContentType().split("/")[1];
+                }
+                // TODO Refactor
+                String imagePath = businessImages + fileName;
+                ImageIO.write(resizedImage, extension, new File(imagePath));
+                if(newBusiness.getName() != null) {
+                    newBusiness.setImage(newBusiness.getName() + "." + extension);
+                } else {
+                    newBusiness.setImage(oldBusiness.getName() + "." + extension);
+                }
+            }
+
+            return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBusiness(@PathVariable Integer id) {
         try {
             if (id != null) {
-                // Obtener el negocio por ID
                 Business business = businessService.getBusiness(id);
                 if (business == null) {
                     return ResponseEntity.notFound().build();
                 }
-                // Eliminar el negocio y su imagen
                 businessService.deleteBusiness(id);
                 return ResponseEntity.noContent().build();
             } else {
@@ -117,9 +124,6 @@ public class BusinessController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
-
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Business> getBusiness(@PathVariable Integer id) {

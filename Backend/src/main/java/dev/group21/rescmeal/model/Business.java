@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
-@Table(name = "business")
+@Table(name = "business", uniqueConstraints = @UniqueConstraint(columnNames = {"cvu", "email", "phone"}))
 @Data
 @DynamicUpdate
 @NoArgsConstructor
@@ -21,7 +21,6 @@ public class Business {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "La imagen es obligatoria")
     private String image;
 
     @NotNull(message = "El nombre es obligatorio")

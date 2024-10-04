@@ -39,25 +39,25 @@ public class BusinessService {
         return businessRepository.saveAndFlush(updateBusiness);
     }
 
-    // TODO Refactor for new Business Model
-//    /**
-//     * Update method, works even while sending a partially different Business entity.
-//     * @param existingBusiness old Business entity without changed values.
-//     * @param updateBusiness updated Business entity, may have null properties.
-//     * @return Business entity
-//     */
-//    public Business dynamicUpdateBusiness(Business existingBusiness, Business updateBusiness) {
-//        // Update fields that were sent with some value.
-//        if(updateBusiness.getBusiness_name() == null) updateBusiness.setBusiness_name(existingBusiness.getBusiness_name());
-//        if(updateBusiness.getBusiness_type() == null) updateBusiness.setBusiness_type(existingBusiness.getBusiness_type());
-//        if(updateBusiness.getAddress() == null) updateBusiness.setAddress(existingBusiness.getAddress());
-//        if(updateBusiness.getEmail() == null) updateBusiness.setEmail(existingBusiness.getEmail());
-//        if(updateBusiness.getPassword() == null) updateBusiness.setPassword(existingBusiness.getPassword());
-//        if(updateBusiness.getPhone() == null) updateBusiness.setPhone(existingBusiness.getPhone());
-//        if(updateBusiness.getBusiness_time() == null) updateBusiness.setBusiness_time(existingBusiness.getBusiness_time());
-//        if(updateBusiness.getCvu() == null) updateBusiness.setCvu(existingBusiness.getCvu());
-//        return businessRepository.saveAndFlush(updateBusiness);
-//    }
+    /**
+     * Update method, works even while sending a partially different Business entity.
+     * @param existingBusiness old Business entity without changed values.
+     * @param updateBusiness updated Business entity, may have null properties.
+     * @return Business entity
+     */
+    public Business dynamicUpdateBusiness(Business existingBusiness, Business updateBusiness) {
+        // Update fields that were sent with some value.
+        if(updateBusiness.getName() == null) updateBusiness.setName(existingBusiness.getName());
+        if(updateBusiness.getType() == null) updateBusiness.setType(existingBusiness.getType());
+        if(updateBusiness.getAddress() == null) updateBusiness.setAddress(existingBusiness.getAddress());
+        if(updateBusiness.getEmail() == null) updateBusiness.setEmail(existingBusiness.getEmail());
+        if(updateBusiness.getPassword() == null) updateBusiness.setPassword(existingBusiness.getPassword());
+        if(updateBusiness.getPhone() == null) updateBusiness.setPhone(existingBusiness.getPhone());
+        if(updateBusiness.getSchedule() == null) updateBusiness.setSchedule(existingBusiness.getSchedule());
+        if(updateBusiness.getCvu() == null) updateBusiness.setCvu(existingBusiness.getCvu());
+        if(updateBusiness.getImage() == null) updateBusiness.setImage(existingBusiness.getImage());
+        return businessRepository.saveAndFlush(updateBusiness);
+    }
 
     /**
      *
