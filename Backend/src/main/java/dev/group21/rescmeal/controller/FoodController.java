@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Food;
 import dev.group21.rescmeal.services.FoodService;
+import jakarta.validation.Valid;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -12,14 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/foods")
+@RequestMapping("/api/food")
 public class FoodController {
-    @Value("${foodImages.path}")
-    private String foodImagesPath;
+    //@Value("${foodImages.path}")
+    //private String foodImagesPath;
     private final FoodService foodService;
 
     @Autowired
@@ -28,20 +33,44 @@ public class FoodController {
     }
 
     @PostMapping
-    public ResponseEntity<Food> createFood(@RequestPart("food") String foodJson, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<Food> createFood(@Valid @RequestPart("food") String foodJson, @RequestPart("image") MultipartFile image) {
         try {
             Food food = new ObjectMapper().readValue(foodJson, Food.class);
-            String imagePath = foodImagesPath + food.getName() + image.getContentType().replace("image/", ".");
-            FileOutputStream fout = new FileOutputStream(imagePath);
-            fout.write(image.getBytes());
-            fout.close();
-            food.setImage(food.getName() + image.getContentType().replace("image/", "."));
+
+            // Ruta absoluta al directorio public/Food en Next.js
+            String frontendDir = System.getProperty("user.dir") + "/../Frontend/public/Food/";
+
+            // Asegúrate de que el directorio exista
+            File dir = new File(frontendDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            // Leer la imagen
+            BufferedImage originalImage = ImageIO.read(image.getInputStream());
+
+            // Redimensionar la imagen
+            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
+
+            // Obtener la extensión
+            String extension = image.getContentType().split("/")[1];
+
+            // Ruta completa de la imagen
+            String imagePath = frontendDir + food.getName() + "." + extension;
+
+            // Guardar la imagen redimensionada
+            ImageIO.write(resizedImage, extension, new File(imagePath));
+
+            // Establecer la ruta de la imagen en el objeto Food
+            food.setImage(food.getName() + "." + extension);
+
             Food createdFood = foodService.createFood(food);
             return ResponseEntity.ok(createdFood);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
+
 
     // TODO Test relative position of images, maybe inside rescmeal root but ignored by git.
     @PutMapping

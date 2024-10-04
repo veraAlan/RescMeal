@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.controller;
 
+import jakarta.validation.Valid;
 import org.imgscalr.Scalr;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -24,8 +25,8 @@ import java.io.FileOutputStream;
 @RestController
 @RequestMapping("/api/business")
 public class BusinessController {
-    @Value("${businessImages.path}")
-    private String businessImagesPath;
+ //   @Value("${businessImages.path}")
+//    private String businessImagesPath;
     private final BusinessService businessService;
 
     @Autowired
@@ -34,7 +35,7 @@ public class BusinessController {
     }
 
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@RequestPart("business") String businessJson, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart("image") MultipartFile image) {
         try {
             Business business = new ObjectMapper().readValue(businessJson, Business.class);
 
