@@ -60,8 +60,8 @@ public class BusinessService {
     }
 
     /**
-     *
-     *
+     * Delete a business and their image from the database.
+     * @param id Integer id of Business entity.
      */
     public void deleteBusiness(Integer id) {
         Business business = businessRepository.findById(id).orElse(null);
@@ -82,7 +82,7 @@ public class BusinessService {
 
     /**
      * Get method for Business entity, finds by entity id.
-     * @param id Integer id or Business entity.
+     * @param id Integer id of Business entity.
      * @return Business entity.
      */
     public Business getBusiness(Integer id) {
