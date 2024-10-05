@@ -28,17 +28,19 @@ public class BusinessController {
         this.businessService = businessService;
     }
 
+    /**
+     * Create a new business with validated inputs and a possible image.
+     * @param businessJson String (JSON formatted).
+     * @param image MultipartFile image.
+     * @return ResponseEntity business created.
+     */
     @PostMapping
     public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            Business business = new ObjectMapper().readValue(businessJson, Business.class);
+            @Valid Business business = new ObjectMapper().readValue(businessJson, Business.class);
             if(image != null) {
-                BufferedImage originalImage = ImageIO.read(image.getInputStream());
-                BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-                String extension = image.getContentType().split("/")[1];
-                String imagePath = businessImages + business.getName() + "." + extension;
-                ImageIO.write(resizedImage, extension, new File(imagePath));
-                business.setImage(business.getName() + "." + extension);
+                ResponseEntity createdImage = uploadImage(business.getName(), image);
+                business.setImage(createdImage.getBody().toString());
             }
             Business createdBusiness = businessService.createBusiness(business);
             return ResponseEntity.ok(createdBusiness);
@@ -47,58 +49,49 @@ public class BusinessController {
         }
     }
 
-    // Requires All info to be updated
+    /**
+     * Update business using a complete new Business JSON and an image.
+     * @param businessJson String (JSON formatted)
+     * @param image MultipartFile image
+     * @return ResponseEntity business updated.
+     */
     @PutMapping
     public ResponseEntity<Business> updateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image") MultipartFile image) {
         try {
             Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
-            // TODO Refactor
-            BufferedImage originalImage = ImageIO.read(image.getInputStream());
-            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-            String extension = image.getContentType().split("/")[1];
-            String imagePath = businessImages + newBusiness.getName() + "." + extension;
-            ImageIO.write(resizedImage, extension, new File(imagePath));
-            newBusiness.setImage(newBusiness.getName() + "." + extension);
+            if(image != null) {
+                ResponseEntity createdImage = uploadImage(newBusiness.getName(), image);
+                newBusiness.setImage(createdImage.getBody().toString());
+            }
             return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
-    // Updates only needed entries
+    /**
+     * Dynamically update a business with a partial Business JSON and an Optional image.
+     * @param businessJson String (JSON formatted)
+     * @param image MultipartFile image
+     * @return ResponseEntity business updated.
+     */
     @PatchMapping
     public ResponseEntity<Business> dynamicUpdateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             System.out.println(image);
             Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
-            // TODO Refactor
 
             Business oldBusiness = businessService.getBusiness(newBusiness.getId());
             if(oldBusiness == null) return ResponseEntity.notFound().build();
-            if(image != null){
+            if(image != null) {
                 if(oldBusiness.getImage() != null) {
                     File oldImage = new File(businessImages + oldBusiness.getImage());
                     oldImage.delete();
                 }
-                BufferedImage originalImage = ImageIO.read(image.getInputStream());
-                BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-                String extension = image.getContentType().split("/")[1];
-                String fileName;
-                // TODO Refactor
-                if (newBusiness.getName() != null) {
-                    fileName = newBusiness.getName() + "." + image.getContentType().split("/")[1];
-                } else {
-                    fileName = oldBusiness.getName() + "." + image.getContentType().split("/")[1];
-                }
-                // TODO Refactor
-                String imagePath = businessImages + fileName;
-                ImageIO.write(resizedImage, extension, new File(imagePath));
-                if(newBusiness.getName() != null) {
-                    newBusiness.setImage(newBusiness.getName() + "." + extension);
-                } else {
-                    newBusiness.setImage(oldBusiness.getName() + "." + extension);
-                }
+                String businessName = newBusiness.getName() == null ? oldBusiness.getName() : newBusiness.getName();
+                ResponseEntity createdImage = uploadImage(businessName, image);
+                newBusiness.setImage(createdImage.getBody().toString());
             }
 
             return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
@@ -107,6 +100,11 @@ public class BusinessController {
         }
     }
 
+    /**
+     * Deletes a complete business entry, with their image if found.
+     * @param id Integer, id of entry to delete
+     * @return ResponseEntity<Void>
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBusiness(@PathVariable Integer id) {
         try {
@@ -125,6 +123,11 @@ public class BusinessController {
         }
     }
 
+    /**
+     * Find a specific business by ID.
+     * @param id Integer id of Business entity.
+     * @return ResponseEntity Business object.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Business> getBusiness(@PathVariable Integer id) {
         try {
@@ -139,6 +142,10 @@ public class BusinessController {
         }
     }
 
+    /**
+     * Get all the business stored in the Database.
+     * @return ResponseEntity List of all business found.
+     */
     @GetMapping("/list")
     public ResponseEntity<List<Business>> getAllBussiness() {
         try {
@@ -154,9 +161,28 @@ public class BusinessController {
     }
 
     /**
+     * Store image to public folder.
+     * @param businessName String of the name the file will have (Business name).
+     * @param image MultipartFile Image.
+     * @return ResponseEntity with image name as body.
+     */
+    private ResponseEntity<String> uploadImage(String businessName, MultipartFile image) {
+        try {
+            BufferedImage originalImage = ImageIO.read(image.getInputStream());
+            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
+            String extension = image.getContentType().split("/")[1];
+            String imagePath = businessImages + businessName + "." + extension;
+            ImageIO.write(resizedImage, extension, new File(imagePath));
+            return ResponseEntity.ok(businessName + "." + extension);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    /**
      * Add error message to header and log Exception thrown.
-     * @param e Exception thrown
-     * @return HttpHeader
+     * @param e Exception thrown.
+     * @return HttpHeader with custom error entry.
      */
     private HttpHeaders errorHeader(Exception e) {
         System.getLogger(e.toString());
