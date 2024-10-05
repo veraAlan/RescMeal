@@ -32,9 +32,10 @@ const FoodList: React.FC = () => {
                         <p><strong>Fecha de Producción:</strong> {production_date}</p>
                         {image && (
                             <img
-                                src={image}
+                                src={`/Food/${image}`}
                                 alt={`${name} logo.`}
-                                className="mt-2"
+                                className="mt-2 w-32 h-32 object-cover rounded"
+                                loading="lazy"
                             />
                         )}
                     </li>

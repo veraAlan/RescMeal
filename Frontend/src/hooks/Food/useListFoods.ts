@@ -9,7 +9,7 @@ export function useListFoods() {
     useEffect(() => {
         async function fetchFoods() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods/list`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/food/list`);
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }

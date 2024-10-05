@@ -5,6 +5,7 @@ import dev.group21.rescmeal.repository.FoodRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -61,7 +62,19 @@ public class FoodService {
      * @param id ID of the Food entity to delete.
      */
     public void deleteFood(Integer id) {
-        foodRepository.deleteById(id);
+        Food food = foodRepository.findById(id).orElse(null);
+        if (food != null) {
+            // Ruta al directorio public de tu proyecto Next.js
+            String publicDir = System.getProperty("user.dir") + "/../Frontend/public/Food/";
+            String imagePath = publicDir + food.getImage();
+            // Eliminar la imagen si existe
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+            // Eliminar el negocio de la base de datos
+            foodRepository.deleteById(id);
+        }
     }
 
     /**

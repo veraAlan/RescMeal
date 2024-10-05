@@ -23,8 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/food")
 public class FoodController {
-    //@Value("${foodImages.path}")
-    //private String foodImagesPath;
+    private final String foodImages = System.getProperty("user.dir") + "/../Frontend/public/Food/";
     private final FoodService foodService;
 
     @Autowired
@@ -36,34 +35,10 @@ public class FoodController {
     public ResponseEntity<Food> createFood(@Valid @RequestPart("food") String foodJson, @RequestPart("image") MultipartFile image) {
         try {
             Food food = new ObjectMapper().readValue(foodJson, Food.class);
-
-            // Ruta absoluta al directorio public/Food en Next.js
-            String frontendDir = System.getProperty("user.dir") + "/../Frontend/public/Food/";
-
-            // Asegúrate de que el directorio exista
-            File dir = new File(frontendDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
+            if(image != null) {
+                ResponseEntity createdImage = uploadImage(food.getBusiness().getId() + "-" + food.getName(), image);
+                food.setImage(createdImage.getBody().toString());
             }
-
-            // Leer la imagen
-            BufferedImage originalImage = ImageIO.read(image.getInputStream());
-
-            // Redimensionar la imagen
-            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-
-            // Obtener la extensión
-            String extension = image.getContentType().split("/")[1];
-
-            // Ruta completa de la imagen
-            String imagePath = frontendDir + food.getName() + "." + extension;
-
-            // Guardar la imagen redimensionada
-            ImageIO.write(resizedImage, extension, new File(imagePath));
-
-            // Establecer la ruta de la imagen en el objeto Food
-            food.setImage(food.getName() + "." + extension);
-
             Food createdFood = foodService.createFood(food);
             return ResponseEntity.ok(createdFood);
         } catch (Exception e) {
@@ -71,13 +46,15 @@ public class FoodController {
         }
     }
 
-
-    // TODO Test relative position of images, maybe inside rescmeal root but ignored by git.
     @PutMapping
-    public ResponseEntity<Food> updateFood(@RequestBody Food newFood) {
+    public ResponseEntity<Food> updateFood(@RequestBody Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             if (foodService.getFood(newFood.getId()) == null) {
                 return ResponseEntity.notFound().build();
+            }
+            if(image != null) {
+                ResponseEntity createdImage = uploadImage(newFood.getBusiness().getId() + "-" + newFood.getName(), image);
+                newFood.setImage(createdImage.getBody().toString());
             }
             return ResponseEntity.ok(foodService.updateFood(newFood));
         } catch (Exception e) {
@@ -85,13 +62,21 @@ public class FoodController {
         }
     }
 
-    // TODO Update function to request images and replace the one located at the foodImages.path
     @PatchMapping
-    public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food newFood) {
+    public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             Food oldFood = foodService.getFood(newFood.getId());
             if (oldFood == null) {
                 return ResponseEntity.notFound().build();
+            }
+            if(image != null) {
+                if(oldFood.getImage() != null) {
+                    File oldImage = new File(foodImages + oldFood.getImage());
+                    oldImage.delete();
+                }
+                String foodName = newFood.getName() == null ? newFood.getBusiness().getId() + "-" + newFood.getName() : oldFood.getBusiness().getId() + "-" + oldFood.getName();
+                ResponseEntity createdImage = uploadImage(foodName, image);
+                newFood.setImage(createdImage.getBody().toString());
             }
             return ResponseEntity.ok(foodService.dynamicUpdateFood(oldFood, newFood));
         } catch (Exception e) {
@@ -136,6 +121,25 @@ public class FoodController {
             } else {
                 return ResponseEntity.ok(foodList);
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    /**
+     * Store image to public folder.
+     * @param foodName String of the name the file will have (Business + Food name).
+     * @param image MultipartFile Image.
+     * @return ResponseEntity with image name as body.
+     */
+    private ResponseEntity<String> uploadImage(String foodName, MultipartFile image) {
+        try {
+            BufferedImage originalImage = ImageIO.read(image.getInputStream());
+            BufferedImage resizedImage = Scalr.resize(originalImage, 800);
+            String extension = image.getContentType().split("/")[1];
+            String imagePath = foodImages + foodName + "." + extension;
+            ImageIO.write(resizedImage, extension, new File(imagePath));
+            return ResponseEntity.ok(foodName + "." + extension);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
