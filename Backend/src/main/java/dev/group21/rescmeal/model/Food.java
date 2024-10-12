@@ -1,6 +1,5 @@
 package dev.group21.rescmeal.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -10,8 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-
+import java.util.Date;
 
 @Entity
 @Table(name = "food")
@@ -53,10 +51,10 @@ public class Food {
 
     @NotNull(message = "La fecha de expiración es obligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate expiration_date;
+    private Date expiration_date;
 
     @NotNull(message = "La fecha de producción es obligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "La fecha de producción debe ser una fecha pasada o presente")
-    private LocalDate production_date;
+    private Date production_date;
 }
