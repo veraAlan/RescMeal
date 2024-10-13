@@ -10,7 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 
 @Entity
@@ -56,5 +56,5 @@ public class Client {
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @MinAge(value = 18, message = "El cliente debe tener al menos 18 años")
-    private LocalDate birthdate;
+    private Date birthdate;
 }

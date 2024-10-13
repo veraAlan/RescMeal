@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "carrier")
@@ -52,6 +51,6 @@ public class Carrier {
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @MinAge(value = 18, message = "El cliente debe tener al menos 18 años")
-    private LocalDate date;
+    private Date date;
 
 }
