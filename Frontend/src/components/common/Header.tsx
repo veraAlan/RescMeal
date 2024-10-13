@@ -1,32 +1,44 @@
+"use client";
 import Link from 'next/link';
-import React from 'react';
+import Logo from './Logo';
 
 const Header: React.FC = () => {
     return (
-        <header className="bg-blue-500 text-white p-4">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">
-                    <Link href="/" className="hover:underline">Inicio</Link>
-                </h1>
-                <nav>
-                    <ul className="flex space-x-4">
-                        <li>
-                            <Link href="/register/client" className="hover:underline">Registrar Cliente</Link>
-                        </li>
-                        <li>
-                            <Link href="/register/carrier" className="hover:underline">Registrar Repartidor</Link>
-                        </li>
-                        <li>
-                            <Link href="/register/business" className="hover:underline">Registrar Local</Link>
-                        </li>
-                        <li>
-                            <Link href="/register/food" className="hover:underline">Registrar Platillo</Link>
-                        </li>
-                    </ul>
-                </nav>
+        <header className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 shadow-lg">
+            <div className="container mx-auto flex justify-between items-center">
+                <div>
+                    <Logo />
+                </div>
+                <div className="flex space-x-4">
+                    <Link href="/login">
+                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                            Iniciar Sesión
+                        </button>
+                    </Link>
+                    <Link href="/register/client">
+                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                            Registrar Cliente
+                        </button>
+                    </Link>
+                    <Link href="/register/business">
+                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                            Registrar Local
+                        </button>
+                    </Link>
+                    <Link href="/register/carrier">
+                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                            Registrar Repartidor
+                        </button>
+                    </Link>
+                    <Link href="/register/food">
+                        <button className="bg-green-500 text-white font-bold py-2 px-4 rounded">
+                            Registrar Comida
+                        </button>
+                    </Link>
+                </div>
             </div>
         </header>
     );
-}
+};
 
 export default Header;

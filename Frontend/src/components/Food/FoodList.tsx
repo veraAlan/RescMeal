@@ -1,13 +1,8 @@
 import React from 'react';
 import { useListFoods } from '../../hooks/Food/useListFoods';
-import { Food } from '../../types/Food';
 
 const FoodList: React.FC = () => {
-    const { foods, loading, error } = useListFoods();
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+    const { foods, error } = useListFoods();
 
     if (error) {
         return <p>Error loading foods: {error}</p>;
@@ -46,4 +41,3 @@ const FoodList: React.FC = () => {
 };
 
 export default FoodList;
-
