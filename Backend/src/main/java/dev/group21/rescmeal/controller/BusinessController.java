@@ -146,7 +146,7 @@ public class BusinessController {
      * Get all the business stored in the Database.
      * @return ResponseEntity List of all business found.
      */
-    @GetMapping("/list")
+    @GetMapping()
     public ResponseEntity<List<Business>> getAllBussiness() {
         try {
             List<Business> businessList = businessService.getAllBusiness();
