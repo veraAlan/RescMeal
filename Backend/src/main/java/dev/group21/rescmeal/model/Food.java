@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.Date;
 public class Food {
 
     @Id
+    @UUID
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

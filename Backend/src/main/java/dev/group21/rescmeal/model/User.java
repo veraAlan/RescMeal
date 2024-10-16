@@ -1,6 +1,7 @@
 package dev.group21.rescmeal.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,6 @@ public class User {
     @Size(max = 30)
     private String username;
     @NotNull
-    @Size(max = 50)
     private String email;
     @NotNull
     @Size(max = 120)

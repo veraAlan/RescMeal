@@ -23,7 +23,7 @@ public class JwtUtils {
     @Value("${group21.rescmeal.jwtSecret}")
     private String jwtSecret;
     @Value("${group21.rescmeal.jwtExpirationMs}")
-    private String jwtExpirationMs;
+    private Long jwtExpirationMs;
     @Value("${group21.rescmeal.jwtCookieName}")
     private String jwtCookie;
 
@@ -76,7 +76,7 @@ public class JwtUtils {
     private String generateTokenFromUsername(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
+                .setIssuedAt(new Date((new Date()).getTime()))
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
