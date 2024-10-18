@@ -71,10 +71,10 @@ public class PurchaseController {
     private void updatePurchaseDetails(Purchase purchase, Purchase purchaseDetails) {
         purchase.setClient(purchaseDetails.getClient());
         purchase.setBusiness(purchaseDetails.getBusiness());
-        purchase.setPaymentMethod(purchaseDetails.getPaymentMethod());
-        purchase.setTotalCost(purchaseDetails.getTotalCost());
+        purchase.setPayment_method(purchaseDetails.getPayment_method());
+        purchase.setTotal_cost(purchaseDetails.getTotal_cost());
         purchase.setPickup(purchaseDetails.isPickup());
-        purchase.setCreationDate(purchaseDetails.getCreationDate());
+        purchase.setCreation_date(purchaseDetails.getCreation_date());
 
         // Actualiza los elementos de la lista de purchasedItems
         if (purchase.getPurchasedItems() != null) {

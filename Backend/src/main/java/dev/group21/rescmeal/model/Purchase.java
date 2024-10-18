@@ -33,13 +33,13 @@ public class Purchase {
 
     @NotNull(message = "El campo paymentMethod no puede estar vacío.")
     @Size(min = 1, max = 50, message = "El método de pago debe tener entre 1 y 50 caracteres.")
-    private String paymentMethod;
+    private String payment_method;
 
     @Min(value = 0, message = "El costo total debe ser positivo.")
-    private double totalCost;
+    private double total_cost;
 
     private boolean pickup;
-    private Date creationDate;
+    private Date creation_date;
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Para evitar la recursión infinita

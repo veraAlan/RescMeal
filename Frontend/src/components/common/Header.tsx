@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import Logo from './Logo';
+import CartIcon from '../Cart/CartIcon';
 
 const Header: React.FC = () => {
     return (
@@ -10,31 +11,22 @@ const Header: React.FC = () => {
                     <Logo />
                 </div>
                 <div className="flex space-x-4">
-                    <Link href="/login">
-                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
-                            Iniciar Sesión
-                        </button>
+                    <Link href="/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                        Iniciar Sesión
                     </Link>
-                    <Link href="/register/client">
-                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
-                            Registrar Cliente
-                        </button>
+                    <Link href="/register/client" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                        Registrar Cliente
                     </Link>
-                    <Link href="/register/business">
-                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
-                            Registrar Local
-                        </button>
+                    <Link href="/register/business" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                        Registrar Local
                     </Link>
-                    <Link href="/register/carrier">
-                        <button className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
-                            Registrar Repartidor
-                        </button>
+                    <Link href="/register/carrier" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                        Registrar Repartidor
                     </Link>
-                    <Link href="/register/food">
-                        <button className="bg-green-500 text-white font-bold py-2 px-4 rounded">
-                            Registrar Comida
-                        </button>
+                    <Link href="/register/food" className="bg-green-500 text-white font-bold py-2 px-4 rounded">
+                        Registrar Comida
                     </Link>
+                    <CartIcon />
                 </div>
             </div>
         </header>
