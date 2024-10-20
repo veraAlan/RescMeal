@@ -58,7 +58,7 @@ public class BusinessController {
     @PutMapping
     public ResponseEntity<Business> updateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image") MultipartFile image) {
         try {
-            Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
+            @Valid Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
             if(image != null) {
                 ResponseEntity createdImage = uploadImage(newBusiness.getName(), image);
@@ -79,7 +79,6 @@ public class BusinessController {
     @PatchMapping
     public ResponseEntity<Business> dynamicUpdateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            System.out.println(image);
             Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
 
             Business oldBusiness = businessService.getBusiness(newBusiness.getId());

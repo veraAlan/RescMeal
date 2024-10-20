@@ -48,11 +48,11 @@ export const useRegisterBusiness = () => {
         if (!businessData.phone) tempErrors.phone = "El teléfono es obligatorio";
         if (!businessData.schedule) tempErrors.schedule = "El horario es obligatorio";
         if (!businessData.cvu) tempErrors.cvu = "El CVU es obligatorio";
-    
+
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
-    
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -68,6 +68,7 @@ export const useRegisterBusiness = () => {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
+                        'Authenticate': 'Bearer kljasd.lfkj;aslkdjf;lkasjd;f'
                     },
                     body: formData,
                 });
