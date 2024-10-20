@@ -31,14 +31,15 @@ public class Purchase {
     @NotNull(message = "El campo business no puede estar vacío.")
     private Business business;
 
-    @NotNull(message = "El campo paymentMethod no puede estar vacío.")
-    @Size(min = 1, max = 50, message = "El método de pago debe tener entre 1 y 50 caracteres.")
+    @NotNull(message = "Debe seleccionar un metodo de pago.")
     private String payment_method;
 
     @Min(value = 0, message = "El costo total debe ser positivo.")
     private double total_cost;
 
-    private boolean pickup;
+    @NotNull(message = "Desea retirar su pedido o que se lo entreguen.")
+    private Boolean pickup;
+
     private Date creation_date;
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)

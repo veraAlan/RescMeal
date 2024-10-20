@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Food } from '../../types/Food';
+import { Purchase } from '../../types/Purchase';
 
 interface CartItem {
     food: Food;
@@ -14,7 +15,7 @@ interface CartContextType {
     decrementQuantity: (foodId: number) => void;
     removeFromCart: (food: Food) => void;
     clearCart: () => void;
-    processPurchase: (payload: any) => Promise<void>;
+    processPurchase: (payload: Purchase) => Promise<{ success: boolean; errors?: { [key: string]: string } }>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -60,27 +61,28 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setCart([]);
     };
 
-const processPurchase = async (payload: any) => {
-    console.log("Enviando payload:", payload); // Verifica el payload aquí
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/purchase`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al procesar la compra');
+    const processPurchase = async (payload: Purchase): Promise<{ success: boolean; errors?: { [key: string]: string } }> => {
+        console.log("Enviando payload:", payload); // Verifica el payload aquí
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/purchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                return { success: false, errors: errorData };
+            }
+            console.log("Compra procesada:", payload);
+            clearCart();
+            return { success: true };
+        } catch (error) {
+            console.error("Error en el procesamiento de la compra:", error);
+            return { success: false, errors: { global: "Error en el procesamiento de la compra" } };
         }
-
-        console.log("Compra procesada:", payload);
-        clearCart();
-    } catch (error) {
-        console.error(error);
-    }
-}
+    };
 
     return (
         <CartContext.Provider value={{ cart, addToCart, incrementQuantity, decrementQuantity, removeFromCart, clearCart, processPurchase }}>

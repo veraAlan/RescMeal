@@ -3,6 +3,7 @@ package dev.group21.rescmeal.controller;
 import dev.group21.rescmeal.model.Purchase;
 import dev.group21.rescmeal.model.PurchasedItem;
 import dev.group21.rescmeal.services.PurchaseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class PurchaseController {
      * @return La respuesta HTTP con la compra creada.
      */
     @PostMapping
-    public ResponseEntity<Object> createPurchase(@RequestBody Purchase purchase) {
+    public ResponseEntity<Object> createPurchase(@Valid @RequestBody Purchase purchase) {
         Purchase newPurchase = purchaseService.savePurchase(purchase);
         return ResponseEntity.ok(newPurchase);
     }
@@ -67,16 +68,14 @@ public class PurchaseController {
         }
     }
 
-    // Método auxiliar para actualizar los detalles de la compra
     private void updatePurchaseDetails(Purchase purchase, Purchase purchaseDetails) {
         purchase.setClient(purchaseDetails.getClient());
         purchase.setBusiness(purchaseDetails.getBusiness());
         purchase.setPayment_method(purchaseDetails.getPayment_method());
         purchase.setTotal_cost(purchaseDetails.getTotal_cost());
-        purchase.setPickup(purchaseDetails.isPickup());
+        purchase.setPickup(purchaseDetails.getPickup());
         purchase.setCreation_date(purchaseDetails.getCreation_date());
 
-        // Actualiza los elementos de la lista de purchasedItems
         if (purchase.getPurchasedItems() != null) {
             purchase.getPurchasedItems().clear();
             if (purchaseDetails.getPurchasedItems() != null) {
