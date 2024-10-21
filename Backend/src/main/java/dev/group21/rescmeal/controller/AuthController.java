@@ -5,7 +5,6 @@ import dev.group21.rescmeal.repository.RoleRepository;
 import dev.group21.rescmeal.repository.UserRepository;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.UserDetailsImpl;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
-@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -46,7 +44,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // Log in with either email or username.
-        if(loginRequest.getIdentifier().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
+        if(loginRequest.getIdentifier().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
             User user = userRepository.findByEmail(loginRequest.getIdentifier()).orElseThrow(() -> new RuntimeException("Role not found"));
             loginRequest.setIdentifier(user.getUsername());
         }
@@ -74,30 +72,21 @@ public class AuthController {
         User user = new User(signupRequest.getUsername(), signupRequest.getEmail(), encoder.encode(signupRequest.getPassword()));
 
         Set<Role> roles = new HashSet<>();
-        Role role;
-
-        switch (signupRequest.getRole().toUpperCase()) {
-            case "CLIENT":
-                role = roleRepository.findByName(ERole.ROLE_CLIENT)
-                        .orElseThrow(() -> new RuntimeException("Role not found"));
-                break;
-            case "BUSINESS":
-                role = roleRepository.findByName(ERole.ROLE_BUSINESS)
-                        .orElseThrow(() -> new RuntimeException("Role not found"));
-                break;
-            case "CARRIER":
-                role = roleRepository.findByName(ERole.ROLE_CARRIER)
-                        .orElseThrow(() -> new RuntimeException("Role not found"));
-                break;
-            default:
-                role = roleRepository.findByName(null)
-                        .orElseThrow(() -> new RuntimeException("Role not found"));
-        }
+        Role role = switch (signupRequest.getRole().toUpperCase()) {
+            case "CLIENT" -> roleRepository.findByName(ERole.ROLE_CLIENT)
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            case "BUSINESS" -> roleRepository.findByName(ERole.ROLE_BUSINESS)
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            case "CARRIER" -> roleRepository.findByName(ERole.ROLE_CARRIER)
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            default -> roleRepository.findByName(null)
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+        };
 
         roles.add(role);
         user.setRoles(roles);
         userRepository.save(user);
-        LoginRequest login = new LoginRequest(user.getUsername(), user.getPassword());
+        LoginRequest login = new LoginRequest(signupRequest.getUsername(), signupRequest.getPassword());
 
         return authenticateUser (login);
     }
@@ -110,14 +99,4 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(null);
     }
-
-    @PostMapping("/link-role")
-    public ResponseEntity<?> linkRole(@Valid @RequestBody RoleLinkRequest roleLinkRequest) {
-        System.out.println(roleLinkRequest);
-//        User user = userRepository.findByUsername(jwtUtils.getUsernameFromJwtToken(jwt)).orElseThrow(() -> new RuntimeException("User not found."));
-        return ResponseEntity.ok().body(roleLinkRequest);
-    }
 }
-
-
-

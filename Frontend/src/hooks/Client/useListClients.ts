@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Client } from '../../types/Client';
+import axios from 'axios';
 
 export function useListClients() {
     const [clients, setClients] = useState<Client[] | null>(null);
@@ -8,13 +9,15 @@ export function useListClients() {
 
     useEffect(() => {
         async function fetchClients() {
+            console.log("Client call.")
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/client/list`);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                const data: Client[] = await res.json();
-                setClients(data);
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/client`, { headers: {}, withCredentials: true })
+                    .then(response => {
+                        console.log("Client: ", response)
+                        const data: Client[] = response.data
+                        setClients(data)
+                    })
+                    .catch(e => console.error("Error fetching clients: ", e))
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);

@@ -49,53 +49,47 @@ public class SecurityConfig {
         return authProvider;
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // TODO Needs checking the methods possible and what the endpoint should do.
     @Bean
     @Order(1)
-    public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/auth/signout").permitAll())
-                .addFilterAfter(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+            .csrf(AbstractHttpConfigurer::disable)
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS,"/api/food/list").permitAll()
+                .requestMatchers("/api/food/list", "/api/food").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
+                .requestMatchers("/api/client").hasAnyRole("CLIENT", "ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/business","api/business/*").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/carrier","api/carrier/*").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/food/me").hasAnyRole("BUSINESS", "ADMIN") // TODO Provisional method for uploading only to the business logged in.
+                .requestMatchers(HttpMethod.PUT, "/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/food/*/me").hasAnyRole("BUSINESS", "ADMIN")) // TODO Same as above but for listing foods of own business.
+            .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain clientFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.GET, "/api/client", "/api/client/*").hasAnyAuthority("CLIENT", "ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/api/business", "/api/business/**").hasAnyAuthority("BUSINESS", "ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/api/food", "/api/food/**").hasAnyAuthority("BUSINESS", "ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/api/food", "/api/food/**").hasAnyAuthority("BUSINESS", "ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/api/carrier", "/api/carrier/**").hasAnyAuthority("CARRIER", "ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/api/food", "/api/food/**").hasAnyAuthority("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
-                    .anyRequest().hasAnyAuthority("CLIENT"))
-            .authenticationProvider(authenticationProvider());
-
-        return http.build();
-    }
-
-    @Bean
-    @Order(3)
     public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/**").hasRole("ADMIN"))
-                .authenticationProvider(authenticationProvider())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/**").hasRole("ADMIN")
+                )
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
