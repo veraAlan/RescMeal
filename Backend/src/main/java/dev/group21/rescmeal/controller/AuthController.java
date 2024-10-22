@@ -45,7 +45,7 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // Log in with either email or username.
         if(loginRequest.getIdentifier().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-            User user = userRepository.findByEmail(loginRequest.getIdentifier()).orElseThrow(() -> new RuntimeException("Role not found"));
+            User user = userRepository.findByEmail(loginRequest.getIdentifier()).orElseThrow(() -> new RuntimeException("Identifier not found."));
             loginRequest.setIdentifier(user.getUsername());
         }
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getIdentifier(), loginRequest.getPassword()));

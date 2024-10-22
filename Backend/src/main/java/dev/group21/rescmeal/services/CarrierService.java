@@ -35,8 +35,6 @@ public class CarrierService {
     public Carrier dynamicUpdateCarrier(Carrier existingCarrier, Carrier updateCarrier) {
         if (updateCarrier.getName() == null) updateCarrier.setName(existingCarrier.getName());
         if (updateCarrier.getLastName() == null) updateCarrier.setLastName(existingCarrier.getLastName());
-        if (updateCarrier.getEmail() == null) updateCarrier.setEmail(existingCarrier.getEmail());
-        if (updateCarrier.getPassword() == null) updateCarrier.setPassword(existingCarrier.getPassword());
         if (updateCarrier.getVehicleType() == null) updateCarrier.setVehicleType(existingCarrier.getVehicleType());
         if (updateCarrier.getPhone() == null) updateCarrier.setPhone(existingCarrier.getPhone());
         if (updateCarrier.getDate() == null) updateCarrier.setDate(existingCarrier.getDate());

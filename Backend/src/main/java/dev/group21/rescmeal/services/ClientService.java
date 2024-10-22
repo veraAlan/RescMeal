@@ -47,9 +47,7 @@ public class ClientService {
     public Client dynamicUpdateClient(Client existingClient, Client updateClient) {
         if (updateClient.getName() == null) updateClient.setName(existingClient.getName());
         if (updateClient.getLast_name() == null) updateClient.setLast_name(existingClient.getLast_name());
-        if (updateClient.getEmail() == null) updateClient.setEmail(existingClient.getEmail());
         if (updateClient.getPhone() == null) updateClient.setPhone(existingClient.getPhone());
-        if (updateClient.getPassword() == null) updateClient.setPassword(existingClient.getPassword());
         if (updateClient.getBalance() == null) updateClient.setBalance(existingClient.getBalance());
         if (updateClient.getAddress() == null) updateClient.setAddress(existingClient.getAddress());
         if (updateClient.getBirthdate() == null) updateClient.setBirthdate(existingClient.getBirthdate());

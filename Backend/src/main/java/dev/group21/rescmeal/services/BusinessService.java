@@ -50,8 +50,6 @@ public class BusinessService {
         if(updateBusiness.getName() == null) updateBusiness.setName(existingBusiness.getName());
         if(updateBusiness.getType() == null) updateBusiness.setType(existingBusiness.getType());
         if(updateBusiness.getAddress() == null) updateBusiness.setAddress(existingBusiness.getAddress());
-        if(updateBusiness.getEmail() == null) updateBusiness.setEmail(existingBusiness.getEmail());
-        if(updateBusiness.getPassword() == null) updateBusiness.setPassword(existingBusiness.getPassword());
         if(updateBusiness.getPhone() == null) updateBusiness.setPhone(existingBusiness.getPhone());
         if(updateBusiness.getSchedule() == null) updateBusiness.setSchedule(existingBusiness.getSchedule());
         if(updateBusiness.getCvu() == null) updateBusiness.setCvu(existingBusiness.getCvu());
