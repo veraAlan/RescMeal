@@ -9,7 +9,6 @@ export function useListFoods() {
     useEffect(() => {
         async function fetchFoods() {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/food/list`, {
-                headers: { 'Access-Control-Allow-Origin': '*' },
                 withCredentials: true
             })
                 .then(response => {
