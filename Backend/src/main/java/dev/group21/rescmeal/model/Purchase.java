@@ -40,6 +40,8 @@ public class Purchase {
     @NotNull(message = "Desea retirar su pedido o que se lo entreguen.")
     private Boolean pickup;
 
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.DATE)
     private Date creation_date;
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)

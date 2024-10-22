@@ -37,7 +37,7 @@ public class CarrierService {
         if (updateCarrier.getLastName() == null) updateCarrier.setLastName(existingCarrier.getLastName());
         if (updateCarrier.getVehicleType() == null) updateCarrier.setVehicleType(existingCarrier.getVehicleType());
         if (updateCarrier.getPhone() == null) updateCarrier.setPhone(existingCarrier.getPhone());
-        if (updateCarrier.getDate() == null) updateCarrier.setDate(existingCarrier.getDate());
+        if (updateCarrier.getBirthdate() == null) updateCarrier.setBirthdate(existingCarrier.getBirthdate());
         return carrierRepository.saveAndFlush(updateCarrier);
     }
 

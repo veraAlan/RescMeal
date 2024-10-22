@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Food, FoodErrors } from '../../types/Food';
 import { Business } from '../../types/Business';
+import { getSessionId } from '../../utils/getSessionId';
+import axios from 'axios';
 
 export const useRegisterFood = () => {
     const [formData, setFormData] = useState<Food>({
-        //TO DO Cuanto este el sistema de roles esto tiene que cambiarse.
-        business: { id: 3 } as Business, // Ajusta según tu modelo de Business
+        business: { id: 0 } as Business,
         name: '',
         category: '',
         price: 0.0,
@@ -20,6 +21,22 @@ export const useRegisterFood = () => {
     const [errors, setErrors] = useState<FoodErrors>({});
     const [successMessage, setSuccessMessage] = useState('');
     const [generalError, setGeneralError] = useState('');
+
+    useEffect(() => {
+        const fetchSessionId = async () => {
+            try {
+                const sessionId = await getSessionId();
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    business: { id: sessionId } as Business
+                }));
+            } catch (error) {
+                setGeneralError('Error obteniendo el ID de la sesión.');
+            }
+        };
+
+        fetchSessionId();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -61,27 +78,23 @@ export const useRegisterFood = () => {
             if (imageData) {
                 formDataToSend.append("image", imageData);
             }
-
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/food`, {
-                    method: 'POST',
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/food`, formDataToSend, {
                     headers: {
                         'Accept': 'application/json',
                     },
-                    body: formDataToSend,
+                    withCredentials: true,
                 });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
+                if (response.status !== 200) {
+                    const errorData = response.data;
                     setErrors(errorData);
                     setGeneralError('Error registrando alimento. Por favor, inténtelo de nuevo.');
                     throw new Error('Error al crear el alimento');
                 }
-
-                const data = await response.json();
+                const data = response.data;
                 setSuccessMessage('Alimento registrado exitosamente.');
                 setFormData({
-                    business: { id: 1 } as Business, // Ajusta según tu modelo de Business
+                    business: { id: 0 } as Business, // Esto se actualizará con el ID real
                     name: '',
                     category: '',
                     price: 0.0,
@@ -98,7 +111,7 @@ export const useRegisterFood = () => {
                 setGeneralError('Error registrando alimento. Por favor, inténtelo de nuevo.');
             }
         }
-    };
+    };    
 
     return {
         formData,
