@@ -11,19 +11,19 @@ const Header: React.FC = () => {
                     <Logo />
                 </div>
                 <div className="flex space-x-4">
-                    <Link href="/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                    <Link href="/auth/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
                         Iniciar Sesión
                     </Link>
-                    <Link href="/register/client" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                    <Link href="/auth/register/client" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
                         Registrar Cliente
                     </Link>
-                    <Link href="/register/business" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                    <Link href="/auth/register/business" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
                         Registrar Local
                     </Link>
-                    <Link href="/register/carrier" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
+                    <Link href="/auth/register/carrier" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">
                         Registrar Repartidor
                     </Link>
-                    <Link href="/register/food" className="bg-green-500 text-white font-bold py-2 px-4 rounded">
+                    <Link href="/auth/register/food" className="bg-green-500 text-white font-bold py-2 px-4 rounded">
                         Registrar Comida
                     </Link>
                     <CartIcon />

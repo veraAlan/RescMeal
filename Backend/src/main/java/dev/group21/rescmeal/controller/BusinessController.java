@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.controller;
 
+import dev.group21.rescmeal.services.UserService;
 import jakarta.validation.Valid;
 import org.imgscalr.Scalr;
 import java.awt.image.BufferedImage;
@@ -23,10 +24,12 @@ import java.util.List;
 public class BusinessController {
     private final String businessImages = System.getProperty("user.dir") + "/../Frontend/public/Business/";
     private final BusinessService businessService;
+    private final UserService userService;
 
     @Autowired
-    public BusinessController(BusinessService businessService) {
+    public BusinessController(BusinessService businessService, UserService userService) {
         this.businessService = businessService;
+        this.userService = userService;
     }
 
     /**
@@ -36,7 +39,7 @@ public class BusinessController {
      * @return ResponseEntity business created.
      */
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "user", required = true) Long userid) {
         try {
             @Valid Business business = new ObjectMapper().readValue(businessJson, Business.class);
             if(image != null) {
@@ -44,6 +47,7 @@ public class BusinessController {
                 business.setImage(createdImage.getBody().toString());
             }
             Business createdBusiness = businessService.createBusiness(business);
+            userService.updateBusiness(userid, createdBusiness);
             return ResponseEntity.ok(createdBusiness);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();

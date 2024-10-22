@@ -5,12 +5,14 @@ const RegisterBusiness: React.FC = () => {
     //TODO No funcionan las validaciones que viene del Backend. Carga imagenes y las guarda en Frontend/public/Business
     const {
         businessData,
+        registerData,
         errors,
         successMessage,
         generalError,
         handleChange,
         handleImage,
-        handleSubmit
+        handleSubmit,
+        handleChangeRegister
     } = useRegisterBusiness();
 
     return (
@@ -19,6 +21,36 @@ const RegisterBusiness: React.FC = () => {
             {successMessage && <p className="text-green-500">{successMessage}</p>}
             {generalError && <p className="text-red-500">{generalError}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block">Nombre usuario:</label>
+                    <input
+                        type="text"
+                        name="username"
+                        value={registerData.username}
+                        onChange={handleChangeRegister}
+                        className="border p-2 w-full"
+                    />
+                </div>
+                <div>
+                    <label className="block">Email del local:</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={registerData.email}
+                        onChange={handleChangeRegister}
+                        className="border p-2 w-full"
+                    />
+                </div>
+                <div>
+                    <label className="block">Contraseña:</label>
+                    <input
+                        type="password"
+                        name="password"
+                        value={registerData.password}
+                        onChange={handleChangeRegister}
+                        className="border p-2 w-full"
+                    />
+                </div>
                 <div>
                     <label className="block">Foto del Negocio:</label>
                     <input
@@ -61,28 +93,6 @@ const RegisterBusiness: React.FC = () => {
                         className="border p-2 w-full"
                     />
                     {errors.address && <p className="text-red-500">{errors.address}</p>}
-                </div>
-                <div>
-                    <label className="block">Email:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={businessData.email}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
-                    {errors.email && <p className="text-red-500">{errors.email}</p>}
-                </div>
-                <div>
-                    <label className="block">Contraseña:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={businessData.password}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
-                    {errors.password && <p className="text-red-500">{errors.password}</p>}
                 </div>
                 <div>
                     <label className="block">Horario del Negocio:</label>

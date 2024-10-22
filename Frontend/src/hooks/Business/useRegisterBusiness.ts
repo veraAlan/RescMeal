@@ -1,18 +1,51 @@
 import { useState } from 'react';
 import { Business, BusinessErrors } from '../../types/Business';
+import axios from 'axios';
+
+export interface Register {
+    username: string
+    email: string
+    role: string
+    password: string
+}
+
+export interface linkUser {
+    id: number,
+}
+
+export interface linkBusiness {
+    business: number,
+}
 
 export const useRegisterBusiness = () => {
     const [businessData, setBusinessData] = useState<Business>({
         name: '',
         type: '',
         address: '',
-        email: '',
-        password: '',
         phone: '',
         schedule: '',
         cvu: '',
         image: ''
     });
+
+    const [registerData, setRegisterData] = useState<Register>({
+        username: '',
+        email: '',
+        role: 'business',
+        password: ''
+    })
+
+    const [linkUser, setLinkUser] = useState<linkUser>({
+        id: 0,
+    })
+
+    const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target
+        setRegisterData({
+            ...registerData,
+            [name]: value
+        })
+    }
 
     const [imageData, setImageData] = useState<File | null>(null);
     const [errors, setErrors] = useState<BusinessErrors>({});
@@ -43,8 +76,6 @@ export const useRegisterBusiness = () => {
         if (!businessData.name) tempErrors.name = "El nombre es obligatorio";
         if (!businessData.type) tempErrors.type = "El tipo es obligatorio";
         if (!businessData.address) tempErrors.address = "La dirección es obligatoria";
-        if (!businessData.email) tempErrors.email = "El correo electrónico es obligatorio";
-        if (!businessData.password) tempErrors.password = "La contraseña es obligatoria";
         if (!businessData.phone) tempErrors.phone = "El teléfono es obligatorio";
         if (!businessData.schedule) tempErrors.schedule = "El horario es obligatorio";
         if (!businessData.cvu) tempErrors.cvu = "El CVU es obligatorio";
@@ -63,51 +94,65 @@ export const useRegisterBusiness = () => {
                 formData.append("image", imageData);
             }
 
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/business`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authenticate': 'Bearer kljasd.lfkj;aslkdjf;lkasjd;f'
-                    },
-                    body: formData,
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    setErrors(errorData);
-                    setGeneralError('Error registrando negocio. Por favor, inténtelo de nuevo.');
-                    throw new Error('Error al crear el negocio');
-                }
-                const data = await response.json();
-                setSuccessMessage('Negocio registrado exitosamente');
-                setBusinessData({
-                    name: '',
-                    type: '',
-                    address: '',
-                    email: '',
-                    password: '',
-                    phone: '',
-                    schedule: '',
-                    cvu: '',
-                    image: data.image
-                });
-                setImageData(null);
-                setErrors({});
-                setGeneralError('');
-            } catch (error) {
-                setGeneralError('Error registrando negocio. Por favor, inténtelo de nuevo.');
-            }
+            registerData.role = 'business'
+
+            const userResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, registerData)
+                .then(response => {
+                    console.log("Response from signup: ", response)
+                    setLinkUser(response.data.id)
+                })
+                .catch(error => console.error("Error register in: ", error))
+
+            const businessResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`, { business: businessData, image: businessData.image, userid: linkUser }, { withCredentials: true })
+                .then(response => {
+                    console.log("Response from signup: ", response)
+                })
+                .catch(error => console.error('Error registrando negocio. Por favor, inténtelo de nuevo.', error))
+
+            // try {
+            //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/business`, {
+            //         method: 'POST',
+            //         credentials: 'include',
+            //         body: formData,
+            //     }).then(response => setLinkBusiness(response))
+            //     if (!response.ok) {
+            //         const errorData = await response.json();
+            //         setErrors(errorData);
+            //         setGeneralError('Error registrando negocio. Por favor, inténtelo de nuevo.');
+            //         throw new Error('Error al crear el negocio');
+            //     }
+            //     const data = await response.json();
+            //     setSuccessMessage('Negocio registrado exitosamente');
+            //     setBusinessData({
+            //         name: '',
+            //         type: '',
+            //         address: '',
+            //         email: '',
+            //         password: '',
+            //         phone: '',
+            //         schedule: '',
+            //         cvu: '',
+            //         image: data.image
+            //     });
+            //     setImageData(null);
+            //     setErrors({});
+            //     setGeneralError('');
+            // } catch (error) {
+            //     setGeneralError('Error registrando negocio. Por favor, inténtelo de nuevo.');
+            // }
         }
     };
 
     return {
         businessData,
+        registerData,
         imageData,
         errors,
         successMessage,
         generalError,
         handleChange,
         handleImage,
-        handleSubmit
+        handleSubmit,
+        handleChangeRegister
     };
 };

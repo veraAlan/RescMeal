@@ -4,8 +4,6 @@ export interface Business {
     name: string;
     type: string;
     address: string;
-    email: string;
-    password: string;
     phone: string;
     schedule: string;
     cvu: string;
@@ -16,8 +14,6 @@ export interface BusinessErrors {
     name?: string;
     type?: string;
     address?: string;
-    email?: string;
-    password?: string;
     phone?: string;
     schedule?: string;
     cvu?: string;

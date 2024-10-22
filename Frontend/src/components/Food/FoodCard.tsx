@@ -15,7 +15,7 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
             <img className="w-full h-48 object-cover md:w-48 md:h-auto" src={food.image} alt={food.name} />
             <div className="p-4 flex flex-col justify-between leading-normal flex-grow">
                 <div>
-                    <div className="text-gray-900 font-bold text-xl mb-2">{food.name}</div>
+                    <a href={'/Map/' + food.business.id}><div className="text-gray-900 font-bold text-xl mb-2">{food.name}</div></a>
                     <div className="text-gray-700 text-sm mb-2">Negocio: {food.business.name}</div>
                     <p className="text-gray-700 text-base">{food.description}</p>
                 </div>

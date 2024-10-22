@@ -36,7 +36,8 @@ export function useListFoods() {
                                 expiration_date: formattedExpirationDate,
                                 production_date: formattedProductionDate,
                                 business: {
-                                    name: business.name,
+                                    id: business.id,
+                                    name: business.name
                                 },
                             };
                         });

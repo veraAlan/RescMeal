@@ -31,6 +31,11 @@ const MapComponent = ({ id }: { id: number }) => {
                 )}
             </div>
             <div ref={mapContainerRef} style={{ width: '100%', height: '400px' }} />
+            <a href='/'>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                    Volver al home
+                </button>
+            </a>
         </div>
     );
 };
