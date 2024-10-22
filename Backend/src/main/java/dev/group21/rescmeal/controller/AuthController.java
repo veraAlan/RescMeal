@@ -5,10 +5,12 @@ import dev.group21.rescmeal.repository.RoleRepository;
 import dev.group21.rescmeal.repository.UserRepository;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -97,5 +99,28 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(null);
+    }
+
+    @GetMapping("/session-id")
+    public ResponseEntity<Integer> getSessionId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            Long userId = userDetails.getId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (user.getClient() != null) {
+                return ResponseEntity.ok(user.getClient().getId());
+            } else if (user.getBusiness() != null) {
+                return ResponseEntity.ok(user.getBusiness().getId());
+            } else if (user.getCarrier() != null) {
+                return ResponseEntity.ok(user.getCarrier().getId());
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 }

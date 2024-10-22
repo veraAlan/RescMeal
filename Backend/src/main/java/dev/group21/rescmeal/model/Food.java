@@ -21,7 +21,6 @@ import java.util.Date;
 public class Food {
 
     @Id
-    @UUID
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

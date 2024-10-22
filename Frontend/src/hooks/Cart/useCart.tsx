@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Food } from '../../types/Food';
 import { Purchase } from '../../types/Purchase';
+import axios from 'axios';
 
 interface CartItem {
     food: Food;
@@ -62,19 +63,19 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const processPurchase = async (payload: Purchase): Promise<{ success: boolean; errors?: { [key: string]: string } }> => {
-        console.log("Enviando payload:", payload); // Verifica el payload aquí
+        console.log("Enviando payload:", payload);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/purchase`, {
-                method: 'POST',
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/purchase`, payload, {
+                withCredentials: true,
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(payload),
             });
-            if (!response.ok) {
-                const errorData = await response.json();
-                return { success: false, errors: errorData };
+    
+            if (response.status !== 200) {
+                return { success: false, errors: response.data.errors };
             }
+    
             console.log("Compra procesada:", payload);
             clearCart();
             return { success: true };
