@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { User } from '../../types/User';
 import { redirect } from 'next/navigation';
+import { AuthContext } from '@/context/AuthContext';
 
 export const useLoginUser = () => {
    const [status, setStatus] = useState<Number | null>(null)
-   const [error, setError] = useState<String | null>(null);
+   const [error, setError] = useState<String | null>(null)
+   const authContext = useContext(AuthContext)
 
    const [loginData, setLoginData] = useState<User>({
       identifier: '',
@@ -28,7 +30,13 @@ export const useLoginUser = () => {
          password: loginData.password
       }, { withCredentials: true })
          .then(response => {
-            setStatus(response.status);
+            if (!authContext) {
+               return null;
+            }
+            const { login } = authContext
+
+            login(response.data.token)
+            setStatus(response.status)
             setError(null)
          })
          .catch(error => setError("Email, nombre de usuario o contraseña incorrecta."))

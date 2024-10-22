@@ -64,6 +64,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/validate").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/auth/signout").permitAll()
@@ -88,7 +89,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").hasRole("ADMIN")
+                        .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

@@ -5,6 +5,7 @@ import dev.group21.rescmeal.repository.RoleRepository;
 import dev.group21.rescmeal.repository.UserRepository;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +57,7 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+                .body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), jwtCookie.getValue(), roles));
     }
 
     @PostMapping("/signup")
@@ -97,5 +98,15 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(null);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> sessionVerify(HttpServletRequest request){
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        if(jwtUtils.validateJwtToken(jwt)){
+            return ResponseEntity.ok().body(null);
+        }
+        ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
+        return ResponseEntity.status(403).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(null);
     }
 }
