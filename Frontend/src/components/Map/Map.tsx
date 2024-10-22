@@ -3,11 +3,7 @@ import useMap from '../../hooks/Map/useMap';
 import { SearchBox } from '@mapbox/search-js-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const business = {
-    address: "Rio Negro 488 Neuquen" 
-};
-
-const MapComponent = () => {
+const MapComponent = ({ id }: { id: number }) => {
     const {
         mapContainerRef,
         mapInstanceRef,
@@ -16,23 +12,25 @@ const MapComponent = () => {
         setInputValue,
         token,
         mapboxgl
-    } = useMap(business); // Pasamos el objeto business al hook
+    } = useMap({ businessId: id }); // Pasamos el objeto business al hook
 
     return (
         <div>
+            <div hidden>
+                {mapLoaded && (
+                    <SearchBox
+                        accessToken={token}
+                        onChange={(value) => {
+                            setInputValue(value);
+                        }}
+                        value={inputValue}
+                        map={mapInstanceRef.current}
+                        mapboxgl={mapboxgl}
+                        marker
+                    />
+                )}
+            </div>
             <div ref={mapContainerRef} style={{ width: '100%', height: '400px' }} />
-            {mapLoaded && (
-                <SearchBox
-                    accessToken={token}
-                    onChange={(value) => {
-                        setInputValue(value);
-                    }}
-                    value={inputValue}
-                    map={mapInstanceRef.current}
-                    mapboxgl={mapboxgl}
-                    marker
-                />
-            )}
         </div>
     );
 };

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import mapboxgl, { Map } from 'mapbox-gl';
+import mapboxgl, { Map, Point } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import axios from 'axios';
 
 // Token de MapBox 
 const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
-const useMap = (business: { address: string }) => {
+const useMap = ({ businessId }: { businessId: number }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapInstanceRef = useRef<Map | null>(null);
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
@@ -28,9 +29,11 @@ const useMap = (business: { address: string }) => {
         // Set map loaded state
         mapInstanceRef.current.on("load", () => {
             setMapLoaded(true);
-            if (business && business.address) {
-                setAddress(business.address);
-            }
+            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/business/${businessId}`, { withCredentials: true })
+                .then(response => {
+                    if (response.data && response.data.address) setAddress(response.data.address + " Q8300");
+                })
+                .catch(e => console.error("Error: ", e))
         });
 
         return () => {
@@ -39,7 +42,7 @@ const useMap = (business: { address: string }) => {
                 mapInstanceRef.current = null;
             }
         };
-    }, [business]);
+    }, []);
 
     const setAddress = async (address: string) => {
         try {
@@ -54,9 +57,13 @@ const useMap = (business: { address: string }) => {
                 if (mapInstanceRef.current) {
                     mapInstanceRef.current.flyTo({
                         center: [lng, lat],
-                        zoom: 12,
-                        essential: true // esta opción permite que la animación sea esencial para la interacción del usuario.
+                        zoom: 15,
+                        essential: true, // esta opción permite que la animación sea esencial para la interacción del usuario.
+                        maxDuration: 50
                     });
+                    new mapboxgl.Marker()
+                        .setLngLat([lng, lat])
+                        .addTo(mapInstanceRef.current);
                 }
 
                 setInputValue(address);
