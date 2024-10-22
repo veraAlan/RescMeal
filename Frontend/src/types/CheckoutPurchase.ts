@@ -1,4 +1,8 @@
-import { Food } from './Food';
+export interface CheckoutPurchasedItem {
+    food: { id: number }; 
+    quantity: number;
+    price: number;
+}
 
 export interface Client {
     id: number;
@@ -18,23 +22,17 @@ export interface Business {
     phone: string;
 }
 
-export interface PurchasedItem {
-    food: Food | { id: number };
-    quantity: number;
-    price: number;
-}
-
-export interface Purchase {
-    id: number;
+export interface CheckoutPurchase {
     client: Client;
     business: Business;
-    payment_method: string;
+    payment_method?: string;
     total_cost: number;
-    pickup: boolean;
+    pickup?: boolean;
     creation_date: string;
-    purchasedItems: PurchasedItem[];
+    purchasedItems: CheckoutPurchasedItem[];
 }
 
+// Define la interfaz PurchaseErrors
 export interface PurchaseErrors {
     payment_method?: string;
     pickup?: string;

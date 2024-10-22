@@ -68,15 +68,21 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/auth/signout").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/auth/session-id").permitAll()
                 .requestMatchers("/api/api/purchase").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/food/list", "/api/food").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/client", "/api/client/me").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"api/business/*").hasAnyRole("BUSINESS", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/business","api/business/me").hasAnyRole("BUSINESS", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/carrier","api/carrier/me").hasAnyRole("CARRIER", "ADMIN")
+                    .requestMatchers(HttpMethod.GET,"/api/delivery/list").hasAnyRole("CARRIER", "ADMIN")
+                    .requestMatchers(HttpMethod.GET,"/api/purchase/list").hasAnyRole("CARRIER", "ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/api/delivery").hasAnyRole("CARRIER", "ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/api/purchase").hasAnyRole("CARRIER", "ADMIN","CLIENT")
                 .requestMatchers(HttpMethod.POST,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
                 .requestMatchers(HttpMethod.POST,"/api/food/me").hasAnyRole("BUSINESS") // TODO Provisional method for uploading only to the business logged in.
-                .requestMatchers(HttpMethod.PUT,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT,"/api/purchase").hasAnyRole("CARRIER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/food/*/me").hasAnyRole("BUSINESS")) // TODO Same as above but for listing foods of own business.
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -91,7 +97,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().hasRole("ADMIN")
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                 )
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
