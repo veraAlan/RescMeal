@@ -40,6 +40,9 @@ dependencies {
 	implementation("org.imgscalr:imgscalr-lib:4.2")
 	implementation("org.springframework.boot:spring-boot-starter-web-services")
 	implementation("javax.xml.ws:jaxws-api:2.3.1")
+	implementation("jakarta.xml.ws:jakarta.xml.ws-api:2.3.3")
+	implementation("org.apache.cxf:cxf-rt-frontend-jaxws:3.4.10")
+	implementation("org.apache.cxf:cxf-rt-wsdl:3.4.10")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
@@ -64,4 +67,8 @@ hibernate {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+repositories {
+	mavenCentral()
 }
