@@ -43,6 +43,15 @@ dependencies {
 	implementation("jakarta.xml.ws:jakarta.xml.ws-api:2.3.3")
 	implementation("org.apache.cxf:cxf-rt-frontend-jaxws:3.4.10")
 	implementation("org.apache.cxf:cxf-rt-wsdl:3.4.10")
+
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.webjars:chartjs:3.7.1")
+	implementation("com.mercadopago:sdk-java:1.10.0") {
+		exclude(group = "com.google.collections", module = "google-collections")
+		exclude(group = "com.google.guava", module = "guava")
+	}
+	implementation("com.google.guava:guava:30.1-jre")
+
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
@@ -67,8 +76,4 @@ hibernate {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-repositories {
-	mavenCentral()
 }
