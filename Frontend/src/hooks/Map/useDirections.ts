@@ -1,37 +1,26 @@
-// hooks/useMapboxDirections.ts
 import { useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const useMapboxDirections = (start: [number, number], end: [number, number], accessToken: string) => {
+const useMapboxDirections = (stops: [number, number][], accessToken: string) => {
     const [directions, setDirections] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null); // Explicitly define error as a string or null
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const coordinates = `${start[0]},${start[1]};${end[0]},${end[1]}`;
+        const coordinates = stops.map(stop => `${stop[0]},${stop[1]}`).join(';');
 
         const fetchDirections = async () => {
-            const url = `https://api.mapbox.com/directions/v5/mapbox/driving?access_token=${accessToken}`;
-            const body = new URLSearchParams({
-                coordinates,
-                steps: 'true',
-                waypoints: '0;1', // Asumiendo que solo hay dos puntos
-            });
+            const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinates}?access_token=${accessToken}&steps=true&geometries=geojson&overview=full`;
 
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: body.toString(),
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                });
+                const response = await fetch(url);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch directions');
                 }
 
                 const data = await response.json();
-                console.log(data); // Agregado para verificar la respuesta
+                console.log(data); // Verifica la respuesta
+
                 setDirections(data.routes[0].geometry.coordinates);
             } catch (error) {
                 setError((error as Error).message);
@@ -39,7 +28,7 @@ const useMapboxDirections = (start: [number, number], end: [number, number], acc
         };
 
         fetchDirections();
-    }, [start, end, accessToken]);
+    }, [stops, accessToken]);
 
     return { directions, error };
 };
