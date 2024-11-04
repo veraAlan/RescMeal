@@ -38,6 +38,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	implementation("org.imgscalr:imgscalr-lib:4.2")
+
 	implementation("org.springframework.boot:spring-boot-starter-web-services")
 	implementation("javax.xml.ws:jaxws-api:2.3.1")
 	implementation("jakarta.xml.ws:jakarta.xml.ws-api:2.3.3")

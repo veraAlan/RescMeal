@@ -1,36 +1,28 @@
 package dev.group21.rescmeal.soap;
 
-import dev.group21.rescmeal.model.Client;
-import dev.group21.rescmeal.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import javax.annotation.security.PermitAll;
-
 @Endpoint
-@PermitAll
 public class ClientEndpoint {
+    private static final Logger log = LoggerFactory.getLogger(ClientEndpoint.class);
     private static final String NAMESPACE_URI = "http://rescmeal.food/ws-rescmeal";
-
-    private ClientRepository clientRepository;
-
-    @Autowired
-    public ClientEndpoint(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetClientRequest")
     @ResponsePayload
     public GetClientResponse getClient(@RequestPayload GetClientRequest request) {
-        GetClientResponse response = new GetClientResponse();
-        Client client = clientRepository.findByName(request.getName()).orElseThrow(() -> new RuntimeException("Client not found"));
+        log.info("Received request for client: " + request.getName());
 
-        response.setName(client.getName());
-        response.setLast_name(client.getLast_name());
-        response.setBalance(client.getBalance().intValue());
+        GetClientResponse response = new GetClientResponse();
+        response.setName("John");
+        response.setLastName("Doe");
+        response.setBalance(100);
+
+        log.info("Responding with client details: " + response.getName() + " " + response.getLastName());
         return response;
     }
 }

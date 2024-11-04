@@ -1,54 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-        xmlns:tns="http://schemas.xmlsoap.org/soap/envelope/"
-        xmlns:ws="http://schemas.xmlsoap.org/wsdl/"
-       targetNamespace="http://rescmeal.food/ws-rescmeal"
-       elementFormDefault="qualified">
+        xmlns:tns="http://rescmeal.food/ws-rescmeal"
+        targetNamespace="http://rescmeal.food/ws-rescmeal"
+        elementFormDefault="qualified">
 
-    <element name="Envelope">
-        <complexType>
-            <sequence>
-                <element name="Header" minOccurs="0" type="tns:Header"/>
-                <element name="Body" type="tns:Body"/>
-            </sequence>
-            <attribute name="encodingStyle" type="anyURI"/>
-        </complexType>
-    </element>
+    <element name="GetClientRequest" type="tns:GetClientRequest"/>
+    <element name="GetClientResponse" type="tns:GetClientResponse"/>
 
-    <complexType name="Header">
+    <complexType name="GetClientRequest">
         <sequence>
-            <any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            <element name="name" type="string"/>
         </sequence>
     </complexType>
 
-    <complexType name="Body">
+    <complexType name="GetClientResponse">
         <sequence>
-            <element name="GetClientRequest">
-                <complexType>
-                    <sequence>
-                        <element name="name" type="string"/>
-                    </sequence>
-                </complexType>
-            </element>
-            <element name="GetClientResponse">
-                <complexType>
-                    <sequence>
-                        <element name="name" type="string"/>
-                        <element name="last_name" type="string"/>
-                        <element name="balance" type="int"/>
-                    </sequence>
-                </complexType>
-            </element>
-            <element name="clients">
-                <complexType>
-                    <sequence>
-                        <element name="name" type="string"/>
-                        <element name="last_name" type="string"/>
-                        <element name="balance" type="int"/>
-                        <element name="address" type="string"/>
-                    </sequence>
-                </complexType>
-            </element>
+            <element name="name" type="string"/>
+            <element name="last_name" type="string"/>
+            <element name="balance" type="int"/>
         </sequence>
     </complexType>
+
 </schema>

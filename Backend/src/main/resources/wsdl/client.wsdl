@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <definitions
-     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-     targetNamespace="http://rescmeal.food/ws-rescmeal"
-     xmlns:tns="http://rescmeal.food/ws-rescmeal">
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://rescmeal.food/ws-rescmeal"
+        xmlns:tns="http://rescmeal.food/ws-rescmeal">
     <types>
         <xsd:schema>
-            <xsd:import namespace="http://rescmeal.food/ws-rescmeal" schemaLocation="classpath:/clientSchema.xsd"/>
+            <xsd:import namespace="http://rescmeal.food/ws-rescmeal" schemaLocation="classpath:/wsdl/clientSchema.xsd"/>
         </xsd:schema>
     </types>
     <message name="GetClientRequest">
