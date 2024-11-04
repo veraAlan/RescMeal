@@ -8,9 +8,12 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import javax.annotation.security.PermitAll;
+
 @Endpoint
+@PermitAll
 public class ClientEndpoint {
-    private static final String NAMESPACE_URI = "http://localhost:8080/ws-rescmeal";
+    private static final String NAMESPACE_URI = "http://rescmeal.food/ws-rescmeal";
 
     private ClientRepository clientRepository;
 

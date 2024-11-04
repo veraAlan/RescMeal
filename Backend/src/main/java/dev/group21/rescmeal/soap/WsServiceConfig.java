@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -13,7 +14,7 @@ import org.springframework.xml.xsd.XsdSchema;
 
 @EnableWs
 @Configuration
-public class WsConfigurerAdapter {
+public class WsServiceConfig extends WsConfigurerAdapter {
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -23,17 +24,17 @@ public class WsConfigurerAdapter {
     }
 
     @Bean(name = "client")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema clientsSchema) {
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema clientSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("ClientsPort");
         wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setTargetNamespace("http://localhost:8080/ws-rescmeal");
-        wsdl11Definition.setSchema(clientsSchema);
+        wsdl11Definition.setTargetNamespace("http://rescmeal.food/ws-rescmeal");
+        wsdl11Definition.setSchema(clientSchema);
         return wsdl11Definition;
     }
 
     @Bean
-    public XsdSchema clientsSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("client.xsd"));
+    public XsdSchema clientSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("wsdl/clientSchema.xsd"));
     }
 }

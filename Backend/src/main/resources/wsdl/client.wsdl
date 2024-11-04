@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://rescmeal.food/ws-rescmeal"
+     xmlns:tns="http://rescmeal.food/ws-rescmeal">
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="http://rescmeal.food/ws-rescmeal" schemaLocation="classpath:/clientSchema.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="GetClientRequest">
+        <part name="parameters" element="tns:GetClientRequest"/>
+    </message>
+    <message name="GetClientResponse">
+        <part name="parameters" element="tns:GetClientResponse"/>
+    </message>
+    <portType name="ClientPort">
+        <operation name="getClient">
+            <input message="tns:GetClientRequest"/>
+            <output message="tns:GetClientResponse"/>
+        </operation>
+    </portType>
+    <binding name="ClientBinding" type="tns:ClientPort">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="getClient">
+            <soap:operation soapAction="getClientAction"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="ClientService">
+        <port name="ClientPort" binding="tns:ClientBinding">
+            <soap:address location="http://localhost:8080/ws"/>
+        </port>
+    </service>
+</definitions>
