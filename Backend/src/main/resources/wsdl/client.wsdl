@@ -5,7 +5,7 @@
         xmlns:tns="http://rescmeal.food/ws-rescmeal">
     <types>
         <xsd:schema>
-            <xsd:import namespace="http://rescmeal.food/ws-rescmeal" schemaLocation="classpath:/wsdl/clientSchema.xsd"/>
+            <xsd:import namespace="http://rescmeal.food/ws-rescmeal" schemaLocation="classpath:/wsdl/client.xsd"/>
         </xsd:schema>
     </types>
     <message name="GetClientRequest">
