@@ -7,9 +7,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
 @Data
-@XmlRootElement(name = "GetClientRequest", namespace = "http://rescmeal.food/ws-rescmeal")
+@XmlRootElement(name = "GetUserResponse", namespace = "http://rescmeal.food/ws-rescmeal")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GetClientRequest {
+public class GetUserResponse {
     @XmlElement(required = true)
-    private String name;
+    private String username;
+    @XmlElement(required = true)
+    private String email;
+    @XmlElement
+    private String message;
 }

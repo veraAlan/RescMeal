@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://rescmeal.food/ws"
+        xmlns="http://rescmeal.food/ws"
+        elementFormDefault="qualified">
+
+        <xs:element name="GetUserRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="username" type="xs:string"/>
+                    <xs:element name="email" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="GetUserResponse">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="username" type="xs:string"/>
+                    <xs:element name="email" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="GetUserRoleRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="username" type="xs:string"/>
+                    <xs:element name="email" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="GetUserRoleResponse">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="last_name" type="xs:string"/>
+                    <xs:element name="address" type="xs:string"/>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element name="schedule" type="xs:string"/>
+                    <xs:element name="vehicle_type" type="xs:string"/>
+                    <xs:element name="birthdate" type="xs:string"/>
+                    <xs:element name="phone" type="xs:string"/>
+                    <xs:element name="balance" type="xs:double"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+</xs:schema>

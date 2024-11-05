@@ -15,7 +15,6 @@ import org.springframework.xml.xsd.XsdSchema;
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
-
     @Bean
     public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -24,18 +23,18 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
-    @Bean(name = "clients")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema clientsSchema) {
+    @Bean(name = "users")
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema usersSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("ClientPort");
+        wsdl11Definition.setPortTypeName("UserPort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://rescmeal.food/ws-rescmeal");
-        wsdl11Definition.setSchema(clientsSchema);
+        wsdl11Definition.setSchema(usersSchema);
         return wsdl11Definition;
     }
 
     @Bean
-    public XsdSchema clientsSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("wsdl/client.xsd"));
+    public XsdSchema usersSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("wsdl/user.xsd"));
     }
 }

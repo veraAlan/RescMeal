@@ -1,6 +1,7 @@
 package dev.group21.rescmeal.repository;
 
 import dev.group21.rescmeal.model.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
