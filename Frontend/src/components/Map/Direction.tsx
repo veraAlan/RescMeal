@@ -22,8 +22,11 @@ const Map: React.FC<MapProps> = ({ stops }) => {
             });
 
             // Marcar los puntos de inicio y paso
-            stops.forEach((stop) => {
-                new mapboxgl.Marker().setLngLat(stop).addTo(map);
+            stops.forEach((stop, index) => {
+                new mapboxgl.Marker()
+                    .setLngLat(stop)
+                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(`Parada ${index + 1}`)) // Añadir un popup a cada marker
+                    .addTo(map);
             });
 
             // Manejo de error
@@ -58,8 +61,8 @@ const Map: React.FC<MapProps> = ({ stops }) => {
                             'line-cap': 'round',
                         },
                         paint: {
-                            'line-color': '#888',
-                            'line-width': 8,
+                            'line-color': '#007cbf',
+                            'line-width': 4,
                         },
                     });
 
@@ -76,7 +79,12 @@ const Map: React.FC<MapProps> = ({ stops }) => {
         }
     }, [directions, error, stops]);
 
-    return <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />;
+    return (
+        <div className="container mx-auto py-8">
+            <h1 className="text-2xl font-bold text-center mb-4">Mapa con Rutas de Mapbox</h1>
+            <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 rounded-lg shadow-lg" /> {/* Ajustar la altura a 600px */}
+        </div>
+    );
 };
 
 export default Map;

@@ -13,7 +13,6 @@ const Home: React.FC = () => {
 
     return (
         <div>
-            <h1>Mapa con Rutas de Mapbox</h1>
             <Direction stops={stops} />
         </div>
     );

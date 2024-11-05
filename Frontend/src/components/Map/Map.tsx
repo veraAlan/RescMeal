@@ -15,8 +15,8 @@ const MapComponent = ({ id }: { id: number }) => {
     } = useMap({ businessId: id }); // Pasamos el objeto business al hook
 
     return (
-        <div>
-            <div hidden>
+        <div className="container mx-auto py-8">
+            <div className="hidden">
                 {mapLoaded && (
                     <SearchBox
                         accessToken={token}
@@ -30,9 +30,9 @@ const MapComponent = ({ id }: { id: number }) => {
                     />
                 )}
             </div>
-            <div ref={mapContainerRef} style={{ width: '100%', height: '400px' }} />
+            <div ref={mapContainerRef} className="w-full h-96 border-2 border-blue-500 rounded-lg shadow-lg mb-4" />
             <a href='/'>
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                <button className="bg-blue-500 text-white px-4 py-2 rounded shadow">
                     Volver al home
                 </button>
             </a>
