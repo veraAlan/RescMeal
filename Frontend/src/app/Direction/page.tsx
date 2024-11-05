@@ -4,9 +4,10 @@ import Direction from "../../components/Map/Direction";
 
 const Home: React.FC = () => {
     const stops: [number, number][] = [
-        [2.344003, 48.85805], // Coordenadas de inicio
-        [2.34955, 48.86084],  // Primera parada
-        [2.35222, 48.85661],  // Segunda parada
+        [-68.0598, -38.9543], // Coordenadas de inicio
+        [-68.0622, -38.9627], // Primera parada
+        [-68.0561, -38.9577], // Segunda parada
+        [-68.0532, -38.9452], // Tercera parada
         // Agrega más puntos aquí
     ];
 

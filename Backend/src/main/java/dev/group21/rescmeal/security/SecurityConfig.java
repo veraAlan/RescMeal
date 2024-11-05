@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -20,6 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -63,6 +65,7 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/ws").permitAll()
 //                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 //                .requestMatchers(HttpMethod.POST,"/api/auth/validate").permitAll()
 //                .requestMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
@@ -84,11 +87,23 @@ public class SecurityConfig {
 //                .requestMatchers(HttpMethod.PUT,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
 //                .requestMatchers(HttpMethod.PUT,"/api/purchase").hasAnyRole("CARRIER", "ADMIN")
 //                .requestMatchers(HttpMethod.PUT,"/api/food/*/me").hasAnyRole("BUSINESS") // TODO Same as above but for listing foods of own business.
-//                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+//                    .requestMatchers("/**").permitAll()
                     .requestMatchers("/**").permitAll())
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
 //    @Bean

@@ -13,14 +13,16 @@ const Header: React.FC = () => {
                     <Logo />
                 </div>
                 <div className="flex space-x-4">
-                    <Link href="/auth/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Iniciar Sesión</Link>
-                    <Link href="/auth/register/client" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Registrar Cliente</Link>
-                    <Link href="/auth/register/business" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Registrar Local</Link>
-                    <Link href="/auth/register/carrier" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Registrar Repartidor</Link>
-                    <Link href="auth/auth/register/food" className="bg-green-500 text-white font-bold py-2 px-4 rounded">Registrar Comida</Link>
-                    <Link href="/delivery" className="bg-yellow-500 text-white font-bold py-2 px-4 rounded">Pedidos Pendientes</Link>
-                    <Link href="/delivery/takenOrders" className="bg-orange-500 text-white font-bold py-2 px-4 rounded">Pedidos Tomados</Link>
+                    <Link href="/auth/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Iniciar Sesión</Link>
+                    <Link href="/auth/register/client" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Registrar Cliente</Link>
+                    <Link href="/auth/register/business" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Registrar Local</Link>
+                    <Link href="/auth/register/carrier" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Registrar Repartidor</Link>
+                    <Link href="auth/auth/register/food" className="bg-green-500 text-white font-bold py-2 px-4 rounded" hidden>Registrar Comida</Link>
+                    <Link href="/delivery" className="bg-yellow-500 text-white font-bold py-2 px-4 rounded" hidden>Pedidos Pendientes</Link>
+                    <Link href="/delivery/takenOrders" className="bg-orange-500 text-white font-bold py-2 px-4 rounded" hidden>Pedidos Tomados</Link>
+                    <Link href={`/Direction`} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Mapa</Link>
                     <Link href={`/business/dashboard?businessId=1`} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Dashboard de Ventas</Link>
+                    <Link href={`/soap`} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Pedidos SOAP</Link>
                     <CartIcon />
                 </div>
             </div>

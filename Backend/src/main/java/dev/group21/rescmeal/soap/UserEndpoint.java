@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -23,6 +24,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Endpoint
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserEndpoint {
     private static final Logger log = LoggerFactory.getLogger(UserEndpoint.class);
     private static final String NAMESPACE_URI = "http://rescmeal.food/ws-rescmeal";
