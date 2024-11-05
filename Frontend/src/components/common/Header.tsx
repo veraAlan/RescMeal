@@ -4,6 +4,8 @@ import Logo from './Logo';
 import CartIcon from '../Cart/CartIcon';
 
 const Header: React.FC = () => {
+    const businessId = 1; // Cambia esto con el ID dinámico de tu negocio
+
     return (
         <header className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
@@ -18,6 +20,7 @@ const Header: React.FC = () => {
                     <Link href="auth/auth/register/food" className="bg-green-500 text-white font-bold py-2 px-4 rounded">Registrar Comida</Link>
                     <Link href="/delivery" className="bg-yellow-500 text-white font-bold py-2 px-4 rounded">Pedidos Pendientes</Link>
                     <Link href="/delivery/takenOrders" className="bg-orange-500 text-white font-bold py-2 px-4 rounded">Pedidos Tomados</Link>
+                    <Link href={`/business/dashboard?businessId=1`} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Dashboard de Ventas</Link>
                     <CartIcon />
                 </div>
             </div>
