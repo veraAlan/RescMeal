@@ -17,8 +17,10 @@ public class SalesDashboardController {
     @Autowired
     private SalesService salesService;
 
+    // Método GET para obtener los datos de ventas del dashboard.
     @GetMapping("/dashboard")
     public Map<String, Object> getSalesData(@RequestParam Integer businessId) {
+        // Llama al método getSalesData del servicio con el businessId proporcionado y devuelve los datos.
         return salesService.getSalesData(businessId);
     }
 }

@@ -37,10 +37,11 @@ public class PurchaseController {
     @PostMapping("/process-payment")
     public ResponseEntity<Object> processPayment(@Valid @RequestBody Purchase purchase) {
         try {
-                String preferenceUrl = mercadoPagoService.createPreference(purchase);
-                return ResponseEntity.ok(preferenceUrl);
+            // Llama al servicio de Mercado Pago para crear una preferencia de pago
+            String preferenceUrl = mercadoPagoService.createPreference(purchase);
+            return ResponseEntity.ok(preferenceUrl);
         } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
