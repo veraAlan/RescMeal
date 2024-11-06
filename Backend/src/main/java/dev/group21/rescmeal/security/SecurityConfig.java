@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -65,7 +66,8 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/ws").permitAll()
+                            .requestMatchers("/**").permitAll()
+//                    .requestMatchers("/ws").hasRole("ADMIN")
 //                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 //                .requestMatchers(HttpMethod.POST,"/api/auth/validate").permitAll()
 //                .requestMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
@@ -86,9 +88,8 @@ public class SecurityConfig {
 //                .requestMatchers(HttpMethod.POST,"/api/food/me").hasAnyRole("BUSINESS") // TODO Provisional method for uploading only to the business logged in.
 //                .requestMatchers(HttpMethod.PUT,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
 //                .requestMatchers(HttpMethod.PUT,"/api/purchase").hasAnyRole("CARRIER", "ADMIN")
-//                .requestMatchers(HttpMethod.PUT,"/api/food/*/me").hasAnyRole("BUSINESS") // TODO Same as above but for listing foods of own business.
-//                    .requestMatchers("/**").permitAll()
-                    .requestMatchers("/**").permitAll())
+//                .requestMatchers(HttpMethod.PUT,"/api/food/*/me").hasAnyRole("BUSINESS")
+            ) // TODO Same as above but for listing foods of own business.)
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

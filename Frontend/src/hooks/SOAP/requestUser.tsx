@@ -21,9 +21,9 @@ export const sendSoapRequest = async (identifier: string, type: string): Promise
    const soapRequest = createSoapRequest(identifier, type, identifierType)
    try {
       const response = await axios.post(SOAP_URL, soapRequest, { headers: { 'Content-Type': 'text/xml', } })
-      return response.data.replaceAll('<', '\n<')
+      return response.data.replaceAll('><', '>\n<').replaceAll(/(?=<\/\w+>)/g, '\n').replaceAll(/>(?=\w+)/g, '>\n\t')
    } catch (error) {
       console.error('SOAP Request Error:', error)
-      throw error
+      return "No se pudo realizar la consulta."
    }
 }

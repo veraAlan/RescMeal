@@ -13,7 +13,7 @@ const Header: React.FC = () => {
                     <Logo />
                 </div>
                 <div className="flex space-x-4">
-                    <Link href="/auth/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Iniciar Sesión</Link>
+                    <Link href="/auth/login" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Iniciar Sesión</Link>
                     <Link href="/auth/register/client" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Registrar Cliente</Link>
                     <Link href="/auth/register/business" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Registrar Local</Link>
                     <Link href="/auth/register/carrier" className="bg-white text-blue-500 font-bold py-2 px-4 rounded" hidden>Registrar Repartidor</Link>
