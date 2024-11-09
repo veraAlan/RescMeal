@@ -76,11 +76,17 @@ public class SecurityConfig {
                 .requestMatchers("/api/carrier","/api/carrier/me").hasAnyRole("CARRIER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/delivery/list").hasAnyRole("CARRIER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/purchase/list").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/sales/dashboard").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.GET, "/api/sales/stock").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.GET, "/api/sales/revenue").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.GET, "/api/sales/customers").hasAnyRole("BUSINESS")
                 .requestMatchers(HttpMethod.POST,"/api/delivery").hasAnyRole("CARRIER", "ADMIN")
                 .requestMatchers(HttpMethod.POST,"/api/purchase").hasAnyRole("CARRIER", "ADMIN","CLIENT")
-                .requestMatchers(HttpMethod.POST,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
-                .requestMatchers(HttpMethod.POST,"/api/food/me").hasAnyRole("BUSINESS") // TODO Provisional method for uploading only to the business logged in.
-                .requestMatchers(HttpMethod.PUT,"/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
+                .requestMatchers(HttpMethod.POST, "/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/food/me").hasAnyRole("BUSINESS") // TODO Provisional method for uploading only to the business logged in.
+                .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.PUT, "/api/food").hasAnyRole("BUSINESS", "ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/purchase").hasAnyRole("CARRIER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/food/*/me").hasAnyRole("BUSINESS")) // TODO Same as above but for listing foods of own business.
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

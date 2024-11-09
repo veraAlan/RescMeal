@@ -3,6 +3,7 @@ package dev.group21.rescmeal.controller;
 import dev.group21.rescmeal.model.Purchase;
 import dev.group21.rescmeal.model.PurchasedItem;
 import dev.group21.rescmeal.services.PurchaseService;
+import dev.group21.rescmeal.services.MercadoPagoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,9 @@ public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
 
+    @Autowired
+    private MercadoPagoService mercadoPagoService;
+
     /**
      * Crea una nueva compra.
      * @param purchase Detalles de la compra.
@@ -28,6 +32,17 @@ public class PurchaseController {
     public ResponseEntity<Object> createPurchase(@Valid @RequestBody Purchase purchase) {
         Purchase newPurchase = purchaseService.savePurchase(purchase);
         return ResponseEntity.ok(newPurchase);
+    }
+
+    @PostMapping("/process-payment")
+    public ResponseEntity<Object> processPayment(@Valid @RequestBody Purchase purchase) {
+        try {
+            // Llama al servicio de Mercado Pago para crear una preferencia de pago
+            String preferenceUrl = mercadoPagoService.createPreference(purchase);
+            return ResponseEntity.ok(preferenceUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     /**

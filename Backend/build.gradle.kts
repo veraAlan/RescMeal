@@ -38,6 +38,11 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	implementation ("org.imgscalr:imgscalr-lib:4.2")
+	implementation("com.mercadopago:sdk-java:1.10.0") {
+		exclude(group = "com.google.collections", module = "google-collections")
+		exclude(group = "com.google.guava", module = "guava")
+	}
+	implementation("com.google.guava:guava:30.1-jre")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")

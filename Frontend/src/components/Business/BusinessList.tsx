@@ -30,7 +30,6 @@ const BusinessList: React.FC<BusinessListProps> = () => {
                         <p><strong>Nombre:</strong> {business.name}</p>
                         <p><strong>Tipo:</strong> {business.type}</p>
                         <p><strong>Teléfono:</strong> {business.phone || 'N/A'}</p>
-                        <p><strong>Correo Electrónico:</strong> {business.email}</p>
                         {business.image && (
                             <img
                                 src={`/Business/${business.image}`}
