@@ -69,6 +69,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/auth/signout").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/auth/session-id").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/email/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").permitAll()
                 .requestMatchers("/api/api/purchase").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/food/list", "/api/food").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                 .requestMatchers("/api/client", "/api/client/me").hasAnyRole("CLIENT", "ADMIN")

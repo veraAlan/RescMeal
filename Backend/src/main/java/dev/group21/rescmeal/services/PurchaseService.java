@@ -3,6 +3,7 @@ package dev.group21.rescmeal.services;
 import dev.group21.rescmeal.model.Purchase;
 import dev.group21.rescmeal.model.PurchasedItem;
 import dev.group21.rescmeal.repository.PurchaseRepository;
+import dev.group21.rescmeal.repository.PurchasedItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,18 +18,24 @@ public class PurchaseService {
     @Autowired
     private PurchaseRepository purchaseRepository;
 
+    @Autowired
+    private PurchasedItemRepository purchasedItemRepository;
+
     /**
      * Guarda una compra.
      * @param purchase La compra a guardar.
      * @return La compra guardada.
      */
     public Purchase savePurchase(Purchase purchase) {
+        Purchase savedPurchase = purchaseRepository.save(purchase);
+
         // Crear una nueva lista para evitar ConcurrentModificationException
-        List<PurchasedItem> itemsToModify = new ArrayList<>(purchase.getPurchasedItems());
+        List<PurchasedItem> itemsToModify = new ArrayList<>(savedPurchase.getPurchasedItems());
         for (PurchasedItem item : itemsToModify) {
-            item.setPurchase(purchase); // Establecer la relación de compra
+            item.setPurchase(savedPurchase); // Establecer la relación de compra
+            purchasedItemRepository.save(item); // Guardar cada ítem comprado
         }
-        return purchaseRepository.save(purchase);
+        return savedPurchase;
     }
 
     /**

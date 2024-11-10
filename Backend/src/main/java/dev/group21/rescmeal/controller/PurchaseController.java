@@ -34,13 +34,19 @@ public class PurchaseController {
         return ResponseEntity.ok(newPurchase);
     }
 
+    //TODO Guarda con mercado pago la compra, cuando entra al Sanbox, aunque este aprovado o rechazo. Corregir
     @PostMapping("/process-payment")
-    public ResponseEntity<Object> processPayment(@Valid @RequestBody Purchase purchase) {
+    public ResponseEntity<Object> processPayment(@Valid @RequestBody Purchase purchase, @RequestParam String email) {
         try {
-            // Llama al servicio de Mercado Pago para crear una preferencia de pago
-            String preferenceUrl = mercadoPagoService.createPreference(purchase);
+            // Verifica que no haya llamadas recursivas aquí
+            String preferenceUrl = mercadoPagoService.createPreference(purchase, email);
+
+            // Guarda la compra en la base de datos
+            Purchase newPurchase = purchaseService.savePurchase(purchase);
+
             return ResponseEntity.ok(preferenceUrl);
         } catch (Exception e) {
+            e.printStackTrace();  // Esto imprimirá la traza de la excepción en los logs del servidor
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

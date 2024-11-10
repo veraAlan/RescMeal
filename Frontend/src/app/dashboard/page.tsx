@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef, FC } from 'react';
 import axios from 'axios';
 import { Chart, ChartType } from 'chart.js/auto';
-import { getSessionId } from '../../../utils/getSessionId';
+import { getSessionId } from '../../utils/getSessionId';
 
 interface ChartData {
     labels: string[];

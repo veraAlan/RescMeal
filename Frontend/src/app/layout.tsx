@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import { CartProvider } from '../hooks/Cart/useCart';
-import { AuthProvider } from '@/context/AuthContext';
+import { AuthProvider } from '../context/AuthContext';
 
 interface LayoutProps { children: ReactNode; }
 

@@ -20,7 +20,7 @@ const Header: React.FC = () => {
                     <Link href="/delivery" className="bg-yellow-500 text-white font-bold py-2 px-4 rounded">Pedidos Pendientes</Link>
                     <Link href="/delivery/takenOrders" className="bg-orange-500 text-white font-bold py-2 px-4 rounded">Pedidos Tomados</Link>
                     <Link href={`/Direction`} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Mapa</Link>
-                    <Link href="/business/dashboard" className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Dashboard de Ventas</Link>
+                    <Link href="/dashboard" className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Estadisticas de Venta</Link>
                     <CartIcon />
                 </div>
             </div>

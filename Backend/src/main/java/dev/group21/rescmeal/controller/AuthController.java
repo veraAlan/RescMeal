@@ -123,6 +123,17 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/email/{id}")
+    public ResponseEntity<String> getEmailBySessionId(@PathVariable("id") Integer sessionId) {
+        User user = userRepository.findByClient_Id(sessionId)
+                .orElse(userRepository.findByBusiness_Id(sessionId)
+                        .orElse(userRepository.findByCarrier_Id(sessionId)
+                                .orElseThrow(() -> new RuntimeException("User not found"))));
+
+        return ResponseEntity.ok(user.getEmail());
+    }
+
+
     @PostMapping("/validate")
     public ResponseEntity<?> sessionVerify(HttpServletRequest request){
         String jwt = jwtUtils.getJwtFromCookies(request);
