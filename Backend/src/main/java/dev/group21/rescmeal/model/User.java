@@ -1,7 +1,9 @@
 package dev.group21.rescmeal.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,11 +27,16 @@ public class User {
     private Long id;
     @NotNull
     @Size(max = 30)
+    @Size(min = 2, max = 20, message = "El nombre de usuario debe tener entre 2 y 20 caracteres")
     private String username;
+    // Check if pattern works fine with any mail
     @NotNull
+    @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "El mail tiene que ser valido")
+    @Email(message = "Tiene que ser un mail valido")
     private String email;
     @NotNull
-    @Size(max = 120)
+    @Pattern(regexp = "^(?=.*[A-Z].*[a-z])(?=.*[0-9]).{6,}$", message = "La contraseña debe contener al menos una mayuscula, una minuscula y un numero")
+    @Size(min = 6, max = 50, message = "La contraseña debe tener entre 2 y 20 caracteres")
     private String password;
     @OneToOne
     @JoinColumn(name = "business_id")

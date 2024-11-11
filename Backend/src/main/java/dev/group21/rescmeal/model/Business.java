@@ -39,8 +39,10 @@ public class Business {
     private String phone;
 
     @NotNull(message = "El horario es obligatorio")
+    @Size(min = 3, max = 50, message = "La dirección debe tener entre 3 y 50 caracteres")
     private String schedule;
 
     @NotNull(message = "El CVU es obligatorio")
+    @Size(min = 22, max = 22, message = "El cvu debe tener 22 caracteres")
     private String cvu;
 }

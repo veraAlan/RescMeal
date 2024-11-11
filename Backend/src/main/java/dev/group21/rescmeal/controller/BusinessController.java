@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
@@ -32,6 +33,11 @@ public class BusinessController {
         this.userService = userService;
     }
 
+    @PostMapping("/valid")
+    public ResponseEntity<Business> validateBusiness(@Valid @RequestBody Business business){
+        return ResponseEntity.ok().body(business);
+    }
+
     /**
      * Create a new business with validated inputs and a possible image.
      * @param businessJson String (JSON formatted).
@@ -39,12 +45,12 @@ public class BusinessController {
      * @return ResponseEntity business created.
      */
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "user", required = true) Long userid) {
+    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "user") Long userid) {
         try {
             @Valid Business business = new ObjectMapper().readValue(businessJson, Business.class);
             if(image != null) {
-                ResponseEntity createdImage = uploadImage(business.getName(), image);
-                business.setImage(createdImage.getBody().toString());
+                ResponseEntity<String> createdImage = uploadImage(business.getName(), image);
+                business.setImage(String.valueOf(createdImage.getBody()));
             }
             Business createdBusiness = businessService.createBusiness(business);
             userService.updateBusiness(userid, createdBusiness);
@@ -66,8 +72,8 @@ public class BusinessController {
             @Valid Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
             if(image != null) {
-                ResponseEntity createdImage = uploadImage(newBusiness.getName(), image);
-                newBusiness.setImage(createdImage.getBody().toString());
+                ResponseEntity<String> createdImage = uploadImage(newBusiness.getName(), image);
+                newBusiness.setImage(String.valueOf(createdImage.getBody()));
             }
             return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
         } catch (Exception e) {
@@ -91,11 +97,11 @@ public class BusinessController {
             if(image != null) {
                 if(oldBusiness.getImage() != null) {
                     File oldImage = new File(businessImages + oldBusiness.getImage());
-                    oldImage.delete();
+                    Boolean deleted = oldImage.delete();
                 }
                 String businessName = newBusiness.getName() == null ? oldBusiness.getName() : newBusiness.getName();
-                ResponseEntity createdImage = uploadImage(businessName, image);
-                newBusiness.setImage(createdImage.getBody().toString());
+                ResponseEntity<String> createdImage = uploadImage(businessName, image);
+                newBusiness.setImage(String.valueOf(createdImage.getBody()));
             }
 
             return ResponseEntity.ok(businessService.dynamicUpdateBusiness(oldBusiness, newBusiness));
@@ -174,7 +180,7 @@ public class BusinessController {
         try {
             BufferedImage originalImage = ImageIO.read(image.getInputStream());
             BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-            String extension = image.getContentType().split("/")[1];
+            String extension = Objects.requireNonNull(image.getContentType()).split("/")[1];
             String imagePath = businessImages + businessName + "." + extension;
             ImageIO.write(resizedImage, extension, new File(imagePath));
             return ResponseEntity.ok(businessName + "." + extension);
