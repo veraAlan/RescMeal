@@ -17,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 
+// TODO set CrossOrigin to port 3000 or localhost on a lower level, so it doesn't need to be set in every controller.
+// ^^^ Buscar la forma que quede el CrossOrigin y allowCredentials en un solo lugar y que AuthController aun lo mantenga, asi no lo ponemos en cada Controller. Pero esto hace funcionar las cosas de lado de nextjs
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/food")

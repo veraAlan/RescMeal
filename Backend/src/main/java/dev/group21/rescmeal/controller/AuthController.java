@@ -43,11 +43,6 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/valid")
-    public ResponseEntity<User> validateUserForm(@Valid @RequestBody User user){
-        return ResponseEntity.ok().body(user);
-    }
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // Log in with either email or username.
@@ -92,9 +87,9 @@ public class AuthController {
         roles.add(role);
         user.setRoles(roles);
         userRepository.save(user);
-        LoginRequest loginRequest = new LoginRequest(signupRequest.getUsername(), signupRequest.getPassword());
+        LoginRequest login = new LoginRequest(signupRequest.getUsername(), signupRequest.getPassword());
 
-        return authenticateUser(loginRequest);
+        return authenticateUser (login);
     }
 
     @PostMapping("/signout")
@@ -139,18 +134,7 @@ public class AuthController {
     }
 
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getOwnInformation(HttpServletRequest request){
-        String jwt = jwtUtils.getJwtFromCookies(request);
-        if(jwtUtils.validateJwtToken(jwt)){
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            return ResponseEntity.ok().body(userDetails);
-        }
-        return sessionVerify(request);
-    }
-
-    @GetMapping("/validate")
+    @PostMapping("/validate")
     public ResponseEntity<?> sessionVerify(HttpServletRequest request){
         String jwt = jwtUtils.getJwtFromCookies(request);
         if(jwtUtils.validateJwtToken(jwt)){

@@ -1,68 +1,34 @@
 import { useState } from 'react';
+import { Business, BusinessErrors } from '../../types/Business';
 import axios from 'axios';
-import { redirect } from 'next/navigation';
 
-export interface Business {
-    name?: string
-    type?: string
-    address?: string
-    phone?: string
-    schedule?: string
-    cvu?: string
-}
-
-export interface User {
-    username?: string
-    email?: string
-    role?: string
-    password?: string
+export interface Register {
+    username: string
+    email: string
+    role: string
+    password: string
 }
 
 export interface linkUser {
-    id?: number
+    id: number,
 }
 
 export interface linkBusiness {
-    business?: number
+    business: number,
 }
 
 export const useRegisterBusiness = () => {
-    const [userSession, setUserSession] = useState<Boolean | null>(null)
-    const [hasBusiness, setHasBusiness] = useState<Boolean | null>(null)
-    const [imageError, setImageError] = useState<string | null>(null)
-    const [generalError, setGeneralError] = useState<string | null>(null)
-
-    if (userSession == null) {
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/validate`, { withCredentials: true })
-            .then(r => {
-                setUserSession(true)
-            })
-            .catch(e => {
-                setUserSession(false)
-            })
-    }
-
-    // TODO Solve: Loading more than one time
-    if (hasBusiness == null) {
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/session-id`, { withCredentials: true })
-            .then(r => {
-                setHasBusiness(false)
-            })
-            .catch(e => {
-                setHasBusiness(true)
-            })
-    }
-
-    const [businessForm, setBusinessData] = useState<Business>({
+    const [businessData, setBusinessData] = useState<Business>({
         name: '',
         type: '',
         address: '',
         phone: '',
         schedule: '',
-        cvu: ''
+        cvu: '',
+        image: ''
     });
 
-    const [userForm, setRegisterData] = useState<User>({
+    const [registerData, setRegisterData] = useState<Register>({
         username: '',
         email: '',
         role: 'business',
@@ -76,20 +42,20 @@ export const useRegisterBusiness = () => {
     const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
         setRegisterData({
-            ...userForm,
+            ...registerData,
             [name]: value
         })
     }
 
     const [imageData, setImageData] = useState<File | null>(null);
-    const [userErrors, setUserErrors] = useState<User>({});
-    const [businessErrors, setBusinessErrors] = useState<Business>({});
-    const [status, setStatus] = useState(0);
+    const [errors, setErrors] = useState<BusinessErrors>({});
+    const [successMessage, setSuccessMessage] = useState('');
+    const [generalError, setGeneralError] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setBusinessData({
-            ...businessForm,
+            ...businessData,
             [name]: value
         });
     };
@@ -100,103 +66,90 @@ export const useRegisterBusiness = () => {
             if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
                 setImageData(file);
             } else {
-                setImageError('Solo se permiten imágenes JPEG o PNG');
+                setErrors({ ...errors, image: 'Solo se permiten imágenes JPEG o PNG' });
             }
         }
     };
 
-    const validateUser = (userForm: User) => {
-        let tempErrors: { [k: string]: any } = {};
+    const validate = (): boolean => {
+        let tempErrors: BusinessErrors = {};
+        if (!businessData.name) tempErrors.name = "El nombre es obligatorio";
+        if (!businessData.type) tempErrors.type = "El tipo es obligatorio";
+        if (!businessData.address) tempErrors.address = "La dirección es obligatoria";
+        if (!businessData.phone) tempErrors.phone = "El teléfono es obligatorio";
+        if (!businessData.schedule) tempErrors.schedule = "El horario es obligatorio";
+        if (!businessData.cvu) tempErrors.cvu = "El CVU es obligatorio";
 
-        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/valid`, userForm, { withCredentials: true })
-            .then(() => { setUserErrors({}) })
-            .catch(error => {
-                console.log("Error: ", error)
-                for (const key in error.response.data) {
-                    if (Object.prototype.hasOwnProperty.call(error.response.data, key)) {
-                        tempErrors[key] = error.response.data[key];
-                    }
-                }
-                setUserErrors(tempErrors)
-            })
-
+        setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
 
-    const validateBusiness = (businessForm: Business): boolean => {
-        let tempErrors: { [k: string]: any } = {};
-
-        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business/valid`, businessForm, { withCredentials: true })
-            .then(() => { setBusinessErrors({}) })
-            .catch(error => {
-                for (const key in error.response.data) {
-                    if (Object.prototype.hasOwnProperty.call(error.response.data, key)) {
-                        tempErrors[key] = error.response.data[key];
-                    }
-                }
-                setBusinessErrors(tempErrors)
-            })
-
-        return Object.keys(tempErrors).length === 0;
-    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        if (validateUser(userForm) && !userSession) {
-            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, userForm, { withCredentials: true })
-                .then(r => {
-                    setUserSession(true)
-                })
-                .catch(e => {
-                    setGeneralError(e.response.data)
-                })
-        }
-
-        if (validateBusiness(businessForm) && userSession) {
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
-                .then(r => {
-                    setLinkUser(r.data.id)
-                })
-                .catch(e => {
-                    console.log("Error: ", e)
-                })
-
+        if (validate()) {
             const formData = new FormData();
-            formData.append("business", JSON.stringify(businessForm));
+            formData.append("business", JSON.stringify(businessData));
             if (imageData) {
                 formData.append("image", imageData);
             }
 
-            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`, {
-                business: businessForm,
-                image: imageData,
-                user: linkUser
-            }
-                , { withCredentials: true })
-                .then(response => {
-                    setStatus(response.status)
-                })
-                .catch(error => {
-                    console.log("Error: ", error.response.data)
-                })
-        }
+            registerData.role = 'business'
 
-        if (status === 201) {
-            redirect("/")
+            const userResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, registerData)
+                .then(response => {
+                    console.log("Response from signup: ", response)
+                    setLinkUser(response.data.id)
+                })
+                .catch(error => console.error("Error register in: ", error))
+
+            const businessResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`, { business: businessData, image: businessData.image, userid: linkUser }, { withCredentials: true })
+                .then(response => {
+                    console.log("Response from signup: ", response)
+                })
+                .catch(error => console.error('Error registrando negocio. Por favor, inténtelo de nuevo.', error))
+
+            // try {
+            //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/business`, {
+            //         method: 'POST',
+            //         credentials: 'include',
+            //         body: formData,
+            //     }).then(response => setLinkBusiness(response))
+            //     if (!response.ok) {
+            //         const errorData = await response.json();
+            //         setErrors(errorData);
+            //         setGeneralError('Error registrando negocio. Por favor, inténtelo de nuevo.');
+            //         throw new Error('Error al crear el negocio');
+            //     }
+            //     const data = await response.json();
+            //     setSuccessMessage('Negocio registrado exitosamente');
+            //     setBusinessData({
+            //         name: '',
+            //         type: '',
+            //         address: '',
+            //         email: '',
+            //         password: '',
+            //         phone: '',
+            //         schedule: '',
+            //         cvu: '',
+            //         image: data.image
+            //     });
+            //     setImageData(null);
+            //     setErrors({});
+            //     setGeneralError('');
+            // } catch (error) {
+            //     setGeneralError('Error registrando negocio. Por favor, inténtelo de nuevo.');
+            // }
         }
     };
 
     return {
-        businessForm,
-        userForm,
+        businessData,
+        registerData,
         imageData,
-        userErrors,
-        businessErrors,
-        imageError,
+        errors,
+        successMessage,
         generalError,
-        userSession,
-        hasBusiness,
         handleChange,
         handleImage,
         handleSubmit,

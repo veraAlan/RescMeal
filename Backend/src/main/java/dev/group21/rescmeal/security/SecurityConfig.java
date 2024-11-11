@@ -57,23 +57,40 @@ public class SecurityConfig {
     // TODO Needs checking the methods possible and what the endpoint should do.
     @Bean
     @Order(1)
-    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                // Session methods
-                .requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
-                // User
-                .requestMatchers(HttpMethod.POST,"/api/*/valid").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/user/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/client/me", "/api/business/me", "/api/carrier/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
-                // Food
-                .requestMatchers(HttpMethod.GET, "/api/food/list").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
-            )
+                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/validate").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/signin").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/signup").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/auth/signout").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/session-id").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/email/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").permitAll()
+                .requestMatchers("/api/api/purchase").hasAnyRole("CLIENT", "ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/food/list", "/api/food").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
+                .requestMatchers("/api/client", "/api/client/me").hasAnyRole("CLIENT", "ADMIN")
+                .requestMatchers("/api/business", "/api/business/**").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers("/api/carrier","/api/carrier/me").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/delivery/list").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/purchase/list").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/sales/dashboard").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.GET, "/api/sales/stock").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.GET, "/api/sales/revenue").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.GET, "/api/sales/customers").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.POST,"/api/delivery").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.POST,"/api/purchase").hasAnyRole("CARRIER", "ADMIN","CLIENT")
+                .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
+                .requestMatchers(HttpMethod.POST, "/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/food/me").hasAnyRole("BUSINESS") // TODO Provisional method for uploading only to the business logged in.
+                .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("BUSINESS")
+                .requestMatchers(HttpMethod.PUT, "/api/food").hasAnyRole("BUSINESS", "ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/purchase").hasAnyRole("CARRIER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/food/*/me").hasAnyRole("BUSINESS")) // TODO Same as above but for listing foods of own business.
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -81,48 +98,13 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain roleFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                    // Client
-                    .requestMatchers(HttpMethod.POST, "/api/client").hasRole("CLIENT") // Create a client.
-                    .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT") // Update a client.
-                    .requestMatchers(HttpMethod.PATCH, "/api/client").hasRole("CLIENT") // Update a client.
-                    .requestMatchers("/api/api/purchase").hasAnyRole("CLIENT")
-                    // Business
-                    .requestMatchers(HttpMethod.POST, "/api/business", "/api/food", "/api/purchase/process-payment").hasRole("BUSINESS")
-                    .requestMatchers(HttpMethod.PUT, "/api/business", "/api/food").hasRole("BUSINESS")
-                    .requestMatchers(HttpMethod.PATCH, "/api/business").hasRole("BUSINESS")
-                    .requestMatchers(HttpMethod.GET, "/api/sales/dashboard", "/api/sales/stock", "/api/sales/revenue", "/api/sales/customers").hasRole("BUSINESS")
-                    // Carrier
-                    .requestMatchers(HttpMethod.GET,"/api/delivery/list", "/api/purchase/list").hasRole("CARRIER")
-                    .requestMatchers(HttpMethod.POST,"/api/delivery", "/api/purchase").hasRole("CARRIER")
-                    .requestMatchers(HttpMethod.PUT,"/api/purchase").hasRole("CARRIER")
-                    // MultiRole
-                    .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
-//                    .requestMatchers(HttpMethod.PUT, "").hasAnyRole("")
-//                    .requestMatchers(HttpMethod.PATCH, "").hasAnyRole("")
-//                    .requestMatchers(HttpMethod.GET, "").hasAnyRole("")
-                    // ADMIN
-                    .requestMatchers("/api/**").hasRole("ADMIN")
-                )
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-    @Bean
-    @Order(3)
-    public SecurityFilterChain fallbackFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated()
+                        .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
