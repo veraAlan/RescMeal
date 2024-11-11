@@ -10,12 +10,27 @@ const useDelivery = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/purchase/list`, {
-                    withCredentials: true
-                });
-                const data = response.data;
-                const filteredDeliveries = data.filter((delivery: Purchase) => delivery.pickup);
-                setDeliveries(filteredDeliveries);
+                const token = localStorage.getItem('authToken'); // Obtener el token JWT
+                const [purchasesResponse, takenIdsResponse] = await Promise.all([
+                    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/purchase/list`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        withCredentials: true
+                    }),
+                    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/taken-ids`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        withCredentials: true
+                    })
+                ]);
+
+                const purchases: Purchase[] = purchasesResponse.data;
+                const takenIds: number[] = takenIdsResponse.data;
+
+                const availablePurchases = purchases.filter(purchase => !takenIds.includes(purchase.id));
+                setDeliveries(availablePurchases);
             } catch (err) {
                 setError('Error al cargar los datos.');
             } finally {

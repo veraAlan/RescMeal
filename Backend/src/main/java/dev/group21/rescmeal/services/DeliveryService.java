@@ -29,4 +29,8 @@ public class DeliveryService {
     public void deleteDelivery(int id) {
         deliveryRepository.deleteById(id);
     }
+
+    public List<Integer> getTakenPurchaseIds() {
+        return deliveryRepository.findTakenPurchaseIds();
+    }
 }

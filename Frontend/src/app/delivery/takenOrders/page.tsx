@@ -24,7 +24,7 @@ const TakenOrdersPage: React.FC = () => {
                     withCredentials: true
                 });
                 if (carrierId !== null) {
-                    const filteredOrders = response.data.filter((order: Delivery) => order.carrier.id === carrierId);
+                    const filteredOrders = response.data.filter((order: Delivery) => order.carrier && order.carrier.id === carrierId && order.delivery_state === 'Tomado');
                     setTakenOrders(filteredOrders);
                 }
             } catch (error) {
@@ -43,16 +43,20 @@ const TakenOrdersPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
                 {takenOrders.map(order => (
                     <div key={order.id} className="bg-white p-4 rounded shadow-md">
-                        <p><strong>Carrier:</strong> {order.carrier.name}</p>
-                        <p><strong>Cliente:</strong> {order.purchase.client.name}</p> {/* Mostrar nombre del cliente */}
+                        <p><strong>Carrier:</strong> {order.carrier ? order.carrier.name : 'Sin Carrier'}</p>
+                        <p><strong>Cliente:</strong> {order.purchase.client.name}</p>
                         <p><strong>Total:</strong> ${order.purchase.total_cost}</p>
                         <p><strong>Fecha de Creación:</strong> {order.purchase.creation_date}</p>
                         <p><strong>Items:</strong></p>
                         <ul>
                             {order.purchase.purchasedItems.map(item => (
-                                <li key={item.food.id}>{item.food.name} - Cantidad: {item.quantity} - Precio: ${item.price}</li>
+                                <li key={item.food.id}>
+                                    { 'name' in item.food ? item.food.name : `Food ID: ${item.food.id}` } - Cantidad: {item.quantity} - Precio: ${item.price}
+                                </li>
                             ))}
                         </ul>
+                        <p><strong>Estado de Entrega:</strong> {order.delivery_state}</p>
+                        <p><strong>Hora de Entrega:</strong> {order.delivery_time}</p>
                     </div>
                 ))}
             </div>

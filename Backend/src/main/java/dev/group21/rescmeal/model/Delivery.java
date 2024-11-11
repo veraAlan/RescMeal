@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "delivery")
@@ -32,9 +32,9 @@ public class Delivery {
     @Column(name = "address", length = 150)
     private String address;
 
-    private Time delivery_time;
-    private Time arrival_time;
-    private Time waitingTime;
+    private LocalTime delivery_time;
+    private LocalTime arrival_time;
+    private LocalTime waiting_time;
     private String delivery_state;
     @Column(name = "tip", precision = 10, scale = 2)
     private BigDecimal tip;
