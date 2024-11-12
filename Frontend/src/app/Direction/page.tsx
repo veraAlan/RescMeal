@@ -1,6 +1,8 @@
 'use client'
 import React from 'react';
 import Direction from "../../components/Map/Direction";
+import Matrix from "../../components/Map/Matrix";
+
 
 const Home: React.FC = () => {
     const stops: [number, number][] = [
@@ -13,6 +15,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
+            <Matrix stops={stops}/>
             <Direction stops={stops} />
         </div>
     );

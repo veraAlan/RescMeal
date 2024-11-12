@@ -66,6 +66,17 @@ const Map: React.FC<MapProps> = ({ stops }) => {
                         },
                     });
 
+                    map.addControl(
+                        new mapboxgl.GeolocateControl({
+                            positionOptions: {
+                                enableHighAccuracy: true
+                            },
+                            trackUserLocation: true,
+                            showUserHeading: true
+                        })
+                    );
+
+                    
                     // Ajustar el mapa a la ruta
                     const bounds = new mapboxgl.LngLatBounds();
                     route.forEach((coord: LngLatLike | LngLatBoundsLike) => bounds.extend(coord));
@@ -82,6 +93,7 @@ const Map: React.FC<MapProps> = ({ stops }) => {
     return (
         <div className="container mx-auto py-8">
             <h1 className="text-2xl font-bold text-center mb-4">Mapa con Rutas de Mapbox</h1>
+            <div id="instructions" className="mt-4"></div>
             <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 rounded-lg shadow-lg" /> {/* Ajustar la altura a 600px */}
         </div>
     );
