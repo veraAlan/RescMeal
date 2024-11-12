@@ -46,10 +46,10 @@ export const useRegisterBusiness = () => {
     if (hasBusiness == null) {
         axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/session-id`, { withCredentials: true })
             .then(r => {
-                setHasBusiness(false)
+                setHasBusiness(true)
             })
             .catch(e => {
-                setHasBusiness(true)
+                setHasBusiness(false)
             })
     }
 
@@ -81,7 +81,7 @@ export const useRegisterBusiness = () => {
         })
     }
 
-    const [imageData, setImageData] = useState<File | null>(null);
+    const [imageForm, setImageData] = useState<File | null>(null);
     const [userErrors, setUserErrors] = useState<User>({});
     const [businessErrors, setBusinessErrors] = useState<Business>({});
     const [status, setStatus] = useState(0);
@@ -144,7 +144,7 @@ export const useRegisterBusiness = () => {
         e.preventDefault();
 
         if (validateUser(userForm) && !userSession) {
-            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, userForm, { withCredentials: true })
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, userForm, { withCredentials: true })
                 .then(r => {
                     setUserSession(true)
                 })
@@ -154,35 +154,38 @@ export const useRegisterBusiness = () => {
         }
 
         if (validateBusiness(businessForm) && userSession) {
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
+            await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
                 .then(r => {
                     setLinkUser(r.data.id)
+
+                    const businessData = new FormData()
+                    businessData.append("business", new Blob([JSON.stringify(businessForm)], { type: 'application/json' }))
+                    businessData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
+                    if (imageForm) {
+                        businessData.append("image", imageForm)
+                    }
+
+                    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`,
+                        businessData, {
+                        headers: {
+                            'Content-Type': 'multipart/mixed'
+                        },
+                        withCredentials: true
+                    })
+                        .then(r => {
+                            setStatus(r.status)
+                        })
+                        .catch(e => {
+                            console.log("Error creating business: ", e)
+                        })
                 })
                 .catch(e => {
-                    console.log("Error: ", e)
-                })
-
-            const formData = new FormData();
-            formData.append("business", JSON.stringify(businessForm));
-            if (imageData) {
-                formData.append("image", imageData);
-            }
-
-            axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`, {
-                business: businessForm,
-                image: imageData,
-                user: linkUser
-            }
-                , { withCredentials: true })
-                .then(response => {
-                    setStatus(response.status)
-                })
-                .catch(error => {
-                    console.log("Error: ", error.response.data)
+                    setGeneralError("Error cargando el local, por favor intente nuevamente.")
+                    console.log("Error finding session: ", e)
                 })
         }
 
-        if (status === 201) {
+        if (status === 200 || status === 201) {
             redirect("/")
         }
     };
@@ -190,7 +193,7 @@ export const useRegisterBusiness = () => {
     return {
         businessForm,
         userForm,
-        imageData,
+        imageForm,
         userErrors,
         businessErrors,
         imageError,

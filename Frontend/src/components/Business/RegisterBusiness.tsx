@@ -62,7 +62,7 @@ const RegisterBusiness: React.FC = () => {
                 }
                 {userSession && <p className="text-green-500 text-lg font-semibold">Ya estas en una sesion.<br /> Si no quiere crear un local asociado a al usuario actual, primero cierre sesion.</p>}
                 <label className='block text-lg'>Informacion de Negocio</label>
-                {hasBusiness &&
+                {!hasBusiness &&
                     <div>
                         <div>
                             <label className="block">Logo/Portada:</label>
@@ -145,7 +145,7 @@ const RegisterBusiness: React.FC = () => {
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded">
                     Registrar
                 </button>
-                {!hasBusiness && <p className="text-green-500 text-lg font-semibold">Ya tiene un local asociado. <a href='/auth/me'>Ver perfil</a></p>}
+                {hasBusiness && <p className="text-green-500 text-lg font-semibold">Ya tiene un local asociado. <a href='/auth/me'>Ver perfil</a></p>}
             </form>
         </div>
     );

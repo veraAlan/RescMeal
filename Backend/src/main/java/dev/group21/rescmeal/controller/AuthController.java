@@ -1,8 +1,7 @@
 package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.*;
-import dev.group21.rescmeal.repository.RoleRepository;
-import dev.group21.rescmeal.repository.UserRepository;
+import dev.group21.rescmeal.repository.*;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -42,10 +39,16 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    ClientRepository clientRepository;
+    @Autowired
+    BusinessRepository businessRepository;
+    @Autowired
+    CarrierRepository carrierRepository;
 
     @PostMapping("/valid")
-    public ResponseEntity<User> validateUserForm(@Valid @RequestBody User user){
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<SignupRequest> validateUserForm(@Valid @RequestBody SignupRequest signupRequest){
+        return ResponseEntity.ok().body(signupRequest);
     }
 
     @PostMapping("/signin")
@@ -143,9 +146,80 @@ public class AuthController {
     public ResponseEntity<?> getOwnInformation(HttpServletRequest request){
         String jwt = jwtUtils.getJwtFromCookies(request);
         if(jwtUtils.validateJwtToken(jwt)){
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            // Fail fetching Object of Role inside switch. Needs refactor.
+            ArrayList<Object> roleObject = new ArrayList<>();
+            String roleName = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
+            switch (roleName) {
+                case "ROLE_CLIENT" -> {
+                    Client role = clientRepository.findById(userRepository.findById(userDetails.getId())
+                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+                    roleObject.add(role);
+                }
+                case "ROLE_BUSINESS" ->{
+                    Business role = businessRepository.findById(userRepository.findById(userDetails.getId())
+                                    .orElseThrow(() -> new RuntimeException("User not found")).getBusiness().getId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+                    roleObject.add(role);
+                }
+                case "ROLE_CARRIER" ->{
+                    Carrier role = carrierRepository.findById(userRepository.findById(userDetails.getId())
+                                    .orElseThrow(() -> new RuntimeException("User not found")).getCarrier().getId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+                    roleObject.add(role);
+                }
+                default -> {
+                    Role role = roleRepository.findByName(null)
+                            .orElseThrow(() -> new RuntimeException("Role not found"));
+                    roleObject.add(role);
+                }
+            };
+
             return ResponseEntity.ok().body(userDetails);
+        }
+        return sessionVerify(request);
+    }
+
+    @GetMapping("/role")
+    public ResponseEntity<?> getRoleInformation(HttpServletRequest request){
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        if(jwtUtils.validateJwtToken(jwt)){
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            ArrayList<Object> roleObject = new ArrayList<>();
+            switch (userDetails.getAuthorities().toString()) {
+                case "CLIENT" -> {
+                    Client role = clientRepository.findById(userRepository.findById(userDetails.getId())
+                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+                    roleObject.add(role);
+                }
+                case "BUSINESS" ->{
+                    Business role = businessRepository.findById(userRepository.findById(userDetails.getId())
+                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+                    roleObject.add(role);
+                }
+                case "CARRIER" ->{
+                    Carrier role = carrierRepository.findById(userRepository.findById(userDetails.getId())
+                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
+                            .orElseThrow(() -> new RuntimeException("User not found"));
+                    roleObject.add(role);
+                }
+                default -> {
+                    Role role = roleRepository.findByName(null)
+                            .orElseThrow(() -> new RuntimeException("Role not found"));
+                    roleObject.add(role);
+                }
+            };
+
+            return ResponseEntity.ok().body(roleObject);
         }
         return sessionVerify(request);
     }

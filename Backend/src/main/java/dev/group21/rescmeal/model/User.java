@@ -35,8 +35,6 @@ public class User {
     @Email(message = "Tiene que ser un mail valido")
     private String email;
     @NotNull
-    @Pattern(regexp = "^(?=.*[A-Z].*[a-z])(?=.*[0-9]).{6,}$", message = "La contraseña debe contener al menos una mayuscula, una minuscula y un numero")
-    @Size(min = 6, max = 50, message = "La contraseña debe tener entre 2 y 20 caracteres")
     private String password;
     @OneToOne
     @JoinColumn(name = "business_id")

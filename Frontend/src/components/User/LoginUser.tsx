@@ -15,10 +15,7 @@ const RegisterBusiness: React.FC = () => {
 
    const handleLogOut = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signout`, {
-         identifier: loginData.identifier,
-         password: loginData.password
-      }, { withCredentials: true })
+      axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signout`, {}, { withCredentials: true })
          .catch(error => console.error("Cannot logout: ", error))
    }
 
