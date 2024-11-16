@@ -12,14 +12,11 @@ const useMapboxDirections = (stops: [number, number][], accessToken: string) => 
 
             try {
                 const response = await fetch(url);
-
                 if (!response.ok) {
                     throw new Error('Failed to fetch directions');
                 }
 
                 const data = await response.json();
-
-
                 setDirections(data.routes[0].geometry.coordinates);
                 
             } catch (error) {

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const useMatrixData = (stops: [number, number][], accessToken: string) => {
-    const [matrixDistance, setDistance] = useState<String | null>(null);
-    const [matrixDuration, setDuration] = useState<String | null>(null);
+    const [matrixDistance, setDistance] = useState<number | null>(null);
+    const [matrixDuration, setDuration] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null)
 
@@ -17,13 +17,23 @@ const useMatrixData = (stops: [number, number][], accessToken: string) => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                const duration = data.durations[0][1] + data.durations[0][2] + data.durations[0][3];
-                const distance = data.distances[0][1] + data.distances[0][2] + data.distances[0][3];
-                setDuration(duration);
-                setDistance(distance);
+
+                let totalDuration = 0;
+                let totalDistance = 0;
+
+
+                for (let i = 1; i < data.durations[0].length; i++) {
+                    totalDuration += data.durations[0][i];
+                }
+
+                for (let i = 1; i < data.distances[0].length; i++) {
+                    totalDistance += data.distances[0][i];
+                }
+                setDuration(totalDuration);
+                setDistance(totalDistance);
             } catch (error) {
 
-                setError((error as Error).message); 
+                setError((error as Error).message);
             } finally {
                 setLoading(false);
             }

@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import mapboxgl, { Map, Point } from 'mapbox-gl';
+import mapboxgl, { Map} from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
-
-// Token de MapBox 
-const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
 const useMap = ({ businessId }: { businessId: number }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -16,7 +13,7 @@ const useMap = ({ businessId }: { businessId: number }) => {
         if (!mapContainerRef.current) return;
 
         // Set Mapbox access token
-        mapboxgl.accessToken = token;
+        mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
         // Initialize the map
         mapInstanceRef.current = new mapboxgl.Map({
@@ -47,7 +44,7 @@ const useMap = ({ businessId }: { businessId: number }) => {
     const setAddress = async (address: string) => {
         try {
             // Realiza una solicitud a la API de Mapbox Geocoding
-            const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${token}`);
+            const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`);
             const data = await response.json();
 
             if (data.features && data.features.length > 0) {
@@ -81,7 +78,6 @@ const useMap = ({ businessId }: { businessId: number }) => {
         mapLoaded,
         inputValue,
         setInputValue,
-        token,
         mapboxgl
     };
 };

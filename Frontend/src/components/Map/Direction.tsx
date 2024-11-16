@@ -16,20 +16,18 @@ const Map: React.FC<MapProps> = ({ stops }) => {
         if (mapContainer.current) {
             const map = new mapboxgl.Map({
                 container: mapContainer.current,
-                style: 'mapbox://styles/mapbox/streets-v11',
+                style: 'mapbox://styles/syaitul/cm2i59b8z002101pecb7e8u3i',
                 center: stops[0], // Centrar en el primer punto
                 zoom: 12,
             });
 
-            // Marcar los puntos de inicio y paso
             stops.forEach((stop, index) => {
                 new mapboxgl.Marker()
                     .setLngLat(stop)
-                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(`Parada ${index + 1}`)) // Añadir un popup a cada marker
+                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(`Parada ${index + 1}`)) 
                     .addTo(map);
             });
 
-            // Manejo de error
             if (error) {
                 console.error('Error al obtener direcciones:', error);
                 return;
@@ -83,7 +81,7 @@ const Map: React.FC<MapProps> = ({ stops }) => {
                     map.fitBounds(bounds, { padding: 20 });
                 });
             } else {
-                console.log('No hay direcciones disponibles.'); // Mensaje de depuración
+                console.log('No hay direcciones disponibles.');
             }
 
             return () => map.remove(); // Limpiar el mapa al desmontar
@@ -94,7 +92,7 @@ const Map: React.FC<MapProps> = ({ stops }) => {
         <div className="container mx-auto py-8">
             <h1 className="text-2xl font-bold text-center mb-4">Mapa con Rutas de Mapbox</h1>
             <div id="instructions" className="mt-4"></div>
-            <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 rounded-lg shadow-lg" /> {/* Ajustar la altura a 600px */}
+            <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 rounded-lg shadow-lg" />
         </div>
     );
 };

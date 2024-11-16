@@ -10,7 +10,6 @@ const MapComponent = ({ id }: { id: number }) => {
         mapLoaded,
         inputValue,
         setInputValue,
-        token,
         mapboxgl
     } = useMap({ businessId: id }); // Pasamos el objeto business al hook
 
@@ -19,7 +18,7 @@ const MapComponent = ({ id }: { id: number }) => {
             <div className="hidden">
                 {mapLoaded && (
                     <SearchBox
-                        accessToken={token}
+                        accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''}
                         onChange={(value) => {
                             setInputValue(value);
                         }}
