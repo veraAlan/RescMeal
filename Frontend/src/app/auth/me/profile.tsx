@@ -1,11 +1,15 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react';
+import BusinessProfile from './BusinessProfile';
 
 export interface Profile {
    username?: string
    email?: string
    role?: string
    password?: string
+   business?: Object
+   client?: Object
+   carrier?: Object
 }
 
 export interface Role {
@@ -25,22 +29,13 @@ export interface Role {
 
 export default () => {
    const [profileInfo, useProfile] = useState<Profile | null>(null)
-   const [roleInfo, useRole] = useState<Role | null>(null)
 
    useEffect(() => {
       if (profileInfo == null) {
          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
             .then(r => {
-               console.log('User: ', r.data)
-               axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
-                  .then(r => {
-                     console.log(r.data)
-                     useRole('Role: ', r.data)
-                  })
-                  .catch(e => {
-                     console.log(e)
-                  })
                useProfile(r.data)
+               console.log('User and Role: ', r.data)
             })
             .catch(e => {
                console.log(e)
@@ -58,6 +53,17 @@ export default () => {
                <h2 id="email" className='p-2 text-2xl'>{profileInfo.email}</h2>
             </div>
          }
-      </div>
+
+         {profileInfo?.business &&
+            <BusinessProfile profile={profileInfo.business} />
+         }
+         {/* Need to create visualization of Client and Carrier */}
+         {profileInfo?.client &&
+            <BusinessProfile profile={profileInfo.client} />
+         }
+         {profileInfo?.carrier &&
+            <BusinessProfile profile={profileInfo.carrier} />
+         }
+      </div >
    );
 };

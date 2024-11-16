@@ -59,9 +59,9 @@ public class BusinessService {
 
     /**
      * Delete a business and their image from the database.
-     * @param id Integer id of Business entity.
+     * @param id Long id of Business entity.
      */
-    public void deleteBusiness(Integer id) {
+    public void deleteBusiness(Long id) {
         Business business = businessRepository.findById(id).orElse(null);
         if (business != null) {
             // Ruta al directorio public de tu proyecto Next.js
@@ -80,10 +80,10 @@ public class BusinessService {
 
     /**
      * Get method for Business entity, finds by entity id.
-     * @param id Integer id of Business entity.
+     * @param id Long id of Business entity.
      * @return Business entity.
      */
-    public Business getBusiness(Integer id) {
+    public Business getBusiness(Long id) {
         return businessRepository.findById(id).orElse(null);
     }
 

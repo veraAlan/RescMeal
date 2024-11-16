@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @Size(max = 30)
     @Size(min = 2, max = 20, message = "El nombre de usuario debe tener entre 2 y 20 caracteres")
     private String username;
     // Check if pattern works fine with any mail

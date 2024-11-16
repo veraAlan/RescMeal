@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Business {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String image;
 
@@ -34,8 +34,17 @@ public class Business {
     @Size(min = 5, max = 50, message = "La dirección debe tener entre 5 y 50 caracteres")
     private String address;
 
+    // Float es suficiente para la precision de mapa, 00. + 5-6 digitos
+    @NotNull(message = "La ubicacion es obligatoria (Latitud)")
+    @Pattern(regexp = "^[+-](\\d+)\\.(\\d{5,6})$", message = "Precision maxima de 6 digitos")
+    private float address_lat;
+    @NotNull(message = "La ubicacion es obligatoria (Longitud)")
+    @Pattern(regexp = "^[+-](\\d+)\\.(\\d{5,6})$", message = "Precision maxima de 6 digitos")
+    private float address_long;
+
     @Pattern(regexp = "\\d{10}", message = "El teléfono debe tener 10 dígitos")
     @NotNull(message = "El teléfono es obligatorio")
+    @Size(min=9,max=11)
     private String phone;
 
     @NotNull(message = "El horario es obligatorio")

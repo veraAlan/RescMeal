@@ -116,7 +116,7 @@ public class BusinessController {
      * @return ResponseEntity<Void>
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBusiness(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteBusiness(@PathVariable Long id) {
         try {
             if (id != null) {
                 Business business = businessService.getBusiness(id);
@@ -139,7 +139,7 @@ public class BusinessController {
      * @return ResponseEntity Business object.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Business> getBusiness(@PathVariable Integer id) {
+    public ResponseEntity<Business> getBusiness(@PathVariable Long id) {
         try {
             Business business = businessService.getBusiness(id);
             if (business != null) {

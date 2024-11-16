@@ -70,10 +70,10 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+        // TODO Reformat Response to send a <Key, Value> that can be used in front end as error display text for a specific input.
         if(userRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
-
         if(userRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
@@ -82,14 +82,10 @@ public class AuthController {
 
         Set<Role> roles = new HashSet<>();
         Role role = switch (signupRequest.getRole().toUpperCase()) {
-            case "CLIENT" -> roleRepository.findByName(ERole.ROLE_CLIENT)
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
-            case "BUSINESS" -> roleRepository.findByName(ERole.ROLE_BUSINESS)
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
-            case "CARRIER" -> roleRepository.findByName(ERole.ROLE_CARRIER)
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
-            default -> roleRepository.findByName(null)
-                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            case "CLIENT" -> roleRepository.findByName(ERole.ROLE_CLIENT).orElseThrow(() -> new RuntimeException("Role not found"));
+            case "BUSINESS" -> roleRepository.findByName(ERole.ROLE_BUSINESS).orElseThrow(() -> new RuntimeException("Role not found"));
+            case "CARRIER" -> roleRepository.findByName(ERole.ROLE_CARRIER).orElseThrow(() -> new RuntimeException("Role not found"));
+            default -> roleRepository.findByName(null).orElseThrow(() -> new RuntimeException("Role not found"));
         };
 
         roles.add(role);
@@ -111,8 +107,7 @@ public class AuthController {
     @GetMapping("/session-id")
     public ResponseEntity<Integer> getSessionId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
             Long userId = userDetails.getId();
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
@@ -120,7 +115,7 @@ public class AuthController {
             if (user.getClient() != null) {
                 return ResponseEntity.ok(user.getClient().getId());
             } else if (user.getBusiness() != null) {
-                return ResponseEntity.ok(user.getBusiness().getId());
+                return ResponseEntity.ok(user.getBusiness().getId().intValue());
             } else if (user.getCarrier() != null) {
                 return ResponseEntity.ok(user.getCarrier().getId());
             } else {
@@ -141,85 +136,14 @@ public class AuthController {
         return ResponseEntity.ok(user.getEmail());
     }
 
-
     @GetMapping("/me")
     public ResponseEntity<?> getOwnInformation(HttpServletRequest request){
         String jwt = jwtUtils.getJwtFromCookies(request);
         if(jwtUtils.validateJwtToken(jwt)){
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-            // Fail fetching Object of Role inside switch. Needs refactor.
-            ArrayList<Object> roleObject = new ArrayList<>();
-            String roleName = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
-            switch (roleName) {
-                case "ROLE_CLIENT" -> {
-                    Client role = clientRepository.findById(userRepository.findById(userDetails.getId())
-                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
-                    roleObject.add(role);
-                }
-                case "ROLE_BUSINESS" ->{
-                    Business role = businessRepository.findById(userRepository.findById(userDetails.getId())
-                                    .orElseThrow(() -> new RuntimeException("User not found")).getBusiness().getId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
-                    roleObject.add(role);
-                }
-                case "ROLE_CARRIER" ->{
-                    Carrier role = carrierRepository.findById(userRepository.findById(userDetails.getId())
-                                    .orElseThrow(() -> new RuntimeException("User not found")).getCarrier().getId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
-                    roleObject.add(role);
-                }
-                default -> {
-                    Role role = roleRepository.findByName(null)
-                            .orElseThrow(() -> new RuntimeException("Role not found"));
-                    roleObject.add(role);
-                }
-            };
-
-            return ResponseEntity.ok().body(userDetails);
-        }
-        return sessionVerify(request);
-    }
-
-    @GetMapping("/role")
-    public ResponseEntity<?> getRoleInformation(HttpServletRequest request){
-        String jwt = jwtUtils.getJwtFromCookies(request);
-        if(jwtUtils.validateJwtToken(jwt)){
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-            ArrayList<Object> roleObject = new ArrayList<>();
-            switch (userDetails.getAuthorities().toString()) {
-                case "CLIENT" -> {
-                    Client role = clientRepository.findById(userRepository.findById(userDetails.getId())
-                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
-                    roleObject.add(role);
-                }
-                case "BUSINESS" ->{
-                    Business role = businessRepository.findById(userRepository.findById(userDetails.getId())
-                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
-                    roleObject.add(role);
-                }
-                case "CARRIER" ->{
-                    Carrier role = carrierRepository.findById(userRepository.findById(userDetails.getId())
-                                    .orElseThrow(() -> new RuntimeException("User not found")).getClient().getId())
-                            .orElseThrow(() -> new RuntimeException("User not found"));
-                    roleObject.add(role);
-                }
-                default -> {
-                    Role role = roleRepository.findByName(null)
-                            .orElseThrow(() -> new RuntimeException("Role not found"));
-                    roleObject.add(role);
-                }
-            };
-
-            return ResponseEntity.ok().body(roleObject);
+            User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found."));
+            return ResponseEntity.ok().body(user);
         }
         return sessionVerify(request);
     }

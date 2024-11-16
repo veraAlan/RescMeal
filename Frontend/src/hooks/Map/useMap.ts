@@ -31,7 +31,7 @@ const useMap = ({ businessId }: { businessId: number }) => {
             setMapLoaded(true);
             axios.get(`${process.env.NEXT_PUBLIC_API_URL}/business/${businessId}`, { withCredentials: true })
                 .then(response => {
-                    if (response.data && response.data.address) setAddress(response.data.address + " Q8300");
+                    if (response.data && response.data.address_long && response.data.address_long) setAddress(response.data.address_lat + ", " + response.data.address_long);
                 })
                 .catch(e => console.error("Error: ", e))
         });
@@ -47,7 +47,7 @@ const useMap = ({ businessId }: { businessId: number }) => {
     const setAddress = async (address: string) => {
         try {
             // Realiza una solicitud a la API de Mapbox Geocoding
-            const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${token}`);
+            const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${token}`);
             const data = await response.json();
 
             if (data.features && data.features.length > 0) {
