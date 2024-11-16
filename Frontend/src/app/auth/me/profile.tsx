@@ -1,6 +1,8 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react';
-import BusinessProfile from './BusinessProfile';
+import { useEffect, useState } from 'react'
+import BusinessProfile from './BusinessProfile'
+import ClientProfile from './ClientProfile'
+import CarrierProfile from './CarrierProfile'
 
 export interface Profile {
    username?: string
@@ -30,12 +32,12 @@ export interface Role {
 export default () => {
    const [profileInfo, useProfile] = useState<Profile | null>(null)
 
+   // TODO mandar a Hooks y Components los archivos necesarios.
    useEffect(() => {
       if (profileInfo == null) {
          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
             .then(r => {
                useProfile(r.data)
-               console.log('User and Role: ', r.data)
             })
             .catch(e => {
                console.log(e)
@@ -44,13 +46,13 @@ export default () => {
    })
 
    return (
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto my-4 p-4 border rounded-2xl border-4 border">
          {profileInfo &&
-            <div>
-               <label htmlFor="username" className='font-semibold text-lg'>Username: </label>
-               <h2 id="username" className='p-2 text-2xl'>{profileInfo.username}</h2>
-               <label htmlFor="email" className='font-semibold text-lg'>Email: </label>
-               <h2 id="email" className='p-2 text-2xl'>{profileInfo.email}</h2>
+            <div className='grid grid-rows-2 grid-flow-col w-full pb-4 place-content-evenly'>
+               <label htmlFor="username" className='font-semibold text-lg text-center'>Nombre de Usuario: </label>
+               <h2 id="username" className='p-2 text-2xl text-center'>{profileInfo.username}</h2>
+               <label htmlFor="email" className='font-semibold text-lg text-center'>Email: </label>
+               <h2 id="email" className='p-2 text-2xl text-center'>{profileInfo.email}</h2>
             </div>
          }
 
@@ -59,10 +61,10 @@ export default () => {
          }
          {/* Need to create visualization of Client and Carrier */}
          {profileInfo?.client &&
-            <BusinessProfile profile={profileInfo.client} />
+            <ClientProfile profile={profileInfo.client} />
          }
          {profileInfo?.carrier &&
-            <BusinessProfile profile={profileInfo.carrier} />
+            <CarrierProfile profile={profileInfo.carrier} />
          }
       </div >
    );
