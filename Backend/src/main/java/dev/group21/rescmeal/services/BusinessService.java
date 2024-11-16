@@ -92,6 +92,6 @@ public class BusinessService {
      * @return List of Business entities.
      */
     public List<Business> getAllBusiness() {
-        return businessRepository.findAll();
+        return businessRepository.findAllPageable().toList();
     }
 }
