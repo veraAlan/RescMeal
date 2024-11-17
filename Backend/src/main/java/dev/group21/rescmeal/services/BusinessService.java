@@ -2,6 +2,9 @@ package dev.group21.rescmeal.services;
 
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.repository.BusinessRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,7 +94,7 @@ public class BusinessService {
      * List all Business entity present in database.
      * @return List of Business entities.
      */
-    public List<Business> getAllBusiness() {
-        return businessRepository.findAllPageable().toList();
+    public Page<Business> getAllBusiness(Pageable parameters) {
+        return businessRepository.findAll(parameters);
     }
 }
