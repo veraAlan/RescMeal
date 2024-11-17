@@ -15,6 +15,9 @@ export const usePurchase = () => {
         event: React.FormEvent,
         paymentMethod: string,
         pickup: string,
+        address: string,
+        address_lat: number,
+        address_long: number,
         setShowSuccessModal: (show: boolean) => void
     ) => {
         event.preventDefault();
@@ -37,6 +40,9 @@ export const usePurchase = () => {
                 business: { id: cart[0].food.business.id },
                 total_cost: cart.reduce((total, item) => total + item.food.price * item.quantity, 0),
                 creation_date: new Date().toISOString().split('T')[0],
+                address, // Usar el parámetro de dirección
+                address_lat, // Usar el parámetro de latitud
+                address_long, // Usar el parámetro de longitud
                 purchasedItems
             };
 
@@ -66,7 +72,10 @@ export const usePurchase = () => {
 
     const handleMercadoPago = async (
         paymentMethod: string,
-        pickup: string
+        pickup: string,
+        address: string,
+        address_lat: number,
+        address_long: number
     ) => {
         try {
             const client_id = await getSessionId();
@@ -88,6 +97,9 @@ export const usePurchase = () => {
                 business: { id: cart[0].food.business.id },
                 total_cost: cart.reduce((total, item) => total + item.food.price * item.quantity, 0),
                 creation_date: new Date().toISOString().split('T')[0],
+                address, // Usar el parámetro de dirección
+                address_lat, // Usar el parámetro de latitud
+                address_long, // Usar el parámetro de longitud
                 purchasedItems
             };
     
@@ -114,7 +126,7 @@ export const usePurchase = () => {
                 clearCart();
             }
         } catch (error) {
-            console.error("Error processing payment:", error);
+            console.error("Error procesando el pago:", error);
             setErrors({ global: "Error en el procesamiento del pago" });
         }
     };

@@ -43,6 +43,15 @@ public class Purchase {
     @Temporal(TemporalType.DATE)
     private Date creation_date;
 
+    @NotNull(message = "La dirección no puede estar vacía.")
+    private String address; // Campo agregado
+
+    @NotNull(message = "La latitud de la dirección no puede estar vacía.")
+    private Float address_lat; // Campo agregado
+
+    @NotNull(message = "La longitud de la dirección no puede estar vacía.")
+    private Float address_long; // Campo agregado
+
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Para evitar la recursión infinita
     private List<PurchasedItem> purchasedItems = new ArrayList<>();
