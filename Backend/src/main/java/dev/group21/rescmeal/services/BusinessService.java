@@ -80,7 +80,6 @@ public class BusinessService {
         }
     }
 
-
     /**
      * Get method for Business entity, finds by entity id.
      * @param id Long id of Business entity.
