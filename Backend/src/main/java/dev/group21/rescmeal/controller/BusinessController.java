@@ -9,6 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.services.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -156,14 +161,14 @@ public class BusinessController {
      * Get all the business stored in the Database.
      * @return ResponseEntity List of all business found.
      */
-    @GetMapping()
-    public ResponseEntity<List<Business>> getAllBussiness() {
+    @GetMapping
+    public ResponseEntity<PagedModel<EntityModel<Business>>> getAllBussiness(Pageable pageable, PagedResourcesAssembler<Business> assembler) {
         try {
-            List<Business> businessList = businessService.getAllBusiness();
-            if (businessList.isEmpty()) {
+            Page<Business> businessPage = businessService.getAllBusiness(pageable);
+            if (businessPage.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
-                return ResponseEntity.ok(businessList);
+                return ResponseEntity.ok(assembler.toModel(businessPage));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
