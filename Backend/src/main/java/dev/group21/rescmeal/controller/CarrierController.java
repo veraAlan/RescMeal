@@ -39,7 +39,7 @@ public class CarrierController {
             }
         }
 
-        @GetMapping()
+        @GetMapping("/list")
         public ResponseEntity<PagedModel<EntityModel<Carrier>>> getAllCarrier(Pageable pageable, PagedResourcesAssembler<Carrier> assembler) {
             try {
                 Page<Carrier> carrierPage = carrierService.getAllCarriers(pageable);

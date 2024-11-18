@@ -94,7 +94,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping()
+    @GetMapping("/list")
     public ResponseEntity<PagedModel<EntityModel<Client>>> getAllClients(Pageable pageable, PagedResourcesAssembler<Client> assembler) {
         try {
             Page<Client> clientPage = clientService.getAllClients(pageable);

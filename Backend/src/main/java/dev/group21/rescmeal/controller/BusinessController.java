@@ -160,7 +160,7 @@ public class BusinessController {
      * Get all the business stored in the Database.
      * @return ResponseEntity List of all business found.
      */
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<PagedModel<EntityModel<Business>>> getAllBussiness(Pageable pageable, PagedResourcesAssembler<Business> assembler) {
         try {
             Page<Business> businessPage = businessService.getAllBusiness(pageable);
