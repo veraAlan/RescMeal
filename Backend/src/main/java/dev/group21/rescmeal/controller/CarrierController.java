@@ -1,9 +1,15 @@
 package dev.group21.rescmeal.controller;
 
+import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Carrier;
 import dev.group21.rescmeal.services.CarrierService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +39,14 @@ public class CarrierController {
             }
         }
 
-        @GetMapping("/list")
-        public ResponseEntity<List<Carrier>> getAllCarrier() {
+        @GetMapping()
+        public ResponseEntity<PagedModel<EntityModel<Carrier>>> getAllCarrier(Pageable pageable, PagedResourcesAssembler<Carrier> assembler) {
             try {
-                List<Carrier> carrierList = carrierService.getAllCarriers();
-                if (carrierList.isEmpty()) {
+                Page<Carrier> carrierPage = carrierService.getAllCarriers(pageable);
+                if (carrierPage.isEmpty()) {
                     return ResponseEntity.notFound().build();
                 } else {
-                    return ResponseEntity.ok(carrierList);
+                    return ResponseEntity.ok(assembler.toModel(carrierPage));
                 }
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();

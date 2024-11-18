@@ -5,11 +5,17 @@ import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -89,13 +95,13 @@ public class ClientController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Client>> getAllClients() {
+    public ResponseEntity<PagedModel<EntityModel<Client>>> getAllClients(Pageable pageable, PagedResourcesAssembler<Client> assembler) {
         try {
-            List<Client> clientList = clientService.getAllClients();
-            if (clientList.isEmpty()) {
+            Page<Client> clientPage = clientService.getAllClients(pageable);
+            if (clientPage.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
-                return ResponseEntity.ok(clientList);
+                return ResponseEntity.ok(assembler.toModel(clientPage));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();

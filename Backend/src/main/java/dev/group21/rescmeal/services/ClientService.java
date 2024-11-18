@@ -2,10 +2,11 @@ package dev.group21.rescmeal.services;
 
 import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.repository.ClientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @Transactional
@@ -76,7 +77,7 @@ public class ClientService {
      * Get method for all Client entities.
      * @return List of Client entities.
      */
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    public Page<Client> getAllClients(Pageable parameters) {
+        return clientRepository.findAll(parameters);
     }
 }

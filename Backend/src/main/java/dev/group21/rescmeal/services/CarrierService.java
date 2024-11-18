@@ -2,9 +2,11 @@ package dev.group21.rescmeal.services;
 
 import dev.group21.rescmeal.model.Carrier;
 import dev.group21.rescmeal.repository.CarrierRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
+
 
 
 @Service
@@ -20,8 +22,8 @@ public class CarrierService {
         return carrierRepository.save(carrier);
     }
 
-    public List<Carrier> getAllCarriers() {
-        return carrierRepository.findAll();
+    public Page<Carrier> getAllCarriers(Pageable parameters) {
+        return carrierRepository.findAll(parameters);
     }
 
     public Carrier getCarrier(Integer id) {
