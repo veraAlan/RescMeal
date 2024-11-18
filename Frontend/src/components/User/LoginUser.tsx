@@ -1,9 +1,5 @@
-'use client'
-
 import React from 'react'
 import { useLoginUser } from '../../hooks/User/useLoginUser'
-
-import axios from 'axios' // Can be removed after setting logout in the correct place.
 
 const RegisterBusiness: React.FC = () => {
    const {
@@ -12,12 +8,6 @@ const RegisterBusiness: React.FC = () => {
       handleChange,
       handleSubmit
    } = useLoginUser();
-
-   const handleLogOut = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signout`, {}, { withCredentials: true })
-         .catch(error => console.error("Cannot logout: ", error))
-   }
 
    return (
       <div className="container mx-auto p-4">
@@ -46,12 +36,6 @@ const RegisterBusiness: React.FC = () => {
             </div>
             <button type="submit" className="bg-blue-500 text-white p-2 rounded">
                Login
-            </button>
-         </form>
-
-         <form onSubmit={handleLogOut} className="space-y-4">
-            <button type="submit" className="bg-blue-500 text-white p-2 my-4 rounded">
-               Logout
             </button>
          </form>
       </div>

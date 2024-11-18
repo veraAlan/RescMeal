@@ -21,7 +21,7 @@ export default () => {
    useEffect(() => {
       const fetchBusinesses = async () => {
          try {
-            const data = await getAllBusiness(page, 3) // Initial fetch with page 0 and size 10
+            const data = await getAllBusiness(page, 2) // Initial fetch with page 0 and size 10
             setBusinesses(data._embedded.businessList) // Assuming the API returns the 'content' of the page 
             setLoading(false)
          } catch (error) {

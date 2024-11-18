@@ -1,14 +1,13 @@
-"use client";
-import React from 'react';
-import Search from '../components/Search/Search';
-import FoodCard from '../components/Food/FoodCard';
-import useListFoods from '../hooks/Food/useListFoods';
-import useSearch from '../hooks/Search/Search';
+'use client'
+import React from 'react'
+import Search from '../components/Search/Search'
+import FoodCard from '../components/Food/FoodCard'
+import useListFoods from '../hooks/Food/useListFoods'
+import useSearch from '../hooks/Search/Search'
 
 const HomePage: React.FC = () => {
-
-    const { foods, error } = useListFoods();
-    const { filteredFoods, handleSearch } = useSearch(foods);
+    const { foods, error } = useListFoods()
+    const { filteredFoods, handleSearch } = useSearch(foods)
 
     return (
         <div className="container mx-auto px-4 flex flex-col items-center">
@@ -26,7 +25,7 @@ const HomePage: React.FC = () => {
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
 
-export default HomePage;
+export default HomePage

@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react';
-import axios from 'axios';
-import { User } from '../../types/User';
-import { redirect } from 'next/navigation';
-import { AuthContext } from '@/context/AuthContext';
+import { useContext, useState } from 'react'
+import { User } from '../../types/User'
+import { redirect } from 'next/navigation'
+import { AuthContext } from '@/context/AuthContext'
+import axiosConfig from '../../utils/axiosConfig'
 
 export const useLoginUser = () => {
    const [status, setStatus] = useState<Number | null>(null)
@@ -16,30 +16,25 @@ export const useLoginUser = () => {
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target
-      setLoginData({
-         ...loginData,
-         [name]: value
-      })
+      setLoginData({ ...loginData, [name]: value })
    }
 
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+      e.preventDefault()
 
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+      axiosConfig.post('/api/auth/signin', {
          identifier: loginData.identifier,
          password: loginData.password
-      }, { withCredentials: true })
-         .then(response => {
-            if (!authContext) {
-               return null;
-            }
+      })
+         .then(r => {
+            if (!authContext) return null
             const { login } = authContext
 
-            login(response.data.token)
-            setStatus(response.status)
+            login(r.data.token)
+            setStatus(r.status)
             setError(null)
          })
-         .catch(error => setError("Email, nombre de usuario o contraseña incorrecta."))
+         .catch(e => setError("Email, nombre de usuario o contraseña incorrecta."))
    }
 
    if (status == 200) {
@@ -51,5 +46,5 @@ export const useLoginUser = () => {
       error,
       handleChange,
       handleSubmit
-   };
-};
+   }
+}
