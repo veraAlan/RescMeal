@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Purchase } from '../../types/Purchase';
-import { Delivery } from '../../types/Delivery'; // Asegúrate de que la ruta es correcta
 
 const useDelivery = () => {
-    const [deliveries, setDeliveries] = useState<Purchase[]>([]);
+    const [purchases, setPurchases] = useState<Purchase[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('authToken'); // Obtener el token JWT
+                const token = localStorage.getItem('authToken');
                 const [purchasesResponse, takenIdsResponse] = await Promise.all([
                     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/purchase/list`, {
                         headers: {
@@ -28,12 +27,12 @@ const useDelivery = () => {
                 ]);
 
                 const purchases: Purchase[] = purchasesResponse.data;
-                const takenDeliveries: Delivery[] = takenIdsResponse.data;
+                const takenDeliveries: { purchase: { id: number } }[] = takenIdsResponse.data;
 
                 const takenIds = takenDeliveries.map(delivery => delivery.purchase.id);
 
                 const availablePurchases = purchases.filter(purchase => !takenIds.includes(purchase.id));
-                setDeliveries(availablePurchases);
+                setPurchases(availablePurchases);
             } catch (err) {
                 setError('Error al cargar los datos.');
             } finally {
@@ -44,7 +43,7 @@ const useDelivery = () => {
         fetchData();
     }, []);
 
-    return { deliveries, loading, error, setDeliveries };
+    return { purchases, loading, error, setPurchases };
 };
 
 export default useDelivery;

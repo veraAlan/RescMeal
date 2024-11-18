@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Delivery } from '../../../types/Delivery'; // Asegúrate de que la ruta es correcta
+import { Delivery } from '../../../types/Delivery';
 import { getSessionId } from '../../../utils/getSessionId';
 
 const TakenOrdersPage: React.FC = () => {
@@ -18,6 +18,10 @@ const TakenOrdersPage: React.FC = () => {
             }
         };
 
+        fetchCarrierId();
+    }, []);
+
+    useEffect(() => {
         const fetchTakenOrders = async () => {
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/list`, {
@@ -32,7 +36,9 @@ const TakenOrdersPage: React.FC = () => {
             }
         };
 
-        fetchCarrierId().then(fetchTakenOrders);
+        if (carrierId !== null) {
+            fetchTakenOrders();
+        }
     }, [carrierId]);
 
     if (takenOrders.length === 0) return <p>No hay pedidos tomados.</p>;

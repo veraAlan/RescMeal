@@ -32,6 +32,9 @@ export interface Purchase {
     total_cost: number;
     pickup: boolean;
     creation_date: string;
+    address: string;
+    address_lat: number;
+    address_long: number;
     purchasedItems: PurchasedItem[];
 }
 
