@@ -25,11 +25,12 @@ export const usePurchase = () => {
         try {
             const client_id = await getSessionId();
             const purchasedItems: PurchasedItem[] = cart.map(item => {
-                if (item.food.id === undefined) {
-                    throw new Error("El id del alimento no puede ser undefined");
+                if (item.food.id === undefined || item.food.business.id === undefined) {
+                    throw new Error("El id del alimento o negocio no puede ser undefined");
                 }
                 return {
                     food: { id: item.food.id },
+                    business: { id: item.food.business.id },
                     quantity: item.quantity,
                     price: item.food.price
                 };
@@ -37,7 +38,6 @@ export const usePurchase = () => {
 
             const payload: any = {
                 client: { id: client_id },
-                business: { id: cart[0].food.business.id },
                 total_cost: cart.reduce((total, item) => total + item.food.price * item.quantity, 0),
                 creation_date: new Date().toISOString().split('T')[0],
                 address, // Usar el parámetro de dirección
@@ -82,11 +82,12 @@ export const usePurchase = () => {
             const email = await getEmailById(client_id);
     
             const purchasedItems: PurchasedItem[] = cart.map(item => {
-                if (item.food.id === undefined) {
-                    throw new Error("El id del alimento no puede ser undefined");
+                if (item.food.id === undefined || item.food.business.id === undefined) {
+                    throw new Error("El id del alimento o negocio no puede ser undefined");
                 }
                 return {
                     food: { id: item.food.id },
+                    business: { id: item.food.business.id },
                     quantity: item.quantity,
                     price: item.food.price
                 };
@@ -94,7 +95,6 @@ export const usePurchase = () => {
     
             const payload: any = {
                 client: { id: client_id },
-                business: { id: cart[0].food.business.id },
                 total_cost: cart.reduce((total, item) => total + item.food.price * item.quantity, 0),
                 creation_date: new Date().toISOString().split('T')[0],
                 address, // Usar el parámetro de dirección

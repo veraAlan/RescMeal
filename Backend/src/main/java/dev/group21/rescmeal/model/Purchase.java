@@ -25,11 +25,6 @@ public class Purchase {
     @NotNull(message = "El campo client no puede estar vacío.")
     private Client client;
 
-    @ManyToOne
-    @JoinColumn(name = "business_id")
-    @NotNull(message = "El campo business no puede estar vacío.")
-    private Business business;
-
     @NotNull(message = "Debe seleccionar un metodo de pago.")
     private String payment_method;
 
@@ -44,13 +39,13 @@ public class Purchase {
     private Date creation_date;
 
     @NotNull(message = "La dirección no puede estar vacía.")
-    private String address; // Campo agregado
+    private String address;
 
     @NotNull(message = "La latitud de la dirección no puede estar vacía.")
-    private Float address_lat; // Campo agregado
+    private Float address_lat;
 
     @NotNull(message = "La longitud de la dirección no puede estar vacía.")
-    private Float address_long; // Campo agregado
+    private Float address_long;
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Para evitar la recursión infinita
