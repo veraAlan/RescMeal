@@ -30,7 +30,7 @@ public class DeliveryService {
         deliveryRepository.deleteById(id);
     }
 
-    public List<Integer> getTakenPurchaseIds() {
-        return deliveryRepository.findTakenPurchaseIds();
-    }
+    public List<Delivery> getTakenDeliveries() {
+            return deliveryRepository.findTakenDeliveries();
+        }
 }

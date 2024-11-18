@@ -27,7 +27,7 @@ const Page: React.FC = () => {
             alert('Carrier ID no disponible');
             return;
         }
-
+    
         try {
             const token = localStorage.getItem('authToken'); // Obtener el token JWT
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/delivery`, {
@@ -41,8 +41,9 @@ const Page: React.FC = () => {
                 },
                 withCredentials: true,
             });
-
+    
             if (response.status === 200) {
+                // Eliminar el pedido tomado de la lista de deliveries
                 setDeliveries(prev => prev.filter(delivery => delivery.id !== purchaseId));
                 alert('Pedido tomado con éxito');
             } else {
@@ -53,6 +54,7 @@ const Page: React.FC = () => {
             alert('Error al tomar el pedido');
         }
     };
+    
 
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>{error}</p>;

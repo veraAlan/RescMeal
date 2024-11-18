@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Delivery } from '../../../types/Delivery';
+import { Delivery } from '../../../types/Delivery'; // Asegúrate de que la ruta es correcta
 import { getSessionId } from '../../../utils/getSessionId';
 
 const TakenOrdersPage: React.FC = () => {

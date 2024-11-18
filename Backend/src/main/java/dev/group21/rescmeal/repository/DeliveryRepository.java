@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
 
-    @Query("SELECT d.purchase.id FROM Delivery d WHERE d.delivery_state = 'Tomado'")
-    List<Integer> findTakenPurchaseIds();
+    @Query("SELECT d FROM Delivery d WHERE d.delivery_state = 'Tomado'")
+    List<Delivery> findTakenDeliveries();
 }

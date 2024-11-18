@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +22,12 @@ public class DeliveryController {
         this.deliveryService = deliveryService;
     }
 
-    @GetMapping("/taken-ids")
-    public List<Integer> getTakenPurchaseIds() {
-            return deliveryService.getTakenPurchaseIds();
-        }
+    @GetMapping("/taken")
+    public List<Delivery> getTakenDeliveries() {
+        return deliveryService.getTakenDeliveries();
+    }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('CARRIER', 'ADMIN')")
     public ResponseEntity<Delivery> createDelivery(@RequestBody Delivery delivery) {
         try {
             Delivery createdDelivery = deliveryService.saveDelivery(delivery);

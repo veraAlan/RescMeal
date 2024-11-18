@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Purchase } from '../../types/Purchase';
+import { Delivery } from '../../types/Delivery'; // Asegúrate de que la ruta es correcta
 
 const useDelivery = () => {
     const [deliveries, setDeliveries] = useState<Purchase[]>([]);
@@ -18,7 +19,7 @@ const useDelivery = () => {
                         },
                         withCredentials: true
                     }),
-                    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/taken-ids`, {
+                    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/taken`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         },
@@ -27,7 +28,9 @@ const useDelivery = () => {
                 ]);
 
                 const purchases: Purchase[] = purchasesResponse.data;
-                const takenIds: number[] = takenIdsResponse.data;
+                const takenDeliveries: Delivery[] = takenIdsResponse.data;
+
+                const takenIds = takenDeliveries.map(delivery => delivery.purchase.id);
 
                 const availablePurchases = purchases.filter(purchase => !takenIds.includes(purchase.id));
                 setDeliveries(availablePurchases);
