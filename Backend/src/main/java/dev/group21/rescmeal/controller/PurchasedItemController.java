@@ -75,6 +75,7 @@ public class PurchasedItemController {
             Optional<PurchasedItem> purchasedItemOptional = purchasedItemService.getPurchasedItemById(id);
             if (purchasedItemOptional.isPresent()) {
                 PurchasedItem purchasedItem = purchasedItemOptional.get();
+                purchasedItem.setBusiness(purchasedItemDetails.getBusiness());
                 purchasedItem.setFood(purchasedItemDetails.getFood());
                 purchasedItem.setQuantity(purchasedItemDetails.getQuantity());
                 purchasedItem.setPrice(purchasedItemDetails.getPrice());

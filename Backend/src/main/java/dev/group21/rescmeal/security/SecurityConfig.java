@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/api/client").hasRole("CLIENT") // Update a client.
                 .requestMatchers("/api/api/purchase").hasAnyRole("CLIENT")
                 // Business
-                .requestMatchers(HttpMethod.POST, "/api/business", "/api/food", "/api/purchase/process-payment").hasRole("BUSINESS")
+                .requestMatchers(HttpMethod.POST, "/api/business", "/api/food").hasRole("BUSINESS")
                 .requestMatchers(HttpMethod.PUT, "/api/business", "/api/food").hasRole("BUSINESS")
                 .requestMatchers(HttpMethod.PATCH, "/api/business").hasRole("BUSINESS")
                 .requestMatchers(HttpMethod.GET, "/api/sales/dashboard", "/api/sales/stock", "/api/sales/revenue", "/api/sales/customers").hasRole("BUSINESS")

@@ -92,11 +92,13 @@ public class PurchaseController {
 
     private void updatePurchaseDetails(Purchase purchase, Purchase purchaseDetails) {
         purchase.setClient(purchaseDetails.getClient());
-        purchase.setBusiness(purchaseDetails.getBusiness());
         purchase.setPayment_method(purchaseDetails.getPayment_method());
         purchase.setTotal_cost(purchaseDetails.getTotal_cost());
         purchase.setPickup(purchaseDetails.getPickup());
         purchase.setCreation_date(purchaseDetails.getCreation_date());
+        purchase.setAddress(purchaseDetails.getAddress());
+        purchase.setAddress_lat(purchaseDetails.getAddress_lat());
+        purchase.setAddress_long(purchaseDetails.getAddress_long());
 
         if (purchase.getPurchasedItems() != null) {
             purchase.getPurchasedItems().clear();

@@ -25,6 +25,11 @@ public class PurchasedItem {
     private Purchase purchase;
 
     @ManyToOne
+    @JoinColumn(name = "business_id")
+    @NotNull(message = "El campo business no puede estar vacío.")
+    private Business business;
+
+    @ManyToOne
     @JoinColumn(name = "food_id")
     @NotNull(message = "El campo food no puede estar vacío.")
     private Food food;
