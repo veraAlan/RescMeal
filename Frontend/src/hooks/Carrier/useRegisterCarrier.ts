@@ -1,83 +1,129 @@
-import { useState } from 'react';
-import { Carrier, CarrierErrors } from '../../types/Carrier';
+import { useState } from 'react'
+import { Carrier, CarrierErrors } from '../../types/Carrier'
+import { User } from '@/types/UserRegister'
+import axiosConfig from '@/utils/axiosConfig'
+import { redirect } from 'next/navigation'
 
 export const useRegisterCarrier = () => {
-    const [formData, setFormData] = useState<Carrier>({
+    const [carrierErrors, setCarrierErrors] = useState<CarrierErrors>({})
+    const [userErrors, setUserErrors] = useState<User>({})
+    const [successMessage, setSuccessMessage] = useState('')
+    const [generalError, setGeneralError] = useState('')
+    const [status, setStatus] = useState(0)
+    const [userSession, setUserSession] = useState<Boolean | null>(null)
+    const [hasCarrier, setHasCarrier] = useState<Boolean | null>(null)
+
+    const [carrierForm, setCarrierForm] = useState<Carrier>({
         name: '',
         lastName: '',
-        email: '',
-        password: '',
         vehicleType: '',
         phone: '',
         date: ''
-    });
+    })
 
-    const [errors, setErrors] = useState<CarrierErrors>({});
-    const [successMessage, setSuccessMessage] = useState('');
-    const [generalError, setGeneralError] = useState('');
+    const [userForm, setRegisterData] = useState<User>({
+        username: '',
+        email: '',
+        role: 'carrier',
+        password: ''
+    })
+
+    if (userSession == null) {
+        axiosConfig.get(`/api/auth/validate`)
+            .then(r => { setUserSession(true) })
+            .catch(e => { setUserSession(false) })
+    }
+
+    if (hasCarrier == null) {
+        axiosConfig.get(`/api/auth/session-id`)
+            .then(r => { if (r.status == 200) setHasCarrier(true) })
+            .catch(e => { setHasCarrier(false) })
+    }
+
+    const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target
+        setRegisterData({
+            ...userForm,
+            [name]: value
+        })
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        const { name, value } = e.target
+        setCarrierForm({
+            ...carrierForm,
             [name]: value
-        });
-    };
+        })
+    }
 
-    const validate = (): boolean => {
-        let tempErrors: CarrierErrors = {};
-        if (!formData.name) tempErrors.name = "El nombre es obligatorio";
-        if (!formData.lastName) tempErrors.lastName = "El apellido es obligatorio";
-        if (!formData.email) tempErrors.email = "El correo electrónico es obligatorio";
-        if (!formData.password) tempErrors.password = "La contraseña es obligatoria";
-        if (!formData.vehicleType) tempErrors.vehicleType = "El tipo de vehículo es obligatorio";
-        if (!formData.phone) tempErrors.phone = "El teléfono es obligatorio";
-        if (!formData.date) tempErrors.date = "La fecha es obligatoria";
-        setErrors(tempErrors);
+    const validateUser = (userForm: User) => {
+        let tempErrors: { [k: string]: any } = {};
+
+        axiosConfig.post(`/api/auth/valid`, userForm, { withCredentials: true })
+            .then(() => { setUserErrors({}) })
+            .catch(e => {
+                console.log("Error: ", e)
+                for (const key in e.response.data) {
+                    if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                        tempErrors[key] = e.response.data[key];
+                    }
+                }
+                setUserErrors(tempErrors)
+            })
+
         return Object.keys(tempErrors).length === 0;
-    };
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (validate()) {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carrier`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    setErrors(errorData);
-                    setGeneralError('Error registrando carrier. Por favor, inténtelo de nuevo.');
-                    throw new Error('Error al crear el carrier');
-                }
-                setSuccessMessage('Carrier registrado exitosamente');
-                setFormData({
-                    name: '',
-                    lastName: '',
-                    email: '',
-                    password: '',
-                    vehicleType: '',
-                    phone: '',
-                    date: ''
-                });
-                setErrors({});
-                setGeneralError('');
-            } catch (error) {
-                setGeneralError('Error registrando carrier. Por favor, inténtelo de nuevo.');
-            }
+        e.preventDefault()
+
+        if (validateUser(userForm) && !userSession) {
+            console.log("Sent userForm: ", userForm)
+            await axiosConfig.post(`/api/auth/signup`, userForm, { withCredentials: true })
+                .then(r => {
+                    setUserSession(true)
+                })
+                .catch(e => {
+                    console.log("Error creating user: ", e)
+                    setGeneralError(e.response.data)
+                })
         }
-    };
+
+        if (userSession) {
+            let tempErrors: { [k: string]: any } = {}
+            axiosConfig.post('/api/carrier', carrierForm)
+                .then(r => {
+                    console.log('Carrier registrado exitosamente')
+                    setSuccessMessage('Carrier registrado exitosamente')
+                    setStatus(r.status)
+                })
+                .catch(e => {
+                    for (const key in e.response.data) {
+                        if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                            tempErrors[key] = e.response.data[key]
+                        }
+                    }
+                    setCarrierErrors(tempErrors)
+                })
+        }
+
+        if (status === 200 || status === 201) {
+            setTimeout(redirect("/"), 1000)
+            redirect("/")
+        }
+    }
 
     return {
-        formData,
-        errors,
+        userForm,
+        userErrors,
+        userSession,
+        hasCarrier,
+        carrierForm,
+        carrierErrors,
         successMessage,
         generalError,
         handleChange,
+        handleChangeRegister,
         handleSubmit
-    };
-};
+    }
+}

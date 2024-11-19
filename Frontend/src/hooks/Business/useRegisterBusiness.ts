@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { redirect } from 'next/navigation';
+import { useContext, useState } from 'react'
+import axios from 'axios'
+import { redirect } from 'next/navigation'
+import axiosConfig from '@/utils/axiosConfig'
+import { AuthContext } from '@/context/AuthContext'
 
 export interface Business {
     name?: string
@@ -34,29 +36,21 @@ export const useRegisterBusiness = () => {
     const [imageError, setImageError] = useState<string | null>(null)
     const [generalError, setGeneralError] = useState<string | null>(null)
 
-    const [address, setAddress] = useState<string>('Neuquén Capital');
-    const [address_lat, setAddressLat] = useState<number>(-38.9517);
-    const [address_long, setAddressLong] = useState<number>(-68.0591);
+    const [address, setAddress] = useState<string>('Neuquén Capital')
+    const [address_lat, setAddressLat] = useState<number>(-38.9517)
+    const [address_long, setAddressLong] = useState<number>(-68.0591)
 
     if (userSession == null) {
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/validate`, { withCredentials: true })
-            .then(r => {
-                setUserSession(true)
-            })
-            .catch(e => {
-                setUserSession(false)
-            })
+        axiosConfig.get(`/auth/validate`)
+            .then(r => { setUserSession(true) })
+            .catch(e => { setUserSession(false) })
     }
 
     // TODO Solve: Loading more than one time
     if (hasBusiness == null) {
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/session-id`, { withCredentials: true })
-            .then(r => {
-                setHasBusiness(true)
-            })
-            .catch(e => {
-                setHasBusiness(false)
-            })
+        axiosConfig.get(`/auth/session-id`)
+            .then(r => { setHasBusiness(true) })
+            .catch(e => { setHasBusiness(false) })
     }
 
     const [businessForm, setBusinessData] = useState<Business>({
@@ -68,7 +62,7 @@ export const useRegisterBusiness = () => {
         phone: '',
         schedule: '',
         cvu: ''
-    });
+    })
 
     const [userForm, setRegisterData] = useState<User>({
         username: '',
@@ -77,9 +71,7 @@ export const useRegisterBusiness = () => {
         password: ''
     })
 
-    const [linkUser, setLinkUser] = useState<linkUser>({
-        id: 0,
-    })
+    const [linkUser, setLinkUser] = useState<linkUser>({ id: 0 })
 
     const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -89,32 +81,32 @@ export const useRegisterBusiness = () => {
         })
     }
 
-    const [imageForm, setImageData] = useState<File | null>(null);
-    const [userErrors, setUserErrors] = useState<User>({});
-    const [businessErrors, setBusinessErrors] = useState<Business>({});
-    const [status, setStatus] = useState(0);
+    const [imageForm, setImageData] = useState<File | null>(null)
+    const [userErrors, setUserErrors] = useState<User>({})
+    const [businessErrors, setBusinessErrors] = useState<Business>({})
+    const [status, setStatus] = useState(0)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setBusinessData({
             ...businessForm,
             [name]: value
-        });
-    };
+        })
+    }
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const file = e.target.files[0];
+            const file = e.target.files[0]
             if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-                setImageData(file);
+                setImageData(file)
             } else {
-                setImageError('Solo se permiten imágenes JPEG o PNG');
+                setImageError('Solo se permiten imágenes JPEG o PNG')
             }
         }
-    };
+    }
 
     const validateUser = (userForm: User) => {
-        let tempErrors: { [k: string]: any } = {};
+        let tempErrors: { [k: string]: any } = {}
 
         axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/valid`, userForm, { withCredentials: true })
             .then(() => { setUserErrors({}) })
@@ -122,39 +114,43 @@ export const useRegisterBusiness = () => {
                 console.log("Error: ", error)
                 for (const key in error.response.data) {
                     if (Object.prototype.hasOwnProperty.call(error.response.data, key)) {
-                        tempErrors[key] = error.response.data[key];
+                        tempErrors[key] = error.response.data[key]
                     }
                 }
                 setUserErrors(tempErrors)
             })
 
-        return Object.keys(tempErrors).length === 0;
-    };
+        return Object.keys(tempErrors).length === 0
+    }
 
     const validateBusiness = (businessForm: Business): boolean => {
-        let tempErrors: { [k: string]: any } = {};
+        let tempErrors: { [k: string]: any } = {}
 
         axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business/valid`, businessForm, { withCredentials: true })
             .then(() => { setBusinessErrors({}) })
             .catch(error => {
                 for (const key in error.response.data) {
                     if (Object.prototype.hasOwnProperty.call(error.response.data, key)) {
-                        tempErrors[key] = error.response.data[key];
+                        tempErrors[key] = error.response.data[key]
                     }
                 }
                 setBusinessErrors(tempErrors)
             })
 
-        return Object.keys(tempErrors).length === 0;
-    };
+        return Object.keys(tempErrors).length === 0
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (validateUser(userForm) && !userSession) {
             console.log("Sent userForm: ", userForm)
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, userForm, { withCredentials: true })
                 .then(r => {
+                    const authContext = useContext(AuthContext)
+                    if (!authContext) return null
+                    const { login } = authContext
+                    login(r.data.token)
                     setUserSession(true)
                 })
                 .catch(e => {
@@ -202,7 +198,7 @@ export const useRegisterBusiness = () => {
         if (status === 200 || status === 201) {
             redirect("/")
         }
-    };
+    }
 
     return {
         businessForm,
@@ -221,5 +217,5 @@ export const useRegisterBusiness = () => {
         handleImage,
         handleSubmit,
         handleChangeRegister
-    };
-};
+    }
+}

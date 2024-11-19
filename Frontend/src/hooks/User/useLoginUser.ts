@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { User } from '../../types/User'
+import { User } from '../../types/UserLogin'
 import { redirect } from 'next/navigation'
 import { AuthContext } from '@/context/AuthContext'
 import axiosConfig from '../../utils/axiosConfig'
@@ -22,19 +22,21 @@ export const useLoginUser = () => {
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
 
-      axiosConfig.post('/api/auth/signin', {
-         identifier: loginData.identifier,
-         password: loginData.password
-      })
-         .then(r => {
-            if (!authContext) return null
-            const { login } = authContext
-
-            login(r.data.token)
-            setStatus(r.status)
-            setError(null)
+      {
+         axiosConfig.post('/api/auth/signin', {
+            identifier: loginData.identifier,
+            password: loginData.password
          })
-         .catch(e => setError("Email, nombre de usuario o contraseña incorrecta."))
+            .then(r => {
+               if (!authContext) return null
+               const { login } = authContext
+
+               login(r.data.token)
+               setStatus(r.status)
+               setError(null)
+            })
+            .catch(e => setError("Email, nombre de usuario o contraseña incorrecta."))
+      }
    }
 
    if (status == 200) {

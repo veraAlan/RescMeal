@@ -37,6 +37,11 @@ public class BusinessController {
         this.userService = userService;
     }
 
+    /**
+     * Validate the form of Business.
+     * @param business
+     * @return
+     */
     @PostMapping("/valid")
     public ResponseEntity<Business> validateBusiness(@Valid @RequestBody Business business){
         return ResponseEntity.ok().body(business);
