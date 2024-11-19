@@ -1,83 +1,121 @@
-import { useState } from 'react';
-import { Client, ClientErrors } from '../../types/Client';
+import { useContext, useState } from 'react'
+import { Client, ClientErrors } from '../../types/Client'
+import { User } from '@/types/UserRegister'
+import axiosConfig from '@/utils/axiosConfig'
+import { redirect } from 'next/navigation'
+import { AuthContext } from '@/context/AuthContext'
 
 export const useRegisterClient = () => {
-    const [formData, setFormData] = useState<Client>({
+    const [userErrors, setUserErrors] = useState<User>({})
+    const [clientErrors, setClientErrors] = useState<ClientErrors>({})
+    const [status, setStatus] = useState(0)
+    const [successMessage, setSuccessMessage] = useState('')
+    const [generalError, setGeneralError] = useState('')
+    const [userSession, setUserSession] = useState<Boolean | null>(null)
+
+    const [clientForm, setClientForm] = useState<Client>({
         name: '',
         last_name: '',
-        email: '',
         phone: '',
-        password: '',
         address: '',
         birthdate: ''
-    });
+    })
 
-    const [errors, setErrors] = useState<ClientErrors>({});
-    const [successMessage, setSuccessMessage] = useState('');
-    const [generalError, setGeneralError] = useState('');
+    const [userForm, setRegisterForm] = useState<User>({
+        username: '',
+        email: '',
+        role: 'client',
+        password: ''
+    })
+
+    const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target
+        setRegisterForm({
+            ...userForm,
+            [name]: value
+        })
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        const { name, value } = e.target
+        setClientForm({
+            ...clientForm,
             [name]: value
-        });
-    };
+        })
+    }
 
-    const validate = (): boolean => {
-        let tempErrors: ClientErrors = {};
-        if (!formData.name) tempErrors.name = "El nombre es obligatorio";
-        if (!formData.last_name) tempErrors.last_name = "El apellido es obligatorio";
-        if (!formData.email) tempErrors.email = "El correo electrónico es obligatorio";
-        if (!formData.phone) tempErrors.phone = "El teléfono es obligatorio";
-        if (!formData.password) tempErrors.password = "La contraseña es obligatoria";
-        if (!formData.address) tempErrors.address = "La dirección es obligatoria";
-        if (!formData.birthdate) tempErrors.birthdate = "La fecha de nacimiento es obligatoria";
-        setErrors(tempErrors);
+    const validateUser = (userForm: User) => {
+        let tempErrors: { [k: string]: any } = {};
+
+        axiosConfig.post(`/api/auth/valid`, userForm, { withCredentials: true })
+            .then(() => { setUserErrors({}) })
+            .catch(e => {
+                console.log("Error: ", e)
+                for (const key in e.response.data) {
+                    if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                        tempErrors[key] = e.response.data[key];
+                    }
+                }
+                setUserErrors(tempErrors)
+            })
+
         return Object.keys(tempErrors).length === 0;
-    };
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (validate()) {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/client`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    setErrors(errorData);
-                    setGeneralError('Error registrando cliente. Por favor, inténtelo de nuevo.');
-                    throw new Error('Error al crear el cliente');
-                }
-                setSuccessMessage('Cliente registrado exitosamente');
-                setFormData({
-                    name: '',
-                    last_name: '',
-                    email: '',
-                    phone: '',
-                    password: '',
-                    address: '',
-                    birthdate: ''
-                });
-                setErrors({});
-                setGeneralError('');
-            } catch (error) {
-                setGeneralError('Error registrando cliente. Por favor, inténtelo de nuevo.');
-            }
+        e.preventDefault()
+
+        if (validateUser(userForm) && !userSession) {
+            console.log("Sent userForm: ", userForm)
+            await axiosConfig.post(`/api/auth/signup`, userForm, { withCredentials: true })
+                .then(r => {
+
+                    setUserSession(true)
+                })
+                .catch(e => {
+                    console.log("Error creating user: ", e)
+                    setGeneralError(e.response.data)
+                })
         }
-    };
+
+        if (userSession) {
+            let tempErrors: { [k: string]: any } = {}
+            axiosConfig.post('/api/client', clientForm)
+                .then(r => {
+                    const authContext = useContext(AuthContext)
+                    if (!authContext) return null
+                    const { login } = authContext
+                    login(r.data.token)
+                    setStatus(r.status)
+                    setSuccessMessage('Cliente registrado exitosamente')
+                })
+                .catch(e => {
+                    for (const key in e.response.data) {
+                        if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                            tempErrors[key] = e.response.data[key]
+                        }
+                    }
+                    setClientErrors(tempErrors)
+                    setGeneralError('Error registrando cliente. Por favor, inténtelo de nuevo.')
+                })
+        }
+    }
+
+    if (status === 200 || status === 201) {
+        setTimeout(redirect("/"), 1000)
+        redirect("/")
+    }
 
     return {
-        formData,
-        errors,
+        userForm,
+        userErrors,
+        userSession,
+        clientForm,
+        clientErrors,
         successMessage,
         generalError,
         handleChange,
+        handleChangeRegister,
         handleSubmit
-    };
-};
+    }
+}

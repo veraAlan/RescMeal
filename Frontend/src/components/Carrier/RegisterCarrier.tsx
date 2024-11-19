@@ -37,7 +37,7 @@ const RegisterCarrier: React.FC = () => {
                             {userErrors.username && <p className="text-red-500">{userErrors.username}</p>}
                         </div>
                         <div>
-                            <label className="block">Email del local:</label>
+                            <label className="block">Email:</label>
                             <input
                                 type="email"
                                 name="email"
@@ -61,7 +61,7 @@ const RegisterCarrier: React.FC = () => {
                     </div>
                 }
                 {userSession && <p className="text-green-500 text-lg font-semibold">Ya estas en una sesion.<br /> Si no quiere crear un local asociado a al usuario actual, primero cierre sesion.</p>}
-                <label className='block text-lg'>Informacion de Personal</label>
+                <label className='block text-lg'>Informacion Personal</label>
                 {!hasCarrier &&
                     <div>
                         <div>

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Carrier, CarrierErrors } from '../../types/Carrier'
 import { User } from '@/types/UserRegister'
 import axiosConfig from '@/utils/axiosConfig'
 import { redirect } from 'next/navigation'
+import { AuthContext } from '@/context/AuthContext'
 
 export const useRegisterCarrier = () => {
     const [carrierErrors, setCarrierErrors] = useState<CarrierErrors>({})
@@ -81,6 +82,10 @@ export const useRegisterCarrier = () => {
             console.log("Sent userForm: ", userForm)
             await axiosConfig.post(`/api/auth/signup`, userForm, { withCredentials: true })
                 .then(r => {
+                    const authContext = useContext(AuthContext)
+                    if (!authContext) return null
+                    const { login } = authContext
+                    login(r.data.token)
                     setUserSession(true)
                 })
                 .catch(e => {

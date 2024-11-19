@@ -44,6 +44,6 @@ public class Client {
     @NotNull(message = "Este campo es obligatorio")
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @MinAge(value = 18, message = "El cliente debe tener al menos 18 años")
+//    @MinAge(value = 18, message = "El cliente debe tener al menos 18 años")
     private Date birthdate;
 }
