@@ -20,11 +20,11 @@ const Header: React.FC = () => {
                 <div className="flex space-x-4">
                     {isLoggedIn ? (
                         <>
+                            <RoleHeader />
                             <Link href="/auth/me" className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Perfil</Link>
                             <Link href="/auth/login">
                                 <button onClick={logout} className="bg-white text-blue-500 font-bold py-2 px-4 rounded">Cerrar Sesion</button>
                             </Link>
-                            <RoleHeader />
                         </>
                     ) : (
                         <>

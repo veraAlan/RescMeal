@@ -31,15 +31,13 @@ public class Business {
     private String type;
 
     @NotNull(message = "La dirección es obligatoria")
-    @Size(min = 5, max = 50, message = "La dirección debe tener entre 5 y 50 caracteres")
+    @Size(min=5, max = 100, message = "La dirección debe tener entre 5 y  100 caracteres")
     private String address;
 
     // Float es suficiente para la precision de mapa, 00. + 5-6 digitos
     @NotNull(message = "La ubicacion es obligatoria (Latitud)")
-    @Pattern(regexp = "^[+-](\\d+)\\.(\\d{5,6})$", message = "Precision maxima de 6 digitos")
     private float address_lat;
     @NotNull(message = "La ubicacion es obligatoria (Longitud)")
-    @Pattern(regexp = "^[+-](\\d+)\\.(\\d{5,6})$", message = "Precision maxima de 6 digitos")
     private float address_long;
 
     @Pattern(regexp = "\\d{10}", message = "El teléfono debe tener 10 dígitos")
@@ -48,7 +46,7 @@ public class Business {
     private String phone;
 
     @NotNull(message = "El horario es obligatorio")
-    @Size(min = 3, max = 50, message = "La dirección debe tener entre 3 y 50 caracteres")
+    @Size(min = 3, max = 100, message = "La dirección debe tener entre 3 y 100 caracteres")
     private String schedule;
 
     @NotNull(message = "El CVU es obligatorio")

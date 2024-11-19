@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import mapboxgl, { Map} from 'mapbox-gl';
+import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
 
@@ -28,7 +28,7 @@ const useMap = ({ businessId }: { businessId: number }) => {
             setMapLoaded(true);
             axios.get(`${process.env.NEXT_PUBLIC_API_URL}/business/${businessId}`, { withCredentials: true })
                 .then(response => {
-                    if (response.data && response.data.address_long && response.data.address_long) setAddress(response.data.address_lat + ", " + response.data.address_long);
+                    if (response.data && response.data.address_long && response.data.address_long) setAddress(response.data.address_long + "," + response.data.address_lat);
                 })
                 .catch(e => console.error("Error: ", e))
         });

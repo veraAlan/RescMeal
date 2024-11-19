@@ -6,6 +6,8 @@ export interface Business {
     name?: string
     type?: string
     address?: string
+    address_lat?: number
+    address_long?: number
     phone?: string
     schedule?: string
     cvu?: string
@@ -32,6 +34,10 @@ export const useRegisterBusiness = () => {
     const [imageError, setImageError] = useState<string | null>(null)
     const [generalError, setGeneralError] = useState<string | null>(null)
 
+    const [address, setAddress] = useState<string>('Neuquén Capital');
+    const [address_lat, setAddressLat] = useState<number>(-38.9517);
+    const [address_long, setAddressLong] = useState<number>(-68.0591);
+
     if (userSession == null) {
         axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/validate`, { withCredentials: true })
             .then(r => {
@@ -57,6 +63,8 @@ export const useRegisterBusiness = () => {
         name: '',
         type: '',
         address: '',
+        address_lat: 0,
+        address_long: 0,
         phone: '',
         schedule: '',
         cvu: ''
@@ -144,11 +152,13 @@ export const useRegisterBusiness = () => {
         e.preventDefault();
 
         if (validateUser(userForm) && !userSession) {
+            console.log("Sent userForm: ", userForm)
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, userForm, { withCredentials: true })
                 .then(r => {
                     setUserSession(true)
                 })
                 .catch(e => {
+                    console.log("Error creating user: ", e)
                     setGeneralError(e.response.data)
                 })
         }
@@ -158,26 +168,30 @@ export const useRegisterBusiness = () => {
                 .then(r => {
                     setLinkUser(r.data.id)
 
+                    console.log("Object businessForm: ", businessForm)
+
                     const businessData = new FormData()
+                    businessForm.address = address
+                    businessForm.address_lat = address_lat
+                    businessForm.address_long = address_long
                     businessData.append("business", new Blob([JSON.stringify(businessForm)], { type: 'application/json' }))
                     businessData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
                     if (imageForm) {
                         businessData.append("image", imageForm)
                     }
 
+                    console.log("Sent businessForm: ", businessData)
                     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`,
                         businessData, {
                         headers: {
                             'Content-Type': 'multipart/mixed'
                         },
                         withCredentials: true
+                    }).then(r => {
+                        setStatus(r.status)
+                    }).catch(e => {
+                        console.log("Error creating business: ", e)
                     })
-                        .then(r => {
-                            setStatus(r.status)
-                        })
-                        .catch(e => {
-                            console.log("Error creating business: ", e)
-                        })
                 })
                 .catch(e => {
                     setGeneralError("Error cargando el local, por favor intente nuevamente.")
@@ -200,6 +214,9 @@ export const useRegisterBusiness = () => {
         generalError,
         userSession,
         hasBusiness,
+        setAddress,
+        setAddressLat,
+        setAddressLong,
         handleChange,
         handleImage,
         handleSubmit,

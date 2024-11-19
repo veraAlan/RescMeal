@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRegisterBusiness } from '../../hooks/Business/useRegisterBusiness';
+import AddressPicker from '../Map/AddressPicker';
 
 const RegisterBusiness: React.FC = () => {
     const {
@@ -11,6 +12,9 @@ const RegisterBusiness: React.FC = () => {
         generalError,
         userSession,
         hasBusiness,
+        setAddress,
+        setAddressLat,
+        setAddressLong,
         handleChange,
         handleImage,
         handleSubmit,
@@ -98,12 +102,10 @@ const RegisterBusiness: React.FC = () => {
                         </div>
                         <div>
                             <label className="block">Dirección:</label>
-                            <input
-                                type="text"
-                                name="address"
-                                value={businessForm.address}
-                                onChange={handleChange}
-                                className="border p-2 w-full"
+                            <AddressPicker
+                                setAddress={setAddress}
+                                setAddressLat={setAddressLat}
+                                setAddressLong={setAddressLong}
                             />
                             {businessErrors.address && <p className="text-red-500">{businessErrors.address}</p>}
                         </div>
