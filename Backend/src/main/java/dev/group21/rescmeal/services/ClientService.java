@@ -59,7 +59,7 @@ public class ClientService {
      * Delete a Client entity by id.
      * @param id Integer id of Client entity.
      */
-    public void deleteClient(Integer id) {
+    public void deleteClient(Long id) {
         clientRepository.deleteById(id);
     }
 
@@ -69,7 +69,7 @@ public class ClientService {
      * @param id Integer id of Client entity.
      * @return Client entity.
      */
-    public Client getClient(Integer id) {
+    public Client getClient(Long id) {
         return clientRepository.findById(id).orElse(null);
     }
 

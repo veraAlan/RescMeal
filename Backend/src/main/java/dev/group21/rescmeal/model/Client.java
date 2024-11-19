@@ -21,7 +21,7 @@ import java.util.Date;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotNull(message = "Este campo es obligatorio")
     @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")

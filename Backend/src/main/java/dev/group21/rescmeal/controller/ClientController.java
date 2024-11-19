@@ -1,8 +1,10 @@
 package dev.group21.rescmeal.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.ClientService;
+import dev.group21.rescmeal.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,16 +27,20 @@ public class ClientController {
     @Autowired
     JwtUtils jwtUtils;
     private final ClientService clientService;
+    private final UserService userService;
 
     @Autowired
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, UserService userService) {
         this.clientService = clientService;
+        this.userService = userService;
     }
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@Valid @RequestBody Client client) {
+    public ResponseEntity<Client> createClient(@RequestPart("client") String clientJson, @RequestPart(value = "user") Long userid) {
         try {
+            @Valid Client client = new ObjectMapper().readValue(clientJson, Client.class);
             Client createdClient = clientService.createClient(client);
+            userService.updateClient(userid, createdClient);
             return ResponseEntity.ok(createdClient);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
@@ -42,8 +48,9 @@ public class ClientController {
     }
 
     @PutMapping
-    public ResponseEntity<Client> updateClient(@Valid @RequestBody Client newClient) {
+    public ResponseEntity<Client> updateClient(@RequestPart("client") String clientJson) {
         try {
+            @Valid Client newClient = new ObjectMapper().readValue(clientJson, Client.class);
             if (clientService.getClient(newClient.getId()) == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -67,7 +74,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         try {
             if (id != null) {
                 clientService.deleteClient(id);
@@ -81,7 +88,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable Integer id) {
+    public ResponseEntity<Client> getClient(@PathVariable Long id) {
         try {
             Client client = clientService.getClient(id);
             if (client != null) {

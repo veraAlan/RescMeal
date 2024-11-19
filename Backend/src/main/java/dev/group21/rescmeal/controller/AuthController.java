@@ -113,7 +113,7 @@ public class AuthController {
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             if (user.getClient() != null) {
-                return ResponseEntity.ok(user.getClient().getId());
+                return ResponseEntity.ok(user.getClient().getId().intValue());
             } else if (user.getBusiness() != null) {
                 return ResponseEntity.ok(user.getBusiness().getId().intValue());
             } else if (user.getCarrier() != null) {
