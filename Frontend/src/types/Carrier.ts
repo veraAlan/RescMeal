@@ -4,7 +4,7 @@ export interface Carrier {
     lastName: string
     vehicleType?: string
     phone?: string
-    date: string
+    birthdate: string
 }
 
 export interface CarrierErrors {
@@ -12,5 +12,5 @@ export interface CarrierErrors {
     lastName?: string
     vehicleType?: string
     phone?: string
-    date?: string
+    birthdate?: string
 }

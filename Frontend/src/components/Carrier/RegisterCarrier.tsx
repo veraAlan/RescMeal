@@ -7,11 +7,8 @@ const RegisterCarrier: React.FC = () => {
         userForm,
         userErrors,
         userSession,
-        hasCarrier,
         carrierForm,
         carrierErrors,
-        successMessage,
-        generalError,
         handleChange,
         handleChangeRegister,
         handleSubmit
@@ -21,8 +18,6 @@ const RegisterCarrier: React.FC = () => {
         <div id="myElement" className="container mx-auto p-4">
             <h2 className="text-2xl mb-4">Registrar Carrier</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <label className='block text-lg'>Informacion de Inicio de Sesion</label>
-                {generalError && <p className="text-green-500 text-lg font-semibold">{ }</p>}
                 {!userSession &&
                     <div>
                         <div>
@@ -62,7 +57,6 @@ const RegisterCarrier: React.FC = () => {
                 }
                 {userSession && <p className="text-green-500 text-lg font-semibold">Ya estas en una sesion.<br /> Si no quiere crear un local asociado a al usuario actual, primero cierre sesion.</p>}
                 <label className='block text-lg'>Informacion Personal</label>
-                {!hasCarrier &&
                     <div>
                         <div>
                             <label className="block">Nombre:</label>
@@ -119,21 +113,17 @@ const RegisterCarrier: React.FC = () => {
                             <label className="block">Fecha:</label>
                             <input
                                 type="date"
-                                name="date"
-                                value={carrierForm.date}
+                                name="birthdate"
+                                value={carrierForm.birthdate}
                                 onChange={handleChange}
                                 className="border p-2 w-full"
                             />
-                            {carrierErrors.date && <p className="text-red-500">{carrierErrors.date}</p>}
+                            {carrierErrors.birthdate && <p className="text-red-500">{carrierErrors.birthdate}</p>}
                         </div>
                     </div>
-                }
-                {successMessage && <p className="text-green-500">{successMessage}</p>}
-                {generalError && <p className="text-red-500">{generalError}</p>}
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded">
                     Registrar
                 </button>
-                {hasCarrier && <p className="text-green-500 text-lg font-semibold">Ya tiene una cuenta de repartidor creada. <br /><Link href='/auth/me'><button>Ver Perfil</button></Link></p>}
             </form>
         </div>
     );

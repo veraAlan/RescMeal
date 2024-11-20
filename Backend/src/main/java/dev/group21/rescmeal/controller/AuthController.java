@@ -117,7 +117,7 @@ public class AuthController {
             } else if (user.getBusiness() != null) {
                 return ResponseEntity.ok(user.getBusiness().getId().intValue());
             } else if (user.getCarrier() != null) {
-                return ResponseEntity.ok(user.getCarrier().getId());
+                return ResponseEntity.ok(user.getCarrier().getId().intValue());
             } else {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
             }
