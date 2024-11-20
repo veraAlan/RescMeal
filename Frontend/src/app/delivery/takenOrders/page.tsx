@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Delivery } from '../../../types/Delivery';
 import { getSessionId } from '../../../utils/getSessionId';
+import Link from 'next/link';
 
 const TakenOrdersPage: React.FC = () => {
     const [takenOrders, setTakenOrders] = useState<Delivery[]>([]);
@@ -41,6 +42,11 @@ const TakenOrdersPage: React.FC = () => {
         }
     }, [carrierId]);
 
+    const handleCompleteDelivery = (orderId: number) => {
+        // Lógica para completar la entrega
+        console.log(`Completar entrega para el pedido con ID: ${orderId}`);
+    };
+
     if (takenOrders.length === 0) return <p>No hay pedidos tomados.</p>;
 
     return (
@@ -48,21 +54,33 @@ const TakenOrdersPage: React.FC = () => {
             <h1 className="text-4xl font-bold my-4 text-center text-gray-800">Pedidos Tomados</h1>
             <div className="grid grid-cols-1 gap-4">
                 {takenOrders.map(order => (
-                    <div key={order.id} className="bg-white p-4 rounded shadow-md">
-                        <p><strong>Carrier:</strong> {order.carrier ? order.carrier.name : 'Sin Carrier'}</p>
-                        <p><strong>Cliente:</strong> {order.purchase.client.name}</p>
-                        <p><strong>Total:</strong> ${order.purchase.total_cost}</p>
-                        <p><strong>Fecha de Creación:</strong> {order.purchase.creation_date}</p>
-                        <p><strong>Items:</strong></p>
-                        <ul>
+                    <div key={order.id} className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                        <p className="text-lg"><strong>Cliente:</strong> {order.purchase.client.name}</p>
+                        <p className="text-lg"><strong>Total:</strong> ${order.purchase.total_cost}</p>
+                        <p className="text-lg"><strong>Fecha de Creación:</strong> {new Date(order.purchase.creation_date).toLocaleDateString()}</p>
+                        <p className="text-lg"><strong>Items:</strong></p>
+                        <ul className="ml-6">
                             {order.purchase.purchasedItems.map(item => (
-                                <li key={item.food.id}>
+                                <li key={item.food.id} className="text-lg">
                                     { 'name' in item.food ? item.food.name : `Food ID: ${item.food.id}` } - Cantidad: {item.quantity} - Precio: ${item.price}
                                 </li>
                             ))}
                         </ul>
-                        <p><strong>Estado de Entrega:</strong> {order.delivery_state}</p>
-                        <p><strong>Hora de Entrega:</strong> {order.delivery_time}</p>
+                        <p className="text-lg"><strong>Estado de Entrega:</strong> {order.delivery_state}</p>
+                        <p className="text-lg"><strong>Hora de Entrega:</strong> {order.delivery_time}</p>
+                        <div className="flex justify-between mt-4">
+                            <Link href={`/Direction?purchaseId=${order.purchase.id}`} legacyBehavior>
+                                <a className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200">
+                                    Ver mi Ruta
+                                </a>
+                            </Link>
+                            <button
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                                onClick={() => handleCompleteDelivery(order.id)}
+                            >
+                                Terminar Entrega
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>

@@ -31,7 +31,7 @@ const Page: React.FC = () => {
         }
     
         try {
-            const token = localStorage.getItem('authToken'); // Obtener el token JWT
+            const token = localStorage.getItem('authToken');
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/delivery`, {
                 purchase: { id: purchaseId },
                 carrier: { id: carrierId },
