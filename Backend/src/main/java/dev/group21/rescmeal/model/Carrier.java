@@ -20,26 +20,26 @@ import java.util.Date;
 public class Carrier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @NotBlank(message = "Este campo es obligatorio")
+    @NotEmpty(message = "Este campo es obligatorio")
     @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")
     private String name;
 
-    @NotBlank(message = "Este campo es obligatorio")
+    @NotEmpty(message = "Este campo es obligatorio")
     @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
     private String lastName;
 
+    @NotEmpty(message = "Este campo es obligatorio")
     private String vehicleType;
 
-    @NotNull(message = "Este campo es obligatorio")
+    @NotEmpty(message = "Este campo es obligatorio")
     @Size(min = 10, max = 15, message = "El teléfono debe tener entre 10 y 15 caracteres")
     private String phone;
 
     @NotNull(message = "Este campo es obligatorio")
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @MinAge(value = 18, message = "El cliente debe tener al menos 18 años")
     private Date birthdate;
 
 }

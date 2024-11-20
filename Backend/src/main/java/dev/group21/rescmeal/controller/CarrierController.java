@@ -2,7 +2,9 @@ package dev.group21.rescmeal.controller;
 
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Carrier;
+import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.services.CarrierService;
+import dev.group21.rescmeal.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,16 +25,24 @@ import java.util.List;
 public class CarrierController {
 
         private final CarrierService carrierService;
+        private final UserService userService;
 
         @Autowired
-        public CarrierController(CarrierService carrierService) {
+        public CarrierController(CarrierService carrierService, UserService userService) {
             this.carrierService = carrierService;
+            this.userService = userService;
         }
 
+    @PostMapping("/valid")
+    public ResponseEntity<Carrier> validateCarrier(@Valid @RequestBody Carrier carrier){
+        return ResponseEntity.ok().body(carrier);
+    }
+
         @PostMapping
-        public ResponseEntity<Carrier> createCarrier(@Valid @RequestBody Carrier carrier) {
+        public ResponseEntity<Carrier> createCarrier(@Valid @RequestPart("carrier") Carrier carrier, @RequestPart(value = "user") Long userid) {
             try {
                 Carrier createdCarrier = carrierService.createCarrier(carrier);
+                userService.updateCarrier(userid, createdCarrier);
                 return ResponseEntity.ok(createdCarrier);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
@@ -54,7 +64,7 @@ public class CarrierController {
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Carrier> getCarrier(@PathVariable Integer id) {
+        public ResponseEntity<Carrier> getCarrier(@PathVariable Long id) {
             try {
                 Carrier carrier = carrierService.getCarrier(id);
                 if (carrier != null) {
@@ -89,7 +99,7 @@ public class CarrierController {
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteCarrier(@PathVariable Integer id) {
+        public ResponseEntity<Void> deleteCarrier(@PathVariable Long id) {
             try {
                 if(id != null) {
                     carrierService.deleteCarrier(id);

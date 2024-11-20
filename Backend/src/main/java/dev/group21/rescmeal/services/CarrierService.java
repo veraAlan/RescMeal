@@ -26,7 +26,7 @@ public class CarrierService {
         return carrierRepository.findAll(parameters);
     }
 
-    public Carrier getCarrier(Integer id) {
+    public Carrier getCarrier(Long id) {
         return carrierRepository.findById(id).orElse(null);
     }
 
@@ -43,7 +43,7 @@ public class CarrierService {
         return carrierRepository.saveAndFlush(updateCarrier);
     }
 
-    public void deleteCarrier(Integer id) {
+    public void deleteCarrier(Long id) {
         carrierRepository.deleteById(id);
     }
 }
