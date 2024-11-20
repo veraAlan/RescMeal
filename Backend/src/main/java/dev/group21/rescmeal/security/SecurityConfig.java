@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -71,13 +70,12 @@ public class SecurityConfig {
                                 // User
                                 .requestMatchers(HttpMethod.POST, "/api/*/valid").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/user/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/client/me", "/api/business/me", "/api/carrier/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                                 // Food
                                 .requestMatchers(HttpMethod.GET, "/api/food/list").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                                 // Client
-                                .requestMatchers(HttpMethod.POST, "/api/client").hasRole("CLIENT") // Create a client.
-                                .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT") // Update a client.
-                                .requestMatchers(HttpMethod.PATCH, "/api/client").hasRole("CLIENT") // Update a client.
+                                .requestMatchers(HttpMethod.POST, "/api/client").hasRole("CLIENT")
+                                .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT")
+                                .requestMatchers(HttpMethod.PATCH, "/api/client").hasRole("CLIENT")
                                 .requestMatchers("/api/api/purchase").hasAnyRole("CLIENT")
                                 // Business
                                 .requestMatchers(HttpMethod.POST, "/api/business", "/api/food").hasRole("BUSINESS")

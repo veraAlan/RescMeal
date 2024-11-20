@@ -9,7 +9,6 @@ const RegisterBusiness: React.FC = () => {
         userErrors,
         businessErrors,
         imageError,
-        generalError,
         userSession,
         hasBusiness,
         setAddress,
@@ -26,7 +25,6 @@ const RegisterBusiness: React.FC = () => {
             <h2 className="text-3xl font-semibold mb-4">Registrar Negocio</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <label className='block text-lg'>Informacion de Inicio de Sesion</label>
-                {generalError && <p className="text-green-500 text-lg font-semibold">{ }</p>}
                 {!userSession &&
                     <div>
                         <div>

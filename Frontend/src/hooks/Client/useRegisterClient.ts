@@ -9,9 +9,9 @@ export const useRegisterClient = () => {
     const [userErrors, setUserErrors] = useState<User>({})
     const [clientErrors, setClientErrors] = useState<ClientErrors>({})
     const [status, setStatus] = useState(0)
-    const [successMessage, setSuccessMessage] = useState('')
-    const [generalError, setGeneralError] = useState('')
     const [userSession, setUserSession] = useState<Boolean | null>(null)
+    const [linkUser, setLinkUser] = useState({ id: 0 })
+    const authContext = useContext(AuthContext)
 
     const [clientForm, setClientForm] = useState<Client>({
         name: '',
@@ -45,21 +45,37 @@ export const useRegisterClient = () => {
     }
 
     const validateUser = (userForm: User) => {
-        let tempErrors: { [k: string]: any } = {};
+        let tempErrors: { [k: string]: any } = {}
 
-        axiosConfig.post(`/api/auth/valid`, userForm, { withCredentials: true })
+        axiosConfig.post(`/api/auth/valid`, userForm)
             .then(() => { setUserErrors({}) })
             .catch(e => {
-                console.log("Error: ", e)
                 for (const key in e.response.data) {
                     if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
-                        tempErrors[key] = e.response.data[key];
+                        tempErrors[key] = e.response.data[key]
                     }
                 }
                 setUserErrors(tempErrors)
             })
 
-        return Object.keys(tempErrors).length === 0;
+        return Object.keys(tempErrors).length === 0
+    }
+
+    const validateClient = (clientForm: Client) => {
+        let tempErrors: { [k: string]: any } = {}
+
+        axiosConfig.post(`/api/client/valid`, clientForm)
+            .then(() => { setClientErrors({}) })
+            .catch(e => {
+                for (const key in e.response.data) {
+                    if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                        tempErrors[key] = e.response.data[key]
+                    }
+                }
+                setClientErrors(tempErrors)
+            })
+
+        return Object.keys(tempErrors).length === 0
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,36 +83,41 @@ export const useRegisterClient = () => {
 
         if (validateUser(userForm) && !userSession) {
             console.log("Sent userForm: ", userForm)
-            await axiosConfig.post(`/api/auth/signup`, userForm, { withCredentials: true })
+            axiosConfig.post(`/api/auth/signup`, userForm)
                 .then(r => {
-
-                    setUserSession(true)
-                })
-                .catch(e => {
-                    console.log("Error creating user: ", e)
-                    setGeneralError(e.response.data)
-                })
-        }
-
-        if (userSession) {
-            let tempErrors: { [k: string]: any } = {}
-            axiosConfig.post('/api/client', clientForm)
-                .then(r => {
-                    const authContext = useContext(AuthContext)
                     if (!authContext) return null
                     const { login } = authContext
                     login(r.data.token)
-                    setStatus(r.status)
-                    setSuccessMessage('Cliente registrado exitosamente')
+                    setLinkUser(r.data.id)
+                    setUserSession(true)
                 })
                 .catch(e => {
+                    let tempErrors: { [k: string]: any } = {}
+                    for (const key in e.response.data) {
+                        if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                            tempErrors[key] = e.response.data[key]
+                        }
+                    }
+                    setUserErrors(tempErrors)
+                })
+        }
+
+        if (validateClient(clientForm) && userSession) {
+            const formData = new FormData()
+            formData.append("client", new Blob([JSON.stringify(clientForm)], { type: 'application/json' }))
+            formData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
+            axiosConfig.post('/api/client', formData)
+                .then(r => {
+                    setStatus(r.status)
+                })
+                .catch(e => {
+                    let tempErrors: { [k: string]: any } = {}
                     for (const key in e.response.data) {
                         if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
                             tempErrors[key] = e.response.data[key]
                         }
                     }
                     setClientErrors(tempErrors)
-                    setGeneralError('Error registrando cliente. Por favor, inténtelo de nuevo.')
                 })
         }
     }
@@ -112,8 +133,6 @@ export const useRegisterClient = () => {
         userSession,
         clientForm,
         clientErrors,
-        successMessage,
-        generalError,
         handleChange,
         handleChangeRegister,
         handleSubmit

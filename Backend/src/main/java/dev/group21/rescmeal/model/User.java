@@ -1,10 +1,7 @@
 package dev.group21.rescmeal.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,15 +23,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @NotNull(message = "Este campo es obligatorio")
+    @NotBlank(message = "Este campo es obligatorio")
     @Size(min = 2, max = 20, message = "El nombre de usuario debe tener entre 2 y 20 caracteres")
     private String username;
     // Check if pattern works fine with any mail
-    @NotNull
+    @NotNull(message = "Este campo es obligatorio")
     @Pattern(regexp = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "El mail tiene que ser valido")
     @Email(message = "Tiene que ser un mail valido")
     private String email;
-    @NotNull
+    @NotNull(message = "Este campo es obligatorio")
     private String password;
     @OneToOne
     @JoinColumn(name = "business_id")

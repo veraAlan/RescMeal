@@ -8,8 +8,6 @@ const RegisterClient: React.FC = () => {
         userSession,
         clientForm,
         clientErrors,
-        successMessage,
-        generalError,
         handleChange,
         handleChangeRegister,
         handleSubmit
@@ -83,7 +81,7 @@ const RegisterClient: React.FC = () => {
                     {clientErrors.last_name && <p className="text-red-500">{clientErrors.last_name}</p>}
                 </div>
                 <div>
-                    <label className="block">Teléfono:</label>
+                    <label className="block">Telefono:</label>
                     <input
                         type="text"
                         name="phone"
@@ -93,18 +91,6 @@ const RegisterClient: React.FC = () => {
                         maxLength={15}
                     />
                     {clientErrors.phone && <p className="text-red-500">{clientErrors.phone}</p>}
-                </div>
-                <div>
-                    <label className="block">Dirección:</label>
-                    <input
-                        type="text"
-                        name="address"
-                        value={clientForm.address}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                        maxLength={50}
-                    />
-                    {clientErrors.address && <p className="text-red-500">{clientErrors.address}</p>}
                 </div>
                 <div>
                     <label className="block">Fecha de Nacimiento:</label>
@@ -117,8 +103,6 @@ const RegisterClient: React.FC = () => {
                     />
                     {clientErrors.birthdate && <p className="text-red-500">{clientErrors.birthdate}</p>}
                 </div>
-                {successMessage && <p className="text-green-500">{successMessage}</p>}
-                {generalError && <p className="text-red-500">{generalError}</p>}
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded">Registrar</button>
             </form>
         </div>

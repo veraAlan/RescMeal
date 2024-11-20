@@ -1,6 +1,7 @@
 package dev.group21.rescmeal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.ClientService;
@@ -17,9 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.parser.Entity;
-import java.util.List;
-
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/client")
@@ -35,10 +33,19 @@ public class ClientController {
         this.userService = userService;
     }
 
+    /**
+     * Validate the form of Client.
+     * @param client Client Object
+     * @return ResponseEntity
+     */
+    @PostMapping("/valid")
+    public ResponseEntity<Client> validateClient(@Valid @RequestBody Client client){
+        return ResponseEntity.ok().body(client);
+    }
+
     @PostMapping
-    public ResponseEntity<Client> createClient(@RequestPart("client") String clientJson, @RequestPart(value = "user") Long userid) {
+    public ResponseEntity<Client> createClient(@Valid @RequestPart("client") Client client, @RequestPart(value = "user") Long userid) {
         try {
-            @Valid Client client = new ObjectMapper().readValue(clientJson, Client.class);
             Client createdClient = clientService.createClient(client);
             userService.updateClient(userid, createdClient);
             return ResponseEntity.ok(createdClient);

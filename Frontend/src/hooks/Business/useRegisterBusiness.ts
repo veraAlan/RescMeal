@@ -34,7 +34,6 @@ export const useRegisterBusiness = () => {
     const [userSession, setUserSession] = useState<Boolean | null>(null)
     const [hasBusiness, setHasBusiness] = useState<Boolean | null>(null)
     const [imageError, setImageError] = useState<string | null>(null)
-    const [generalError, setGeneralError] = useState<string | null>(null)
 
     const [address, setAddress] = useState<string>('Neuquén Capital')
     const [address_lat, setAddressLat] = useState<number>(-38.9517)
@@ -155,7 +154,6 @@ export const useRegisterBusiness = () => {
                 })
                 .catch(e => {
                     console.log("Error creating user: ", e)
-                    setGeneralError(e.response.data)
                 })
         }
 
@@ -190,7 +188,6 @@ export const useRegisterBusiness = () => {
                     })
                 })
                 .catch(e => {
-                    setGeneralError("Error cargando el local, por favor intente nuevamente.")
                     console.log("Error finding session: ", e)
                 })
         }
@@ -207,7 +204,6 @@ export const useRegisterBusiness = () => {
         userErrors,
         businessErrors,
         imageError,
-        generalError,
         userSession,
         hasBusiness,
         setAddress,

@@ -39,8 +39,8 @@ public class BusinessController {
 
     /**
      * Validate the form of Business.
-     * @param business
-     * @return
+     * @param business Client Object
+     * @return ResponseEntity
      */
     @PostMapping("/valid")
     public ResponseEntity<Business> validateBusiness(@Valid @RequestBody Business business){
