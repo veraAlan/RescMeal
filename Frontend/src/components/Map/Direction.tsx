@@ -4,11 +4,22 @@ import useMapboxDirections from '../../hooks/Map/useDirections';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
-interface MapProps {
-    stops: [number, number][];
+interface Business {
+    address_long: number;
+    address_lat: number;
+    name: string;
+    type: string;
+    address: string;
+    phone: string;
+    schedule: string;
 }
 
-const Map: React.FC<MapProps> = ({ stops }) => {
+interface MapProps {
+    stops: [number, number][];
+    businesses: Business[];
+}
+
+const Map: React.FC<MapProps> = ({ stops, businesses }) => {
     const mapContainer = useRef<HTMLDivElement | null>(null);
     const { directions, error } = useMapboxDirections(stops, mapboxgl.accessToken);
 
@@ -16,15 +27,16 @@ const Map: React.FC<MapProps> = ({ stops }) => {
         if (mapContainer.current) {
             const map = new mapboxgl.Map({
                 container: mapContainer.current,
-                style: 'mapbox://styles/syaitul/cm2i59b8z002101pecb7e8u3i',
+                style: 'mapbox://styles/mapbox/streets-v11',
                 center: stops[0], // Centrar en el primer punto
                 zoom: 12,
             });
 
-            stops.forEach((stop, index) => {
+            businesses.forEach((business) => {
+                const { address_long, address_lat, name, type, address, phone, schedule } = business;
                 new mapboxgl.Marker()
-                    .setLngLat(stop)
-                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(`Parada ${index + 1}`)) 
+                    .setLngLat([address_long, address_lat])
+                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3>${name}</h3><p>Tipo: ${type}</p><p>Dirección: ${address}</p><p>Teléfono: ${phone}</p><p>Horario: ${schedule}</p>`))
                     .addTo(map);
             });
 
@@ -74,7 +86,6 @@ const Map: React.FC<MapProps> = ({ stops }) => {
                         })
                     );
 
-                    
                     // Ajustar el mapa a la ruta
                     const bounds = new mapboxgl.LngLatBounds();
                     route.forEach((coord: LngLatLike | LngLatBoundsLike) => bounds.extend(coord));
@@ -86,12 +97,11 @@ const Map: React.FC<MapProps> = ({ stops }) => {
 
             return () => map.remove(); // Limpiar el mapa al desmontar
         }
-    }, [directions, error, stops]);
+    }, [directions, error, stops, businesses]);
 
     return (
         <div className="container mx-auto py-8">
             <h1 className="text-2xl font-bold text-center mb-4">Mapa con Rutas de Mapbox</h1>
-            <div id="instructions" className="mt-4"></div>
             <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 rounded-lg shadow-lg" />
         </div>
     );

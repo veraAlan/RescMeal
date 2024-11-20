@@ -7,25 +7,21 @@ interface MapProps {
     stops: [number, number][];
 }
 
-const MatrixDataComponent: React.FC<MapProps> = ({ stops }) => {
-    const { matrixDuration,
-        matrixDistance,
-        loading,
-        error
-    } = useMatrixData(stops, mapboxgl.accessToken);
+const MatrixComponent: React.FC<MapProps> = ({ stops }) => {
+    const { matrixDuration, matrixDistance, loading, error } = useMatrixData(stops, mapboxgl.accessToken);
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-    const time = Math.floor(matrixDuration / 60);
-    const distance = Math.floor(matrixDistance / 1000);
+    if (error || matrixDuration === null || matrixDistance === null) return <p>Error: {error}</p>;
+    
+    const totalTime = Math.floor(matrixDuration / 60);
+    const totalDistance = Math.floor(matrixDistance / 1000);
+
     return (
-        <div>
-            <div>
-                <h3>Tiempo del recorrido {time} min</h3>
-                <h3>Distancia total {distance} km</h3>
-            </div >
+        <div className="mt-4 text-center">
+            <p>Tiempo total del recorrido: <strong>{totalTime} min</strong></p>
+            <p>Distancia total: <strong>{totalDistance} km</strong></p>
         </div>
     );
 };
 
-export default MatrixDataComponent;
+export default MatrixComponent;

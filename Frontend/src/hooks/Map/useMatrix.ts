@@ -4,9 +4,7 @@ const useMatrixData = (stops: [number, number][], accessToken: string) => {
     const [matrixDistance, setDistance] = useState<number | null>(null);
     const [matrixDuration, setDuration] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null)
-
-    console.log("Esto es stops: " + stops);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const coordinates = stops.map(stop => `${stop[0]},${stop[1]}`).join(';');
@@ -21,7 +19,6 @@ const useMatrixData = (stops: [number, number][], accessToken: string) => {
                 let totalDuration = 0;
                 let totalDistance = 0;
 
-
                 for (let i = 1; i < data.durations[0].length; i++) {
                     totalDuration += data.durations[0][i];
                 }
@@ -32,7 +29,6 @@ const useMatrixData = (stops: [number, number][], accessToken: string) => {
                 setDuration(totalDuration);
                 setDistance(totalDistance);
             } catch (error) {
-
                 setError((error as Error).message);
             } finally {
                 setLoading(false);
@@ -40,7 +36,7 @@ const useMatrixData = (stops: [number, number][], accessToken: string) => {
         };
 
         fetchMatrixData();
-    }, []);
+    }, [stops, accessToken]);
 
     return { matrixDuration, matrixDistance, loading, error };
 };
