@@ -121,12 +121,12 @@ export const useRegisterCarrier = () => {
                     setCarrierErrors(tempErrors)
                 })
         }
-
+    }
         if (status === 200 || status === 201) {
             setTimeout(redirect("/"), 1000)
             redirect("/")
         }
-    }
+    
 
     return {
         userForm,

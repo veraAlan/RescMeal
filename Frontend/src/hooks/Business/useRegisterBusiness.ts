@@ -191,11 +191,11 @@ export const useRegisterBusiness = () => {
                     console.log("Error finding session: ", e)
                 })
         }
-
+    }
         if (status === 200 || status === 201) {
             redirect("/")
         }
-    }
+
 
     return {
         businessForm,
