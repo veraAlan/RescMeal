@@ -36,10 +36,6 @@ public class Client {
 
     private BigDecimal balance;
 
-    @NotEmpty(message = "Este campo es obligatorio")
-    @Size(min = 5, max = 50, message = "La dirección debe tener entre 5 y 50 caracteres")
-    private String address;
-
     @NotNull(message = "Este campo es obligatorio")
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

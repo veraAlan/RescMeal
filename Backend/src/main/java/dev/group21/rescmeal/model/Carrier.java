@@ -1,6 +1,5 @@
 package dev.group21.rescmeal.model;
 
-import dev.group21.rescmeal.validation.MinAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -28,10 +27,10 @@ public class Carrier {
 
     @NotEmpty(message = "Este campo es obligatorio")
     @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
-    private String lastName;
+    private String last_name;
 
     @NotEmpty(message = "Este campo es obligatorio")
-    private String vehicleType;
+    private String vehicle_type;
 
     @NotEmpty(message = "Este campo es obligatorio")
     @Size(min = 10, max = 15, message = "El teléfono debe tener entre 10 y 15 caracteres")

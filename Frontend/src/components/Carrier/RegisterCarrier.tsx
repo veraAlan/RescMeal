@@ -75,19 +75,19 @@ const RegisterCarrier: React.FC = () => {
                             <input
                                 type="text"
                                 name="lastName"
-                                value={carrierForm.lastName}
+                                value={carrierForm.last_name}
                                 onChange={handleChange}
                                 className="border p-2 w-full"
                                 maxLength={20}
                             />
-                            {carrierErrors.lastName && <p className="text-red-500">{carrierErrors.lastName}</p>}
+                            {carrierErrors.last_name && <p className="text-red-500">{carrierErrors.last_name}</p>}
                         </div>
                         <div>
                             <label className="block">Tipo de Vehículo:</label>
                             <select
                                 id="vehicleType"
                                 name="vehicleType"
-                                value={carrierForm.vehicleType}
+                                value={carrierForm.vehicle_type}
                                 onChange={handleChange}
                                 className="border p-2 w-full"
                             >
@@ -95,7 +95,7 @@ const RegisterCarrier: React.FC = () => {
                                 <option value="Moto">Moto</option>
                                 <option value="Auto">Auto</option>
                             </select>
-                            {carrierErrors.vehicleType && <p className="text-red-500">{carrierErrors.vehicleType}</p>}
+                            {carrierErrors.vehicle_type && <p className="text-red-500">{carrierErrors.vehicle_type}</p>}
                         </div>
                         <div>
                             <label className="block">Teléfono:</label>

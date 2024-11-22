@@ -1,16 +1,16 @@
 export interface Carrier {
     id?: number
     name: string
-    lastName: string
-    vehicleType?: string
+    last_name: string
+    vehicle_type?: string
     phone?: string
     birthdate: string
 }
 
 export interface CarrierErrors {
     name?: string
-    lastName?: string
-    vehicleType?: string
+    last_name?: string
+    vehicle_type?: string
     phone?: string
     birthdate?: string
 }

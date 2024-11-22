@@ -1,7 +1,6 @@
 package dev.group21.rescmeal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.ClientService;

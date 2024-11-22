@@ -5,10 +5,10 @@ export const useUpdateCarrier = () => {
     const id = 1
     const [carrier, setCarrier] = useState({
         name: '',
-        lastName: '',
+        last_name: '',
         email: '',
         password: '',
-        vehicleType: '',
+        vehicle_type: '',
         phone: '',
         date: ''
     });
@@ -71,10 +71,10 @@ export const useUpdateCarrier = () => {
             setSuccessMessage('Repartidor modificado');
             setCarrier({
                 name: '',
-                lastName: '',
+                last_name: '',
                 email: '',
                 password: '',
-                vehicleType: '',
+                vehicle_type: '',
                 phone: '',
                 date: ''
             });

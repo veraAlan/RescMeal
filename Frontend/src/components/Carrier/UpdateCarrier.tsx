@@ -30,8 +30,8 @@ const UpdateCarrier: React.FC = () => {
                     <label className="block">Apellido</label>
                     <input
                         type="text"
-                        name="lastName"
-                        value={carrier.lastName}
+                        name="last_name"
+                        value={carrier.last_name}
                         onChange={handleChange}
                         className="border p-2 w-full"
                         maxLength={20}
@@ -61,7 +61,7 @@ const UpdateCarrier: React.FC = () => {
                 </div>
                 <div>
                     <label className="block">Tipo de Vehículo</label>
-                    <select id='vehicleType' name='vehicleType' className="border p-2 w-full" onChange={handleChange}>
+                    <select id='vehicle_type' name='vehicle_type' className="border p-2 w-full" onChange={handleChange}>
                         <option value='Moto'> Moto </option>
                         <option value='Auto'> Auto </option>
                     </select>

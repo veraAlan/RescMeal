@@ -25,14 +25,13 @@ const CarrierList: React.FC<CarrierListProps> = () => {
         <div className="container mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4">Listar Repartidores</h2>
             <ul className="space-y-2">
-                {carriers.map(({ id, name, lastName, email, vehicleType, phone, date }) => (
+                {carriers.map(({ id, name, last_name, vehicle_type, phone, birthdate }) => (
                     <li key={id} className="border p-2 rounded shadow-sm">
                         <p><strong>Nombre:</strong> {name}</p>
-                        <p><strong>Apellido:</strong> {lastName}</p>
-                        <p><strong>Correo Electrónico:</strong> {email}</p>
-                        <p><strong>Tipo de Vehículo:</strong> {vehicleType || 'N/A'}</p>
+                        <p><strong>Apellido:</strong> {last_name}</p>
+                        <p><strong>Tipo de Vehículo:</strong> {vehicle_type || 'N/A'}</p>
                         <p><strong>Teléfono:</strong> {phone || 'N/A'}</p>
-                        <p><strong>Fecha:</strong> {date}</p>
+                        <p><strong>Fecha:</strong> {birthdate}</p>
                     </li>
                 ))}
             </ul>
