@@ -1,11 +1,17 @@
 package dev.group21.rescmeal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Food;
 import dev.group21.rescmeal.services.FoodService;
 import jakarta.validation.Valid;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +27,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/food")
 public class FoodController {
+    @Autowired
+    private final AuthController authController;
     private final String foodImages = System.getProperty("user.dir") + "/../Frontend/public/Food/";
     private final FoodService foodService;
 
     @Autowired
-    public FoodController(FoodService foodService) {
+    public FoodController(AuthController authController, FoodService foodService) {
+        this.authController = authController;
         this.foodService = foodService;
     }
 
@@ -34,8 +43,8 @@ public class FoodController {
         try {
             Food food = new ObjectMapper().readValue(foodJson, Food.class);
             if(image != null) {
-                ResponseEntity createdImage = uploadImage(food.getBusiness().getId() + "-" + food.getName(), image);
-                food.setImage(createdImage.getBody().toString());
+                ResponseEntity<String> createdImage = uploadImage(food.getBusiness().getId() + "-" + food.getName(), image);
+                food.setImage(createdImage.getBody());
             }
             Food createdFood = foodService.createFood(food);
             return ResponseEntity.ok(createdFood);
@@ -51,8 +60,8 @@ public class FoodController {
                 return ResponseEntity.notFound().build();
             }
             if(image != null) {
-                ResponseEntity createdImage = uploadImage(newFood.getBusiness().getId() + "-" + newFood.getName(), image);
-                newFood.setImage(createdImage.getBody().toString());
+                ResponseEntity<String> createdImage = uploadImage(newFood.getBusiness().getId() + "-" + newFood.getName(), image);
+                newFood.setImage(createdImage.getBody());
             }
             return ResponseEntity.ok(foodService.updateFood(newFood));
         } catch (Exception e) {
@@ -70,11 +79,11 @@ public class FoodController {
             if(image != null) {
                 if(oldFood.getImage() != null) {
                     File oldImage = new File(foodImages + oldFood.getImage());
-                    oldImage.delete();
+                    Boolean deleted = oldImage.delete();
                 }
                 String foodName = newFood.getName() == null ? newFood.getBusiness().getId() + "-" + newFood.getName() : oldFood.getBusiness().getId() + "-" + oldFood.getName();
-                ResponseEntity createdImage = uploadImage(foodName, image);
-                newFood.setImage(createdImage.getBody().toString());
+                ResponseEntity<String> createdImage = uploadImage(foodName, image);
+                newFood.setImage(createdImage.getBody());
             }
             return ResponseEntity.ok(foodService.dynamicUpdateFood(oldFood, newFood));
         } catch (Exception e) {
@@ -90,6 +99,21 @@ public class FoodController {
                 return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<PagedModel<EntityModel<Food>>> getBusinessFoods(Pageable pageable, PagedResourcesAssembler<Food> assembler){
+        try{
+            Business loggedBusiness = authController.getBusiness();
+            Page<Food> businessPage = foodService.getBusinessFoods(pageable, loggedBusiness);
+            if (businessPage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(assembler.toModel(businessPage));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();

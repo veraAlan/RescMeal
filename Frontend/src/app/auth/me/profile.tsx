@@ -56,16 +56,9 @@ export default () => {
             </div>
          }
 
-         {profileInfo?.business &&
-            <BusinessProfile profile={profileInfo.business} />
-         }
-         {/* Need to create visualization of Client and Carrier */}
-         {profileInfo?.client &&
-            <ClientProfile profile={profileInfo.client} />
-         }
-         {profileInfo?.carrier &&
-            <CarrierProfile profile={profileInfo.carrier} />
-         }
+         {profileInfo?.business && <BusinessProfile profile={profileInfo.business} />}
+         {profileInfo?.client && <ClientProfile profile={profileInfo.client} />}
+         {profileInfo?.carrier && <CarrierProfile profile={profileInfo.carrier} />}
       </div >
-   );
-};
+   )
+}

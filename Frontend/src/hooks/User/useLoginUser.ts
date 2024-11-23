@@ -40,7 +40,7 @@ export const useLoginUser = () => {
    }
 
    if (status == 200) {
-      redirect("/")
+      redirect("/food")
    }
 
    return {

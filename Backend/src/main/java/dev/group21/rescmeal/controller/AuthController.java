@@ -157,4 +157,34 @@ public class AuthController {
         ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.status(403).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(null);
     }
+
+    // TODO Example of update user
+//    @PutMapping("/update")
+//    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody SignupRequest updateUser) {
+//        String jwt = jwtUtils.getJwtFromCookies(request);
+//        if(jwtUtils.validateJwtToken(jwt)){
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//            User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found."));
+//            user.setEmail(updateUser.getEmail());
+//            user.setUsername(updateUser.getUsername());
+//
+//            return ResponseEntity.ok().body(user);
+//        }
+//    }
+
+    public Business getBusiness() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
+            Long userId = userDetails.getId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            if (user.getBusiness() != null) {
+                return user.getBusiness();
+            } else {
+                return new Business();
+            }
+        }
+        return new Business();
+    }
 }

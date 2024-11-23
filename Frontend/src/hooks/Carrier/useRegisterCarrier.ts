@@ -8,6 +8,7 @@ import { AuthContext } from '@/context/AuthContext'
 export const useRegisterCarrier = () => {
     const [carrierErrors, setCarrierErrors] = useState<CarrierErrors>({})
     const [userErrors, setUserErrors] = useState<User>({})
+    const [hasCarrier, setHasCarrier] = useState<Boolean | null>(null)
     const [status, setStatus] = useState(0)
     const [userSession, setUserSession] = useState<Boolean | null>(null)
     const [linkUser, setLinkUser] = useState({ id: 0 })
@@ -27,6 +28,18 @@ export const useRegisterCarrier = () => {
         role: 'carrier',
         password: ''
     })
+
+    if (userSession == null) {
+        axiosConfig.get(`/api/auth/validate`)
+            .then(r => { setUserSession(true) })
+            .catch(e => { setUserSession(false) })
+    }
+
+    if (hasCarrier == null) {
+        axiosConfig.get(`/api/auth/session-id`)
+            .then(r => { if (r.status == 200) setHasCarrier(true) })
+            .catch(e => { setHasCarrier(false) })
+    }
 
     const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -65,8 +78,12 @@ export const useRegisterCarrier = () => {
         let tempErrors: { [k: string]: any } = {}
 
         axiosConfig.post(`/api/carrier/valid`, carrierForm)
-            .then(() => { setCarrierErrors({}) })
+            .then((r) => {
+                console.log("Validate: ", r)
+                setCarrierErrors({})
+            })
             .catch(e => {
+                console.log("Errors: ", e)
                 for (const key in e.response.data) {
                     if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
                         tempErrors[key] = e.response.data[key]
@@ -75,20 +92,20 @@ export const useRegisterCarrier = () => {
                 setCarrierErrors(tempErrors)
             })
 
-            return Object.keys(tempErrors).length === 0
-        }
+        return Object.keys(tempErrors).length === 0
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         if (validateUser(userForm) && !userSession) {
-            console.log("Sent userForm: ", userForm)
-            axiosConfig.post(`/api/auth/signup`, userForm)
+            await axiosConfig.post(`/api/auth/signup`, userForm)
                 .then(r => {
-                    if (!authContext) return null
-                    const { login } = authContext
-                    setLinkUser(r.data.id)
-                    login(r.data.token)
+                    if (authContext) {
+                        const { login } = authContext
+                        setLinkUser(r.data.id)
+                        login(r.data.token)
+                    }
                     setUserSession(true)
                 })
                 .catch(e => {
@@ -103,7 +120,6 @@ export const useRegisterCarrier = () => {
         }
 
         if (validateCarrier(carrierForm) && userSession) {
-            console.log(carrierForm);
             const formData = new FormData()
             formData.append("carrier", new Blob([JSON.stringify(carrierForm)], { type: 'application/json' }))
             formData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
@@ -122,11 +138,12 @@ export const useRegisterCarrier = () => {
                 })
         }
     }
-        if (status === 200 || status === 201) {
-            setTimeout(redirect("/"), 1000)
-            redirect("/")
-        }
-    
+
+    if (status === 200 || status === 201) {
+        setTimeout(redirect("/"), 1000)
+        redirect("/")
+    }
+
 
     return {
         userForm,

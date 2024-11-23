@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.model;
 
+import dev.group21.rescmeal.validation.MinAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Entity
-@Table(name = "carrier")
+@Table(name = "carrier", uniqueConstraints = @UniqueConstraint(columnNames = {"phone"}))
 @Data
 @DynamicUpdate
 @NoArgsConstructor

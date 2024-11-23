@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import org.imgscalr.Scalr;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.services.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,14 +48,14 @@ public class BusinessController {
 
     /**
      * Create a new business with validated inputs and a possible image.
-     * @param businessJson String (JSON formatted).
+     * @param business Business object.
      * @param image MultipartFile image.
+     * @param userid User id to link new business.
      * @return ResponseEntity business created.
      */
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "user") Long userid) {
+    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") Business business, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart("user") Long userid) {
         try {
-            @Valid Business business = new ObjectMapper().readValue(businessJson, Business.class);
             if(image != null) {
                 ResponseEntity<String> createdImage = uploadImage(business.getName(), image);
                 business.setImage(String.valueOf(createdImage.getBody()));
@@ -71,14 +70,13 @@ public class BusinessController {
 
     /**
      * Update business using a complete new Business JSON and an image.
-     * @param businessJson String (JSON formatted)
+     * @param newBusiness Business Object
      * @param image MultipartFile image
      * @return ResponseEntity business updated.
      */
     @PutMapping
-    public ResponseEntity<Business> updateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image") MultipartFile image) {
+    public ResponseEntity<Business> updateBusiness(@RequestPart("business") Business newBusiness, @RequestPart(value = "image") MultipartFile image) {
         try {
-            @Valid Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
             if(image != null) {
                 ResponseEntity<String> createdImage = uploadImage(newBusiness.getName(), image);
@@ -92,21 +90,19 @@ public class BusinessController {
 
     /**
      * Dynamically update a business with a partial Business JSON and an Optional image.
-     * @param businessJson String (JSON formatted)
-     * @param image MultipartFile image
+     * @param newBusiness Business Object (Partial).
+     * @param image MultipartFile image.
      * @return ResponseEntity business updated.
      */
     @PatchMapping
-    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestPart("business") String businessJson, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<Business> dynamicUpdateBusiness(@RequestPart("business") Business newBusiness, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            Business newBusiness = new ObjectMapper().readValue(businessJson, Business.class);
-
             Business oldBusiness = businessService.getBusiness(newBusiness.getId());
             if(oldBusiness == null) return ResponseEntity.notFound().build();
             if(image != null) {
                 if(oldBusiness.getImage() != null) {
                     File oldImage = new File(businessImages + oldBusiness.getImage());
-                    Boolean deleted = oldImage.delete();
+                    oldImage.delete();
                 }
                 String businessName = newBusiness.getName() == null ? oldBusiness.getName() : newBusiness.getName();
                 ResponseEntity<String> createdImage = uploadImage(businessName, image);

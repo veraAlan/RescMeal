@@ -23,6 +23,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
          setIsLoggedIn(true)
          const role = localStorage.getItem('role')
          if (role != null && role != '') setSessionRole(role)
+      } else {
+         axiosConfig.get('/api/auth/signout')
+            .then(() => {
+               localStorage.removeItem('token')
+               localStorage.removeItem('role')
+               setIsLoggedIn(false)
+            })
+            .catch(e => { setSessionError(e) })
       }
    }, [isLoggedIn])
 
@@ -46,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setIsLoggedIn(false)
          })
          .catch(e => { setSessionError(e) })
-      redirect("/auth/login")
+      redirect("/")
    }
 
    return (

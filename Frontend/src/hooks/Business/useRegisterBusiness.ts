@@ -40,15 +40,15 @@ export const useRegisterBusiness = () => {
     const [address_long, setAddressLong] = useState<number>(-68.0591)
 
     if (userSession == null) {
-        axiosConfig.get(`/auth/validate`)
+        axiosConfig.get(`/api/auth/validate`)
             .then(r => { setUserSession(true) })
             .catch(e => { setUserSession(false) })
     }
 
     // TODO Solve: Loading more than one time
     if (hasBusiness == null) {
-        axiosConfig.get(`/auth/session-id`)
-            .then(r => { setHasBusiness(true) })
+        axiosConfig.get(`/api/auth/session-id`)
+            .then(r => { if (r.status == 200) setHasBusiness(true) })
             .catch(e => { setHasBusiness(false) })
     }
 
@@ -107,7 +107,7 @@ export const useRegisterBusiness = () => {
     const validateUser = (userForm: User) => {
         let tempErrors: { [k: string]: any } = {}
 
-        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/valid`, userForm, { withCredentials: true })
+        axiosConfig.post(`/api/auth/valid`, userForm, { withCredentials: true })
             .then(() => { setUserErrors({}) })
             .catch(error => {
                 console.log("Error: ", error)
@@ -125,7 +125,7 @@ export const useRegisterBusiness = () => {
     const validateBusiness = (businessForm: Business): boolean => {
         let tempErrors: { [k: string]: any } = {}
 
-        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business/valid`, businessForm, { withCredentials: true })
+        axiosConfig.post(`/api/business/valid`, businessForm, { withCredentials: true })
             .then(() => { setBusinessErrors({}) })
             .catch(error => {
                 for (const key in error.response.data) {
@@ -141,15 +141,15 @@ export const useRegisterBusiness = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
         if (validateUser(userForm) && !userSession) {
             console.log("Sent userForm: ", userForm)
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, userForm, { withCredentials: true })
+            axiosConfig.post(`/api/auth/signup`, userForm)
                 .then(r => {
                     const authContext = useContext(AuthContext)
-                    if (!authContext) return null
-                    const { login } = authContext
-                    login(r.data.token)
+                    if (authContext) {
+                        const { login } = authContext
+                        login(r.data.token)
+                    }
                     setUserSession(true)
                 })
                 .catch(e => {
@@ -158,7 +158,7 @@ export const useRegisterBusiness = () => {
         }
 
         if (validateBusiness(businessForm) && userSession) {
-            await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true })
+            axiosConfig.get(`/api/auth/me`)
                 .then(r => {
                     setLinkUser(r.data.id)
 
@@ -175,12 +175,11 @@ export const useRegisterBusiness = () => {
                     }
 
                     console.log("Sent businessForm: ", businessData)
-                    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/business`,
+                    axiosConfig.post(`/api/business`,
                         businessData, {
                         headers: {
                             'Content-Type': 'multipart/mixed'
-                        },
-                        withCredentials: true
+                        }
                     }).then(r => {
                         setStatus(r.status)
                     }).catch(e => {
@@ -192,10 +191,11 @@ export const useRegisterBusiness = () => {
                 })
         }
     }
-        if (status === 200 || status === 201) {
-            redirect("/")
-        }
 
+    if (status === 200 || status === 201) {
+        setTimeout(redirect("/"), 1000)
+        redirect("/")
+    }
 
     return {
         businessForm,

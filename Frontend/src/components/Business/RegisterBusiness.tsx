@@ -1,6 +1,6 @@
-import React from 'react';
-import { useRegisterBusiness } from '../../hooks/Business/useRegisterBusiness';
-import AddressPicker from '../Map/AddressPicker';
+import React from 'react'
+import { useRegisterBusiness } from '../../hooks/Business/useRegisterBusiness'
+import AddressPicker from '../Map/AddressPicker'
 
 const RegisterBusiness: React.FC = () => {
     const {
@@ -18,7 +18,9 @@ const RegisterBusiness: React.FC = () => {
         handleImage,
         handleSubmit,
         handleChangeRegister
-    } = useRegisterBusiness();
+    } = useRegisterBusiness()
+
+    // const AddressPicker = dynamic(() => import('../Map/AddressPicker'), { ssr: false })
 
     return (
         <div className="container mx-auto p-4">
@@ -148,7 +150,7 @@ const RegisterBusiness: React.FC = () => {
                 {hasBusiness && <p className="text-green-500 text-lg font-semibold">Ya tiene un local asociado. <a href='/auth/me'>Ver perfil</a></p>}
             </form>
         </div>
-    );
-};
+    )
+}
 
-export default RegisterBusiness;
+export default RegisterBusiness

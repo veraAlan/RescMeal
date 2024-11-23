@@ -1,7 +1,11 @@
 package dev.group21.rescmeal.services;
 
+import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Food;
 import dev.group21.rescmeal.repository.FoodRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +96,13 @@ public class FoodService {
      */
     public List<Food> getAllFoods() {
         return foodRepository.findAll();
+    }
+
+    /**
+     * Retrieve all Food entities.
+     * @return List of Food entities
+     */
+    public Page<Food> getBusinessFoods(Pageable pageable, Business business) {
+        return foodRepository.findAllByBusinessId(pageable, business);
     }
 }
