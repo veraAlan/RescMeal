@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { getSessionId } from '../../utils/getSessionId';
 import { getEmailById } from '../../utils/getEmailById';
 import axios from 'axios';
@@ -7,69 +7,8 @@ import { PurchasedItem, PurchaseErrors } from '../../types/Purchase';
 import { useCart } from '../../hooks/Cart/useCart';
 
 export const usePurchase = () => {
-    const { cart, processPurchase, clearCart } = useCart();
+    const { cart, clearCart } = useCart();
     const [errors, setErrors] = useState<PurchaseErrors>({});
-    const router = useRouter();
-
-    const handleSubmit = async (
-        event: React.FormEvent,
-        paymentMethod: string,
-        pickup: string,
-        address: string,
-        address_lat: number,
-        address_long: number,
-        setShowSuccessModal: (show: boolean) => void
-    ) => {
-        event.preventDefault();
-
-        try {
-            const client_id = await getSessionId();
-            const purchasedItems: PurchasedItem[] = cart.map(item => {
-                if (item.food.id === undefined || item.food.business.id === undefined) {
-                    throw new Error("El id del alimento o negocio no puede ser undefined");
-                }
-                return {
-                    food: { id: item.food.id },
-                    business: { id: item.food.business.id },
-                    quantity: item.quantity,
-                    price: item.food.price
-                };
-            });
-
-            const payload: any = {
-                client: { id: client_id },
-                total_cost: cart.reduce((total, item) => total + item.food.price * item.quantity, 0),
-                creation_date: new Date().toISOString().split('T')[0],
-                address, // Usar el parámetro de dirección
-                address_lat, // Usar el parámetro de latitud
-                address_long, // Usar el parámetro de longitud
-                purchasedItems
-            };
-
-            if (paymentMethod !== '') {
-                payload.payment_method = paymentMethod;
-            }
-
-            if (pickup !== '') {
-                payload.pickup = pickup === "true";
-            }
-
-            const result = await processPurchase(payload);
-
-            if (result.success) {
-                setShowSuccessModal(true);
-                setTimeout(() => {
-                    router.push('/');
-                }, 2000);
-            } else {
-                setErrors(result.errors || {});
-            }
-        } catch (error) {
-            console.error("Error procesando la compra:", error);
-            setErrors({ global: "Error procesando la compra" });
-        }
-    };
-
     const handleMercadoPago = async (
         paymentMethod: string,
         pickup: string,
@@ -131,5 +70,5 @@ export const usePurchase = () => {
         }
     };
 
-    return { handleSubmit, handleMercadoPago, errors };
+    return { handleMercadoPago, errors };
 };
