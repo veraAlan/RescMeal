@@ -16,8 +16,8 @@ export const useRegisterCarrier = () => {
 
     const [carrierForm, setCarrierForm] = useState<Carrier>({
         name: '',
-        lastName: '',
-        vehicleType: '',
+        last_name: '',
+        vehicle_type: '',
         phone: '',
         birthdate: ''
     })

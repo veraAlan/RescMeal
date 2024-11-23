@@ -4,6 +4,7 @@ import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Carrier;
 import dev.group21.rescmeal.model.Client;
 import dev.group21.rescmeal.model.User;
+import dev.group21.rescmeal.model.*;
 import dev.group21.rescmeal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,5 +47,13 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found, id: " + id));
         user.setBusiness(business);
         return userRepository.save(user);
+    }
+
+    public User updateUser(Long userId, SignupRequest updateUser) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
+        user.setEmail(updateUser.getEmail());
+        user.setUsername(updateUser.getUsername());
+        return userRepository.save(user);
+
     }
 }
