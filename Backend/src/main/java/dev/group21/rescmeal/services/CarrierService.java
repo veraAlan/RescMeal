@@ -36,8 +36,8 @@ public class CarrierService {
 
     public Carrier dynamicUpdateCarrier(Carrier existingCarrier, Carrier updateCarrier) {
         if (updateCarrier.getName() == null) updateCarrier.setName(existingCarrier.getName());
-        if (updateCarrier.getLastName() == null) updateCarrier.setLastName(existingCarrier.getLastName());
-        if (updateCarrier.getVehicleType() == null) updateCarrier.setVehicleType(existingCarrier.getVehicleType());
+        if (updateCarrier.getLast_name() == null) updateCarrier.setLast_name(existingCarrier.getLast_name());
+        if (updateCarrier.getVehicle_type() == null) updateCarrier.setVehicle_type(existingCarrier.getVehicle_type());
         if (updateCarrier.getPhone() == null) updateCarrier.setPhone(existingCarrier.getPhone());
         if (updateCarrier.getBirthdate() == null) updateCarrier.setBirthdate(existingCarrier.getBirthdate());
         return carrierRepository.saveAndFlush(updateCarrier);

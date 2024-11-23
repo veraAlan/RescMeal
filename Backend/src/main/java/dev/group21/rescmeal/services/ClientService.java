@@ -50,7 +50,6 @@ public class ClientService {
         if (updateClient.getLast_name() == null) updateClient.setLast_name(existingClient.getLast_name());
         if (updateClient.getPhone() == null) updateClient.setPhone(existingClient.getPhone());
         if (updateClient.getBalance() == null) updateClient.setBalance(existingClient.getBalance());
-        if (updateClient.getAddress() == null) updateClient.setAddress(existingClient.getAddress());
         if (updateClient.getBirthdate() == null) updateClient.setBirthdate(existingClient.getBirthdate());
         return clientRepository.saveAndFlush(updateClient);
     }
