@@ -4,6 +4,7 @@ import com.mercadopago.MercadoPago;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.Payment;
 import com.mercadopago.resources.Preference;
+import com.mercadopago.resources.datastructures.preference.BackUrls;
 import com.mercadopago.resources.datastructures.preference.Item;
 import com.mercadopago.resources.datastructures.preference.Payer;
 import dev.group21.rescmeal.model.Purchase;
@@ -21,6 +22,19 @@ public class MercadoPagoService {
         MercadoPago.SDK.setAccessToken(accessToken);
         Preference preference = new Preference();
 
+        // URLs de redirección configuradas para localhost:3000
+        BackUrls backUrls = new BackUrls(
+                "http://localhost:3000/",
+                "http://localhost:3000/",
+                "http://localhost:3000/"
+        );
+        preference.setBackUrls(backUrls);
+        preference.setAutoReturn(Preference.AutoReturn.approved);
+
+        Payer payer = new Payer();
+        payer.setEmail(userEmail);
+        preference.setPayer(payer);
+
         for (PurchasedItem item : purchase.getPurchasedItems()) {
             Item preferenceItem = new Item();
             preferenceItem.setTitle(item.getFood().getName())
@@ -29,9 +43,6 @@ public class MercadoPagoService {
             preference.appendItem(preferenceItem);
         }
 
-        Payer payer = new Payer();
-        payer.setEmail(userEmail);
-        preference.setPayer(payer);
         preference.save();
         return preference.getSandboxInitPoint();
     }
