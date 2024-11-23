@@ -7,10 +7,9 @@ export interface Role {
    schedule?: string
    cvu?: string
    image?: string
-   lastName?: string
    last_name?: string
    balance?: number
-   vehicleType?: string
+   vehicle_type?: string
    phone?: string
    birthdate?: string
 }
@@ -30,6 +29,9 @@ export default (props: { profile: Role | null }) => {
          <h2 id="schedule" className='p-2 text-2xl'>{props.profile?.schedule}</h2>
          <label htmlFor="schedule" className='font-semibold text-lg self-center'>CVU: </label>
          <h2 id="schedule" className='p-2 text-2xl'>{props.profile?.cvu}</h2>
+         <a href="../update/carrier">
+            <button className="btn-modificar">Modificar Datos</button>
+         </a>
       </div>
    )
 }

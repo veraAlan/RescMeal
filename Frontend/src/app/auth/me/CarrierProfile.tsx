@@ -7,10 +7,9 @@ export interface Role {
    schedule?: string
    cvu?: string
    image?: string
-   lastName?: string
    last_name?: string
    balance?: number
-   vehicleType?: string
+   vehicle_type?: string
    phone?: string
    birthdate?: string
 }
@@ -23,9 +22,9 @@ export default (props: { profile: Role | null }) => {
          <label htmlFor="name" className='font-semibold text-lg self-center'>Nombre: </label>
          <h2 id="name" className='p-2 text-2xl'>{props.profile?.name}</h2>
          <label htmlFor="last_name" className='font-semibold text-lg self-center'>Apellido: </label>
-         <h2 id="last_name" className='p-2 text-2xl'>{props.profile?.lastName}</h2>
+         <h2 id="last_name" className='p-2 text-2xl'>{props.profile?.last_name}</h2>
          <label htmlFor="vehicle_type" className='font-semibold text-lg self-center'>Tipo de Vehiculo: </label>
-         <h2 id="vehicle_type" className='p-2 text-2xl'>{props.profile?.vehicleType}</h2>
+         <h2 id="vehicle_type" className='p-2 text-2xl'>{props.profile?.vehicle_type}</h2>
          <label htmlFor="phone" className='font-semibold text-lg self-center'>Celular: </label>
          <h2 id="phone" className='p-2 text-2xl'>{props.profile?.phone}</h2>
          <label htmlFor="birthdate" className='font-semibold text-lg self-center'>Fecha de Nacimiento: </label>
