@@ -1,6 +1,8 @@
 import { Business } from '@/types/Business'
 import axiosConfig from '@/utils/axiosConfig'
+import normlizeDate from '@/utils/normalizeDate'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 interface FoodItem {
    id: number
@@ -16,10 +18,6 @@ interface FoodItem {
 }
 
 interface FoodPage extends Array<FoodItem> { }
-
-function normlizeDate(date: String) {
-   return date.slice(0, 10).split('-').reverse().join('-')
-}
 
 export function useBusinessFoods() {
    const [page, setPage] = useState<number>()
@@ -39,6 +37,7 @@ export function useBusinessFoods() {
                food.production_date = normlizeDate(food.production_date)
             }
             setBusinessFoods(response.data._embedded.foodList)
+            toast.success('Loaded foods!', { position: 'bottom-right' })
          })
          .catch(err => {
             console.error('Error fetching data:', err)

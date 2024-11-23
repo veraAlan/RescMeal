@@ -1,3 +1,4 @@
+import axiosConfig from "@/utils/axiosConfig";
 import { useState, useEffect } from "react";
 
 
@@ -20,14 +21,11 @@ export const useUpdateCarrier = () => {
     useEffect(() => {
         async function fetchCarrier() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carrier/${id}`);
-                if (!res.ok) {
+                const res = await axiosConfig.get(`/api/carrier/${id}`)
+                if (res.status != 200) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
-                const data = await res.json();
-
-
-                setCarrier(data);
+                setCarrier(res.data);
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -53,13 +51,13 @@ export const useUpdateCarrier = () => {
         e.preventDefault();
         console.log(JSON.stringify(carrier))
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carrier/${id}` , {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carrier/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(carrier),
-                
+
             });
 
             if (!response.ok) {
