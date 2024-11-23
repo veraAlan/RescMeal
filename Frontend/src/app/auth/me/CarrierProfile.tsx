@@ -29,6 +29,9 @@ export default (props: { profile: Role | null }) => {
          <h2 id="phone" className='p-2 text-2xl'>{props.profile?.phone}</h2>
          <label htmlFor="birthdate" className='font-semibold text-lg self-center'>Fecha de Nacimiento: </label>
          <h2 id="birthdate" className='p-2 text-2xl'>{props.profile?.birthdate?.slice(0, 10)}</h2>
+         <a href="../../update/carrier">
+            <button className="btn-modificar">Modificar Datos</button>
+         </a>
       </div>
    )
 }

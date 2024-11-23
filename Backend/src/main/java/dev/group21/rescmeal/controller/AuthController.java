@@ -4,6 +4,7 @@ import dev.group21.rescmeal.model.*;
 import dev.group21.rescmeal.repository.*;
 import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.UserDetailsImpl;
+import dev.group21.rescmeal.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,18 @@ public class AuthController {
     BusinessRepository businessRepository;
     @Autowired
     CarrierRepository carrierRepository;
+    @Autowired
+    UserService userService;
 
     @PostMapping("/valid")
-    public ResponseEntity<SignupRequest> validateUserForm(@Valid @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<SignupRequest> validateUserForm(@Valid @RequestBody SignupRequest signupRequest) {
         return ResponseEntity.ok().body(signupRequest);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // Log in with either email or username.
-        if(loginRequest.getIdentifier().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
+        if (loginRequest.getIdentifier().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
             User user = userRepository.findByEmail(loginRequest.getIdentifier()).orElseThrow(() -> new RuntimeException("Identifier not found."));
             loginRequest.setIdentifier(user.getUsername());
         }
@@ -66,15 +69,16 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), jwtCookie.getValue(), roles));    }
+                .body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), jwtCookie.getValue(), roles));
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         // TODO Reformat Response to send a <Key, Value> that can be used in front end as error display text for a specific input.
-        if(userRepository.existsByUsername(signupRequest.getUsername())) {
+        if (userRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
-        if(userRepository.existsByEmail(signupRequest.getEmail())) {
+        if (userRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
 
@@ -82,9 +86,12 @@ public class AuthController {
 
         Set<Role> roles = new HashSet<>();
         Role role = switch (signupRequest.getRole().toUpperCase()) {
-            case "CLIENT" -> roleRepository.findByName(ERole.ROLE_CLIENT).orElseThrow(() -> new RuntimeException("Role not found"));
-            case "BUSINESS" -> roleRepository.findByName(ERole.ROLE_BUSINESS).orElseThrow(() -> new RuntimeException("Role not found"));
-            case "CARRIER" -> roleRepository.findByName(ERole.ROLE_CARRIER).orElseThrow(() -> new RuntimeException("Role not found"));
+            case "CLIENT" ->
+                    roleRepository.findByName(ERole.ROLE_CLIENT).orElseThrow(() -> new RuntimeException("Role not found"));
+            case "BUSINESS" ->
+                    roleRepository.findByName(ERole.ROLE_BUSINESS).orElseThrow(() -> new RuntimeException("Role not found"));
+            case "CARRIER" ->
+                    roleRepository.findByName(ERole.ROLE_CARRIER).orElseThrow(() -> new RuntimeException("Role not found"));
             default -> roleRepository.findByName(null).orElseThrow(() -> new RuntimeException("Role not found"));
         };
 
@@ -137,9 +144,9 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getOwnInformation(HttpServletRequest request){
+    public ResponseEntity<?> getOwnInformation(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromCookies(request);
-        if(jwtUtils.validateJwtToken(jwt)){
+        if (jwtUtils.validateJwtToken(jwt)) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found."));
@@ -149,42 +156,41 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> sessionVerify(HttpServletRequest request){
+    public ResponseEntity<?> sessionVerify(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromCookies(request);
-        if(jwtUtils.validateJwtToken(jwt)){
+        if (jwtUtils.validateJwtToken(jwt)) {
             return ResponseEntity.ok().body(null);
         }
         ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.status(403).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(null);
     }
 
-    // TODO Example of update user
-//    @PutMapping("/update")
-//    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody SignupRequest updateUser) {
-//        String jwt = jwtUtils.getJwtFromCookies(request);
-//        if(jwtUtils.validateJwtToken(jwt)){
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//            User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new RuntimeException("User not found."));
-//            user.setEmail(updateUser.getEmail());
-//            user.setUsername(updateUser.getUsername());
-//
-//            return ResponseEntity.ok().body(user);
-//        }
-//    }
-
-    public Business getBusiness() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
-            Long userId = userDetails.getId();
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            if (user.getBusiness() != null) {
-                return user.getBusiness();
-            } else {
-                return new Business();
-            }
+    // TODO revisar y probar la funcion
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody SignupRequest updateUser) {
+        String jwt = jwtUtils.getJwtFromCookies(request);
+        if (jwtUtils.validateJwtToken(jwt)) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User updatedUser = userService.updateUser(userDetails.getId(), updateUser);
+            return ResponseEntity.ok().body(updatedUser);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT token");
         }
-        return new Business();
     }
-}
+
+        public Business getBusiness () {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
+                Long userId = userDetails.getId();
+                User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                if (user.getBusiness() != null) {
+                    return user.getBusiness();
+                } else {
+                    return new Business();
+                }
+            }
+            return new Business();
+        }
+    }
