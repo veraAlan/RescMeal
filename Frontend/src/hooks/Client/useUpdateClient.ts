@@ -16,7 +16,7 @@ export const useModifyClient = () => {
             axiosConfig.get(`/api/auth/me`)
                .then(r => {
                   r.data.client.birthdate = r.data.client.birthdate.slice(0, 10)
-                  setLinkUser(r.data)
+                  setLinkUser(r.data.id)
                   setClientForm(r.data.client)
                   setUserSession(true)
                   toast.success('Datos cargados! Modifique lo que necesite.')

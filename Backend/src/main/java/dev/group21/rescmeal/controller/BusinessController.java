@@ -75,12 +75,14 @@ public class BusinessController {
      * @return ResponseEntity business updated.
      */
     @PutMapping
-    public ResponseEntity<Business> updateBusiness(@RequestPart("business") Business newBusiness, @RequestPart(value = "image") MultipartFile image) {
+    public ResponseEntity<Business> updateBusiness(@RequestPart("business") Business newBusiness, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
             if(image != null) {
                 ResponseEntity<String> createdImage = uploadImage(newBusiness.getName(), image);
                 newBusiness.setImage(String.valueOf(createdImage.getBody()));
+            } else {
+                newBusiness.setImage(businessService.getBusiness(newBusiness.getId()).getImage());
             }
             return ResponseEntity.ok(businessService.updateBusiness(newBusiness));
         } catch (Exception e) {

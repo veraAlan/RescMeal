@@ -34,7 +34,6 @@ export function useBusinessFoods() {
                food.production_date = normlizeDate(food.production_date)
             }
             setBusinessFoods(response.data._embedded.foodList)
-            toast.success('Loaded foods!', { position: 'bottom-right' })
          })
          .catch(err => {
             console.error('Error fetching data:', err)

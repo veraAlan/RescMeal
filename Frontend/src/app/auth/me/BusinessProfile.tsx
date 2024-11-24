@@ -21,19 +21,24 @@ export default (props: { profile: Role | null }) => {
 
    return (
       <div>
-         <div className='grid grid-cols-3 grid-flow-row w-full p-4 border rounded-xl border-2'>
-            <label htmlFor="username" className='font-semibold text-lg self-center'>Nombre de Local: </label>
-            <h2 id="username" className='col-span-2 p-2 text-2xl'>{props.profile?.name}</h2>
-            <label htmlFor="type" className='font-semibold text-lg self-center'>Typo de Local: </label>
-            <h2 id="type" className='col-span-2 p-2 text-2xl'>{props.profile?.type}</h2>
-            <label htmlFor="address" className='font-semibold text-lg self-center'>Direccion: </label>
-            <h2 id="address" className='col-span-2 p-2 text-2xl'>{props.profile?.address}</h2>
-            <label htmlFor="phone" className='font-semibold text-lg self-center'>Celular: </label>
-            <h2 id="phone" className='col-span-2 p-2 text-2xl'>{props.profile?.phone}</h2>
-            <label htmlFor="schedule" className='font-semibold text-lg self-center'>Horario: </label>
-            <h2 id="schedule" className='col-span-2 p-2 text-2xl'>{props.profile?.schedule}</h2>
-            <label htmlFor="schedule" className='font-semibold text-lg self-center'>CVU: </label>
-            <h2 id="schedule" className='col-span-2 p-2 text-2xl'>{props.profile?.cvu}</h2>
+         <div className='relative grid grid-cols-3 grid-flow-row w-full p-4 text-2xl border rounded-xl border-2'>
+            <h3 className='w-full h-full rounded-xl font-semibold text-center'>Nombre de Local: </h3>
+            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.name}</h4>
+            <h3 className='w-full h-full rounded-xl font-semibold text-center'>Typo de Local: </h3>
+            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.type}</h4>
+            <h3 className='w-full h-full rounded-xl font-semibold text-center'>Direccion: </h3>
+            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.address}</h4>
+            <h3 className='w-full h-full rounded-xl font-semibold text-center'>Celular: </h3>
+            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.phone}</h4>
+            <h3 className='w-full h-full rounded-xl font-semibold text-center'>Horario: </h3>
+            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.schedule}</h4>
+            <h3 className='w-full h-full rounded-xl font-semibold text-center'>CVU: </h3>
+            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.cvu}</h4>
+            <span className='grid place-items-end col-span-3 w-full'>
+               <a href='/auth/me/business'>
+                  <button className='border border-white rounded-xl w-full p-4 text-xl font-bold bg-cyan-500 text-black hover:bg-cyan-700 hover:text-white'>Modificar Datos</button>
+               </a>
+            </span>
          </div>
          <div>
             {businessFoods == null ? (
@@ -49,9 +54,6 @@ export default (props: { profile: Role | null }) => {
                </div>
             )}
          </div>
-         <a href="../update/carrier">
-            <button className="btn-modificar">Modificar Datos</button>
-         </a>
       </div>
    )
 }

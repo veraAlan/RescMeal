@@ -22,18 +22,22 @@ export default (props: { profile: Role | null }) => {
    if (props.profile?.birthdate) birthdate = normalizeDate(props.profile.birthdate)
 
    return (
-      <div className='relative grid grid-cols-3 grid-flow-row w-full p-4 border rounded-xl border-2 bg-gradient-to-r from-blue-900 to-purple-900 text-white p-4 shadow-lg'>
-         <h2 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Nombre: </h2>
-         <h3 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{props.profile?.name}</h3>
-         <h2 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Apellido: </h2>
-         <h3 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{props.profile?.last_name}</h3>
-         <h2 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Celular: </h2>
-         <h3 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{phone}</h3>
-         <h2 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Balance: </h2>
-         <h3 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>AR$ {props.profile?.balance}</h3>
-         <h2 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Fecha de Nacimiento: </h2>
-         <h3 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{birthdate}</h3>
-         <a href='/auth/me/client' className='absolute bottom-0 right-0'><button className='border border-white rounded-xl p-4 text-xl font-bold bg-cyan-500 text-black hover:bg-cyan-700 hover:text-white'>Modificar datos</button></a>
+      <div className='relative grid grid-cols-3 grid-flow-row w-full p-4 bg-gradient-to-r from-blue-900 to-purple-900 text-white p-4 shadow-lg'>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Nombre: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.name}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Apellido: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.last_name}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Celular: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{phone}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Balance: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>AR$ {props.profile?.balance}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold pb-4 text-center'>Fecha de Nacimiento: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 pb-4 mb-4 text-center'>{birthdate}</h4>
+         <span className='grid place-items-end col-span-3 w-full'>
+            <a href='/auth/me/client'>
+               <button className='border border-white rounded-xl p-4 text-xl font-bold bg-cyan-500 text-black hover:bg-cyan-700 hover:text-white'>Modificar datos</button>
+            </a>
+         </span>
       </div>
    )
 }

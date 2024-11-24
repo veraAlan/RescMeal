@@ -29,13 +29,13 @@ export default () => {
    }, [])
 
    return (
-      <div className="container relative mx-auto my-4 p-4 border rounded-2xl border-4 border bg-gradient-to-r from-blue-900 to-purple-900 text-white p-4 shadow-lg">
+      <div className="container relative mx-auto my-4 p-4 border rounded-2xl border-4 border bg-gradient-to-r from-blue-900 to-purple-900 text-white p-4 shadow-2xl">
          {profileInfo &&
-            <div className='grid grid-cols-3 grid-flow-row gap-4 pb-4 place-content-evenly'>
-               <h2 className='font-semibold text-3xl text-center'>Nombre de Usuario: </h2>
-               <h3 id="username" className='col-span-2 text-3xl text-center'>{profileInfo.username}</h3>
-               <h2 className='font-semibold text-3xl text-center'>Email: </h2>
-               <h3 id="email" className='col-span-2 text-3xl text-center'>{profileInfo.email}</h3>
+            <div className='grid grid-cols-3 grid-flow-row text-2xl gap-4 p-4 place-content-evenly border rounded-xl border-2'>
+               <h3 className='font-semibold text-center'>Nombre de Usuario: </h3>
+               <h4 id="username" className='col-span-2 text-center'>{profileInfo.username}</h4>
+               <h3 className='font-semibold text-center'>Email: </h3>
+               <h4 id="email" className='col-span-2 text-center'>{profileInfo.email}</h4>
             </div>
          }
 

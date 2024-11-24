@@ -1,5 +1,5 @@
 'use client'
-import { useModifyClient } from '@/hooks/Client/useModifyClient';
+import { useModifyClient } from '@/hooks/Client/useUpdateClient';
 import React from 'react'
 
 const RegisterClient: React.FC = () => {

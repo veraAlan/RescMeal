@@ -56,7 +56,6 @@ public class ClientController {
     @PutMapping
     public ResponseEntity<Client> updateClient(@RequestPart("client") Client newClient) {
         try {
-            System.out.println(newClient.getBirthdate());
             if (clientService.getClient(newClient.getId()) == null) {
                 return ResponseEntity.notFound().build();
             }

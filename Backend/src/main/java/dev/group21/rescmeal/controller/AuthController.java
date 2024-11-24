@@ -180,18 +180,18 @@ public class AuthController {
         }
     }
 
-        public Business getBusiness () {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
-                Long userId = userDetails.getId();
-                User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
-                if (user.getBusiness() != null) {
-                    return user.getBusiness();
-                } else {
-                    return new Business();
-                }
+    public Business getBusiness () {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
+            Long userId = userDetails.getId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            if (user.getBusiness() != null) {
+                return user.getBusiness();
+            } else {
+                return new Business();
             }
-            return new Business();
         }
+        return new Business();
     }
+}
