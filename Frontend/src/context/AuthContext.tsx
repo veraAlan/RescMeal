@@ -1,7 +1,9 @@
 'use client'
 import { createContext, useState, useEffect, ReactNode } from 'react'
-import axiosConfig from '../utils/axiosConfig'
+import axiosConfig from '@/utils/axiosConfig'
 import { redirect } from 'next/navigation'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface AuthContextType {
    isLoggedIn: boolean
@@ -41,6 +43,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const role = r.data.roles[0].name.slice(5,)
             localStorage.setItem('role', role)
             setSessionRole(role)
+            toast.success("Sesion iniciada!", {
+               position: "bottom-right",
+               autoClose: 3000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: "dark"
+            })
          })
          .catch(e => setSessionError("Error consiguiendo rol: " + e))
       setIsLoggedIn(true)
@@ -52,13 +64,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             localStorage.removeItem('token')
             localStorage.removeItem('role')
             setIsLoggedIn(false)
+            toast.success("Sesion cerrada!", {
+               position: "bottom-right",
+               autoClose: 3000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: "dark"
+            })
          })
-         .catch(e => { setSessionError(e) })
+         .catch(e => {
+            toast.error(e, {
+               position: "bottom-right",
+               autoClose: 3000,
+               hideProgressBar: false,
+               closeOnClick: true,
+               pauseOnHover: true,
+               draggable: true,
+               progress: undefined,
+               theme: "dark"
+            })
+         })
       redirect("/")
    }
 
    return (
       <AuthContext.Provider value={{ isLoggedIn, sessionRole, login, logout }}>
+         <ToastContainer />
          {children}
       </AuthContext.Provider>
    )

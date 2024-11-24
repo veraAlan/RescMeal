@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FoodErrors } from '../../../types/Food'
 import axiosConfig from '@/utils/axiosConfig'
+import { toast } from 'react-toastify'
+import normlizeDate from '@/utils/normalizeDate'
 
 export const useModifyFoods = (foodId: string | null) => {
    const [imageData, setImageData] = useState<File | null>(null)
@@ -19,6 +21,18 @@ export const useModifyFoods = (foodId: string | null) => {
       expiration_date: null,
       production_date: null
    })
+
+   useEffect(() => {
+      axiosConfig.get('/api/food/' + foodId)
+         .then(r => {
+            r.data.image = '/Food/' + r.data.image
+            r.data.expiration_date = r.data.expiration_date.slice(0, 10)
+            r.data.production_date = r.data.production_date.slice(0, 10)
+            setFormData(r.data)
+            toast.success('Se cargo la comida')
+         })
+         .catch(e => { toast.error('Error cargando la comida: ', e) })
+   }, []);
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target

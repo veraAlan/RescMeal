@@ -111,6 +111,7 @@ public class AuthController {
                 .body(null);
     }
 
+    // TODO Corregir uso en front y eliminar esta funcion.
     @GetMapping("/session-id")
     public ResponseEntity<Integer> getSessionId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Food } from '../../types/Food';
-import axios from 'axios'
+import axiosConfig from '@/utils/axiosConfig';
 
 export function useListFoods() {
     const [foods, setFoods] = useState<Food[]>([]);
@@ -8,9 +8,7 @@ export function useListFoods() {
 
     useEffect(() => {
         async function fetchFoods() {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/food/list`, {
-                withCredentials: true
-            })
+            await axiosConfig.get(`/api/food/list`)
                 .then(response => {
                     const result = response.data;
                     if (result) {
