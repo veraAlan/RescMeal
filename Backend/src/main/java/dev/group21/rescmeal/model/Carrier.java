@@ -39,7 +39,7 @@ public class Carrier {
 
     @NotNull(message = "Este campo es obligatorio")
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date birthdate;
 
 }

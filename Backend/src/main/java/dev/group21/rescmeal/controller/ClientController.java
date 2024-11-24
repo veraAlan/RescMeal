@@ -54,9 +54,9 @@ public class ClientController {
     }
 
     @PutMapping
-    public ResponseEntity<Client> updateClient(@RequestPart("client") String clientJson) {
+    public ResponseEntity<Client> updateClient(@RequestPart("client") Client newClient) {
         try {
-            @Valid Client newClient = new ObjectMapper().readValue(clientJson, Client.class);
+            System.out.println(newClient.getBirthdate());
             if (clientService.getClient(newClient.getId()) == null) {
                 return ResponseEntity.notFound().build();
             }

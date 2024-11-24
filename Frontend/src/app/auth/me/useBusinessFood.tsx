@@ -26,10 +26,7 @@ export function useBusinessFoods() {
    const [error, setError] = useState<string | null>(null)
 
    useEffect(() => {
-      axiosConfig.get(`/api/food/me`,
-         {
-            params: { page, size }
-         })
+      axiosConfig.get(`/api/food/me`, { params: { page, size } })
          .then(response => {
             for (const food of response.data._embedded.foodList) {
                food.image = '/Food/' + food.image
