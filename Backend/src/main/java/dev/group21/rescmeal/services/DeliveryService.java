@@ -33,4 +33,8 @@ public class DeliveryService {
     public List<Delivery> getTakenDeliveries() {
             return deliveryRepository.findTakenDeliveries();
         }
+
+    public Optional<Delivery> getDeliveryByPurchaseId(int purchaseId) {
+        return deliveryRepository.findByPurchaseId(purchaseId);
+    }
 }

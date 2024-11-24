@@ -4,22 +4,21 @@ import useMapboxDirections from '../../hooks/Map/useDirections';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
-interface Business {
-    address_long: number;
-    address_lat: number;
-    name: string;
-    type: string;
-    address: string;
-    phone: string;
-    schedule: string;
-}
+// interface Business {
+//     address_long: number;
+//     address_lat: number;
+//     name: string;
+//     type: string;
+//     address: string;
+//     phone: string;
+//     schedule: string;
+// }
 
 interface MapProps {
     stops: [number, number][];
-    businesses: Business[];
 }
 
-const Map: React.FC<MapProps> = ({ stops, businesses }) => {
+const Map: React.FC<MapProps> = ({ stops }) => {
     const mapContainer = useRef<HTMLDivElement | null>(null);
     const { directions, error } = useMapboxDirections(stops, mapboxgl.accessToken);
 
@@ -30,14 +29,6 @@ const Map: React.FC<MapProps> = ({ stops, businesses }) => {
                 style: 'mapbox://styles/mapbox/streets-v11',
                 center: stops[0], // Centrar en el primer punto
                 zoom: 12,
-            });
-
-            businesses.forEach((business) => {
-                const { address_long, address_lat, name, type, address, phone, schedule } = business;
-                new mapboxgl.Marker()
-                    .setLngLat([address_long, address_lat])
-                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3>${name}</h3><p>Tipo: ${type}</p><p>Dirección: ${address}</p><p>Teléfono: ${phone}</p><p>Horario: ${schedule}</p>`))
-                    .addTo(map);
             });
 
             if (error) {
@@ -97,12 +88,12 @@ const Map: React.FC<MapProps> = ({ stops, businesses }) => {
 
             return () => map.remove(); // Limpiar el mapa al desmontar
         }
-    }, [directions, error, stops, businesses]);
+    }, [directions, error, stops]);
 
     return (
         <div className="container mx-auto py-8">
             <h1 className="text-2xl font-bold text-center mb-4">Mapa con Rutas de Mapbox</h1>
-            <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 rounded-lg shadow-lg" />
+            <div ref={mapContainer} className="w-full h-[600px] border-2 border-blue-500 " />
         </div>
     );
 };

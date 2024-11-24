@@ -1,6 +1,8 @@
 package dev.group21.rescmeal.controller;
 
+import dev.group21.rescmeal.model.Carrier;
 import dev.group21.rescmeal.model.Delivery;
+import dev.group21.rescmeal.services.CarrierService;
 import dev.group21.rescmeal.services.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
@@ -16,10 +19,12 @@ import java.util.List;
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
+    private final CarrierService carrierService;
 
     @Autowired
-    public DeliveryController(DeliveryService deliveryService) {
+    public DeliveryController(DeliveryService deliveryService, CarrierService carrierService) {
         this.deliveryService = deliveryService;
+        this.carrierService = carrierService;
     }
 
     @GetMapping("/taken")
@@ -83,6 +88,21 @@ public class DeliveryController {
             } else {
                 return ResponseEntity.ok(deliveryList);
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @GetMapping("/carrierByPurchase/{purchaseId}")
+    public ResponseEntity<Carrier> getCarrierByPurchaseId(@PathVariable Integer purchaseId) {
+        try {
+            Optional<Delivery> deliveryOpt = deliveryService.getDeliveryByPurchaseId(purchaseId);
+            if (deliveryOpt.isPresent()) {
+                Delivery delivery = deliveryOpt.get();
+                Carrier carrier = delivery.getCarrier();
+                return ResponseEntity.ok(carrier);
+            }
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
