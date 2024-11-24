@@ -1,4 +1,6 @@
+import normalizePhone from '@/utils/normalizePhone'
 import Role from './profile'
+import normalizeDate from '@/utils/normalizeDate'
 
 export interface Role {
    name?: string
@@ -15,23 +17,27 @@ export interface Role {
 }
 
 export default (props: { profile: Role | null }) => {
-   // TODO POR FAVOR normalizar valor de Carrier, tiene lastName cuando es last_name en la base de datos
-   // Relacionado a ^^, vehicleType. Tambien se puede usar "_" en tsx, es mas rapido que tengamos el mismo nombre en la DB y en el front asi no tenemos que confirmar que estemos escribiendo algo bien o no.
+   let phone, birthdate
+   if (props.profile?.phone) phone = normalizePhone(props.profile.phone)
+   if (props.profile?.birthdate) birthdate = normalizeDate(props.profile.birthdate)
+
    return (
-      <div className='grid grid-rows-6 grid-flow-col w-full p-4 border rounded-xl border-2'>
-         <label htmlFor="name" className='font-semibold text-lg self-center'>Nombre: </label>
-         <h2 id="name" className='p-2 text-2xl'>{props.profile?.name}</h2>
-         <label htmlFor="last_name" className='font-semibold text-lg self-center'>Apellido: </label>
-         <h2 id="last_name" className='p-2 text-2xl'>{props.profile?.last_name}</h2>
-         <label htmlFor="vehicle_type" className='font-semibold text-lg self-center'>Tipo de Vehiculo: </label>
-         <h2 id="vehicle_type" className='p-2 text-2xl'>{props.profile?.vehicle_type}</h2>
-         <label htmlFor="phone" className='font-semibold text-lg self-center'>Celular: </label>
-         <h2 id="phone" className='p-2 text-2xl'>{props.profile?.phone}</h2>
-         <label htmlFor="birthdate" className='font-semibold text-lg self-center'>Fecha de Nacimiento: </label>
-         <h2 id="birthdate" className='p-2 text-2xl'>{props.profile?.birthdate?.slice(0, 10)}</h2>
-         <a href="../../update/carrier">
-            <button className="btn-modificar">Modificar Datos</button>
-         </a>
+      <div className='relative grid grid-cols-3 grid-flow-row w-full p-4 text-2xl border rounded-xl border-2'>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Nombre: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.name}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Apellido: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.last_name}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Tipo de Vehiculo: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{props.profile?.vehicle_type}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold text-center'>Celular: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-center'>{phone}</h4>
+         <h3 className='w-full h-full rounded-xl font-semibold pb-4 text-center'>Fecha de Nacimiento: </h3>
+         <h4 className='w-full h-full rounded-xl col-span-2 pb-4 mb-4 text-center'>{birthdate}</h4>
+         <span className='grid place-items-end col-span-3 w-full'>
+            <a href='/auth/me/carrier'>
+               <button className='border border-white rounded-xl p-4 text-xl font-bold bg-cyan-500 text-black hover:bg-cyan-700 hover:text-white'>Modificar datos</button>
+            </a>
+         </span>
       </div>
    )
 }

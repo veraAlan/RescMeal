@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Client, ClientErrors } from '../../types/Client'
 import axiosConfig from '@/utils/axiosConfig'
 import { redirect } from 'next/navigation'
@@ -11,7 +11,7 @@ export const useModifyClient = () => {
    const [linkUser, setLinkUser] = useState({ id: 0 })
 
    useEffect(() => {
-      function fetchCarrier() {
+      function fetchClient() {
          if (linkUser.id == 0) {
             axiosConfig.get(`/api/auth/me`)
                .then(r => {
@@ -25,14 +25,13 @@ export const useModifyClient = () => {
          }
       }
 
-      fetchCarrier()
+      fetchClient()
    }, []);
 
    const [clientForm, setClientForm] = useState<Client>({
       name: '',
       last_name: '',
       phone: '',
-      address: '',
       birthdate: ''
    })
 

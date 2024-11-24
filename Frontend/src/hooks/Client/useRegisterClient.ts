@@ -17,7 +17,6 @@ export const useRegisterClient = () => {
         name: '',
         last_name: '',
         phone: '',
-        address: '',
         birthdate: ''
     })
 

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { useUpdateBusiness } from './useUpdateBusiness'
+import { useUpdateBusiness } from '@/hooks/Business/useUpdateBusiness'
 import AddressPicker from '@/components/Map/AddressPicker'
 
 const RegisterBusiness: React.FC = () => {
