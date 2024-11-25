@@ -42,17 +42,20 @@ public class DeliveryController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Delivery> updateDelivery(@RequestBody Delivery newDelivery) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Delivery> updateDelivery(@PathVariable int id, @RequestBody Delivery updatedDelivery) {
         try {
-            if (deliveryService.getDeliveryById(newDelivery.getId()).isEmpty()) {
+            Optional<Delivery> existingDelivery = deliveryService.getDeliveryById(id);
+            if (existingDelivery.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
+            updatedDelivery.setId(id);
+            return ResponseEntity.ok(deliveryService.saveDelivery(updatedDelivery));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDelivery(@PathVariable Integer id) {

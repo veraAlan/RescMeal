@@ -73,7 +73,7 @@ public class CarrierController {
     }
 
     @PutMapping
-    public ResponseEntity<Carrier> updateCarrier(@Valid @RequestBody Carrier newCarrier) {
+    public ResponseEntity<Carrier> updateCarrier(@RequestPart("carrier") Carrier newCarrier) {
         try{
             if (carrierService.getCarrier(newCarrier.getId()) == null) return ResponseEntity.notFound().build();
             return ResponseEntity.ok(carrierService.updateCarrier(newCarrier));

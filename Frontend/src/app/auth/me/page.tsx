@@ -3,7 +3,7 @@
 import React from 'react'
 import Profile from './profile'
 
-const RegisterBusiness: React.FC = () => {
+const ViewProfile: React.FC = () => {
    return (
       <div>
          <Profile />
@@ -11,4 +11,4 @@ const RegisterBusiness: React.FC = () => {
    )
 }
 
-export default RegisterBusiness
+export default ViewProfile

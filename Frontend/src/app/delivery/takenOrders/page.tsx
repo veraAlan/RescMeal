@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Delivery } from '../../../types/Delivery';
 import { getSessionId } from '../../../utils/getSessionId';
 import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TakenOrdersPage: React.FC = () => {
     const [takenOrders, setTakenOrders] = useState<Delivery[]>([]);
@@ -29,7 +31,11 @@ const TakenOrdersPage: React.FC = () => {
                     withCredentials: true
                 });
                 if (carrierId !== null) {
-                    const filteredOrders = response.data.filter((order: Delivery) => order.carrier && order.carrier.id === carrierId && order.delivery_state === 'Tomado');
+                    const filteredOrders = response.data.filter((order: Delivery) => 
+                        order.carrier && 
+                        order.carrier.id === carrierId && 
+                        order.delivery_state === 'Tomado'
+                    );
                     setTakenOrders(filteredOrders);
                 }
             } catch (error) {
@@ -42,12 +48,43 @@ const TakenOrdersPage: React.FC = () => {
         }
     }, [carrierId]);
 
-    const handleCompleteDelivery = (orderId: number) => {
-        // Lógica para completar la entrega
-        console.log(`Completar entrega para el pedido con ID: ${orderId}`);
+    const handleCompleteDelivery = async (orderId: number) => {
+        try {
+            const currentTime = new Date().toISOString().split('T')[1].split('.')[0];
+            const orderToUpdate = takenOrders.find(order => order.id === orderId);
+
+            if (!orderToUpdate) {
+                console.error('Orden no encontrada');
+                return;
+            }
+
+            const updatedOrder = {
+                ...orderToUpdate,
+                waiting_time: currentTime,
+                delivery_state: 'Terminado'
+            };
+
+            await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/delivery/${orderId}`, updatedOrder, {
+                withCredentials: true
+            });
+
+            setTakenOrders(takenOrders.filter(order => order.id !== orderId));
+            toast.success('Entrega finalizada');
+            toast.success('Recorrido terminado');
+            console.log(`Entrega terminada para el pedido con ID: ${orderId}`);
+        } catch (error) {
+            toast.error('Error al completar la entrega');
+            console.error('Error al completar la entrega:', error);
+        }
     };
 
-    if (takenOrders.length === 0) return <p>No hay pedidos tomados.</p>;
+    if (takenOrders.length === 0) return (
+        <div className="flex flex-col items-center justify-center h-screen">
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">No has tomado ningún pedido aún.</h2>
+            <p className="text-lg text-gray-500">Por favor, selecciona un pedido para ver los detalles aquí.</p>
+            <ToastContainer />
+        </div>
+    );
 
     return (
         <div className="container mx-auto px-4">
@@ -56,8 +93,7 @@ const TakenOrdersPage: React.FC = () => {
                 {takenOrders.map(order => (
                     <div key={order.id} className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
                         <p className="text-lg"><strong>Cliente:</strong> {order.purchase.client.name}</p>
-                        <p className="text-lg"><strong>Total:</strong> ${order.purchase.total_cost}</p>
-                        <p className="text-lg"><strong>Fecha de Creación:</strong> {new Date(order.purchase.creation_date).toLocaleDateString()}</p>
+                        <p className="text-lg"><strong>Total de la Compra:</strong> ${order.purchase.total_cost}</p>
                         <p className="text-lg"><strong>Items:</strong></p>
                         <ul className="ml-6">
                             {order.purchase.purchasedItems.map(item => (
@@ -66,7 +102,6 @@ const TakenOrdersPage: React.FC = () => {
                                 </li>
                             ))}
                         </ul>
-                        <p className="text-lg"><strong>Estado de Entrega:</strong> {order.delivery_state}</p>
                         <p className="text-lg"><strong>Hora de Entrega:</strong> {order.delivery_time}</p>
                         <div className="flex justify-between mt-4">
                             <Link href={`/Direction?purchaseId=${order.purchase.id}`} legacyBehavior>
@@ -84,6 +119,7 @@ const TakenOrdersPage: React.FC = () => {
                     </div>
                 ))}
             </div>
+            <ToastContainer />
         </div>
     );
 };

@@ -1,13 +1,14 @@
-import { AuthContext } from "@/context/AuthContext"
-import Link from "next/link"
-import { useContext } from "react"
-import CartIcon from "../Cart/CartIcon"
+import { AuthContext } from "@/context/AuthContext";
+import Link from "next/link";
+import { useContext } from "react";
+import CartIcon from "../Cart/CartIcon";
+import BalanceButton from "../Balance/BalanceButton";  // Asegúrate de ajustar el path según tu estructura de proyecto
 
 const RoleHeader: React.FC = () => {
-   const authContext = useContext(AuthContext)
-   if (!authContext) return null
+   const authContext = useContext(AuthContext);
+   if (!authContext) return null;
 
-   const { sessionRole } = authContext
+   const { sessionRole } = authContext;
 
    switch (sessionRole) {
       case "BUSINESS": return (<>
@@ -21,6 +22,7 @@ const RoleHeader: React.FC = () => {
       </>);
       case "CLIENT": return (<>
          <CartIcon />
+         <BalanceButton />
       </>);
       case "ADMIN": return (<>
          <Link href={`/businesses`} className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Lista de locales</Link>
@@ -34,4 +36,4 @@ const RoleHeader: React.FC = () => {
    }
 }
 
-export default RoleHeader
+export default RoleHeader;

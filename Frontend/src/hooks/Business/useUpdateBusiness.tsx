@@ -30,7 +30,7 @@ export const useUpdateBusiness = () => {
    const [linkUser, setLinkUser] = useState<linkUser>({ id: 0 })
 
    useEffect(() => {
-      async function fetchCarrier() {
+      async function fetchBusiness() {
          if (linkUser.id == 0) {
             await axiosConfig.get(`/api/auth/me`)
                .then(r => {
@@ -46,7 +46,7 @@ export const useUpdateBusiness = () => {
          }
       }
 
-      fetchCarrier()
+      fetchBusiness()
    }, []);
 
    const [businessForm, setBusinessData] = useState<Business>({

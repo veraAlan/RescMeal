@@ -1,94 +1,99 @@
-import axiosConfig from "@/utils/axiosConfig";
 import { useState, useEffect } from "react";
+import { Carrier, CarrierErrors } from "../../types/Carrier";
+import axiosConfig from "@/utils/axiosConfig";
+import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
 
 
 export const useUpdateCarrier = () => {
-    const id = 1
-    const [carrier, setCarrier] = useState({
-        name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        vehicle_type: '',
-        phone: '',
-        date: ''
-    });
-    const [successMessage, setSuccessMessage] = useState('');
-    const [generalError, setGeneralError] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [carrierErrors, setCarriertErrors] = useState<CarrierErrors>({})
+    const [status, setStatus] = useState(0)
+    const [userSession, setUserSession] = useState<Boolean | null>(null)
+    const [linkUser, setLinkUser] = useState({ id: 0 })
 
     useEffect(() => {
-        async function fetchCarrier() {
-            try {
-                const res = await axiosConfig.get(`/api/carrier/${id}`)
-                if (res.status != 200) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                setCarrier(res.data);
-            } catch (err) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError('An unknown error occurred');
-                }
-            } finally {
-                setLoading(false);
+        function fetchCarrier() {
+            if (linkUser.id == 0) {
+                axiosConfig.get(`/api/auth/me`)
+                    .then(r => {
+                        r.data.carrier.birthdate = r.data.carrier.birthdate.slice(0, 10)
+                        setLinkUser(r.data.id)
+                        setCarrierForm(r.data.carrier)
+                        setUserSession(true)
+                        toast.success('Datos cargados! Modifique lo que necesite.')
+                    })
+                    .catch(e => toast.error(e))
             }
         }
-        fetchCarrier();
+
+        fetchCarrier()
     }, []);
+
+    const [carrierForm, setCarrierForm] = useState<Carrier>({
+        name: '',
+        last_name: '',
+        vehicle_type: '',
+        phone: '',
+        birthdate: ''
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setCarrier({
-            ...carrier,
+        setCarrierForm({
+            ...carrierForm,
             [name]: value
         });
     };
 
+    const validateCarrier = (carrierForm: Carrier) => {
+        let tempErrors: { [k: string]: any } = {}
+        axiosConfig.post(`/api/carrier/valid`, carrierForm)
+            .then(() => { setCarriertErrors({}) })
+            .catch(e => {
+                for (const key in e.response.data) {
+                    if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                        tempErrors[key] = e.response.data[key]
+                    }
+                }
+                setCarriertErrors(tempErrors)
+            })
+
+        return Object.keys(tempErrors).length === 0
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(JSON.stringify(carrier))
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carrier/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(carrier),
+        e.preventDefault()
 
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                setError(errorData);
-                setGeneralError('Error al modificar el repartidor. Por favor intentelo otra vez');
-                throw new Error('Error al modificar al repartidor')
-            }
-            setSuccessMessage('Repartidor modificado');
-            setCarrier({
-                name: '',
-                last_name: '',
-                email: '',
-                password: '',
-                vehicle_type: '',
-                phone: '',
-                date: ''
-            });
-            setError('');
-            setGeneralError('');
-        } catch (error) {
-            setGeneralError('Error modificando al repartidor. Por favor Intentelo otra vez')
+        if (validateCarrier(carrierForm) && userSession) {
+            const formData = new FormData()
+            formData.append("carrier", new Blob([JSON.stringify(carrierForm)], { type: 'application/json' }))
+            formData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
+            axiosConfig.put('/api/carrier', formData)
+                .then(r => {
+                    setStatus(r.status)
+                })
+                .catch(e => {
+                    let tempErrors: { [k: string]: any } = {}
+                    for (const key in e.response.data) {
+                        if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
+                            tempErrors[key] = e.response.data[key]
+                        }
+                    }
+                    setCarriertErrors(tempErrors)
+                })
         }
-    };
+    }
+    
+    if (status === 200) {
+        toast.success('Actualizacion correcta, redireccionando...')
+        setTimeout(redirect("/auth/me"), 3000)
+    }
 
     return {
-        carrier,
-        error,
-        successMessage,
-        generalError,
+        userSession,
+        carrierForm,
+        carrierErrors,
         handleChange,
         handleSubmit
-    };
+    }
 }
