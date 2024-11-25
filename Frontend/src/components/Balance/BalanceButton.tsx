@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const BalanceButton: React.FC = () => {
     const [balance, setBalance] = useState<number | null>(null);
-    const [setUserInfo] = useState<any>(null);
+    const [userInfo, setUserInfo] = useState<any>(null);
 
     const getOwnInformation = async () => {
         try {
