@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -40,6 +41,6 @@ public class Carrier {
     @NotNull(message = "Este campo es obligatorio")
     @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
     @DateTimeFormat(pattern = "yyyy-mm-dd")
-    private Date birthdate;
+    private LocalDate birthdate;
 
 }

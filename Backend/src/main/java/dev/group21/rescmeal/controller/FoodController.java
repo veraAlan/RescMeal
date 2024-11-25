@@ -69,6 +69,20 @@ public class FoodController {
         }
     }
 
+    @PatchMapping("/updateQuantity")
+    public ResponseEntity<Food> updateFoodQuantity(@RequestBody Food newFood) {
+        try {
+            Food storeFood = foodService.getFood(newFood.getId());
+            if (storeFood.getQuantity() < newFood.getQuantity()) {
+              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+            newFood.setQuantity(storeFood.getQuantity() - newFood.getQuantity());
+            return ResponseEntity.ok(foodService.updateFood(newFood));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
     @PatchMapping
     public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {

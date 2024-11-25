@@ -194,4 +194,19 @@ public class AuthController {
         }
         return new Business();
     }
+
+    public Carrier getCarrier () {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
+            Long userId = userDetails.getId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            if (user.getCarrier() != null) {
+                return user.getCarrier();
+            } else {
+                return new Carrier();
+            }
+        }
+        return new Carrier();
+    }
 }

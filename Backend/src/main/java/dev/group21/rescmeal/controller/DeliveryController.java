@@ -1,10 +1,17 @@
 package dev.group21.rescmeal.controller;
 
+import dev.group21.rescmeal.model.Business;
 import dev.group21.rescmeal.model.Carrier;
 import dev.group21.rescmeal.model.Delivery;
+import dev.group21.rescmeal.model.Food;
 import dev.group21.rescmeal.services.CarrierService;
 import dev.group21.rescmeal.services.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +24,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/delivery")
 public class DeliveryController {
-
+    @Autowired
+    private final AuthController authController;
     private final DeliveryService deliveryService;
     private final CarrierService carrierService;
 
     @Autowired
-    public DeliveryController(DeliveryService deliveryService, CarrierService carrierService) {
+    public DeliveryController(AuthController authController, DeliveryService deliveryService, CarrierService carrierService) {
+        this.authController = authController;
         this.deliveryService = deliveryService;
         this.carrierService = carrierService;
     }
@@ -106,6 +115,21 @@ public class DeliveryController {
                 return ResponseEntity.ok(carrier);
             }
             return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<PagedModel<EntityModel<Delivery>>> getCarrierDeliverys(Pageable pageable, PagedResourcesAssembler<Delivery> assembler){
+        try{
+            Carrier loggedCarrier = authController.getCarrier();
+            Page<Delivery> carrierPage = deliveryService.getCarrierDeliverys(loggedCarrier.getId(), pageable );
+            if (carrierPage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(assembler.toModel(carrierPage));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }

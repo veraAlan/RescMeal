@@ -1,8 +1,5 @@
 package dev.group21.rescmeal.security;
 
-import dev.group21.rescmeal.security.jwt.AuthEntryPointJwt;
-import dev.group21.rescmeal.security.jwt.AuthTokenFilter;
-import dev.group21.rescmeal.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import dev.group21.rescmeal.security.jwt.AuthEntryPointJwt;
+import dev.group21.rescmeal.security.jwt.AuthTokenFilter;
+import dev.group21.rescmeal.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -75,9 +76,9 @@ public class SecurityConfig {
                                 // Client
                                 .requestMatchers(HttpMethod.POST, "/api/client").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT")
-                                .requestMatchers(HttpMethod.PATCH, "/api/client").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.GET, "/api/purchase/last/{id}","/api/delivery/carrierByPurchase/{id}").hasRole("CLIENT")
                                 .requestMatchers("/api/purchase").hasAnyRole("CLIENT")
+                                .requestMatchers(HttpMethod.PATCH, "/api/client", "/api/food/updateQuantity").hasRole("CLIENT")
                                 // Business
                                 .requestMatchers(HttpMethod.POST, "/api/business", "/api/food").hasRole("BUSINESS")
                                 .requestMatchers(HttpMethod.PUT, "/api/business", "/api/food").hasRole("BUSINESS")
@@ -85,14 +86,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/food/me", "/api/food/*","/api/sales/dashboard", "/api/sales/stock", "/api/sales/revenue", "/api/sales/customers").hasRole("BUSINESS")
                                 // Carrier
                                 .requestMatchers(HttpMethod.POST, "/api/delivery", "/api/purchase", "/api/carrier", "/api/delivery/{id}").hasRole("CARRIER")
-                                .requestMatchers(HttpMethod.GET, "/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/{id}", "/api/carrier/{id}", "/api/delivery/carrierByPurchase/{id}").hasRole("CARRIER")
+                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/{id}", "/api/carrier/{id}", "/api/delivery/carrierByPurchase/{id}").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PUT, "/api/purchase", "/api/carrier", "/api/delivery/{id}").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PATCH, "/api/carrier").hasRole("CARRIER")
                                 // MultiRole
                                 .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
                                 .requestMatchers(HttpMethod.POST, "/api/purchase").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/api/business/list").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/api/purchase/{id}").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/api/business/list", "/api/purchase/{id}").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
 //                    .requestMatchers(HttpMethod.PUT, "").hasAnyRole("")
 //                    .requestMatchers(HttpMethod.PATCH, "").hasAnyRole("")
 //                    .requestMatchers(HttpMethod.GET, "").hasAnyRole("")

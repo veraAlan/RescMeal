@@ -36,7 +36,13 @@ export default () => {
                <h4 id="username" className='col-span-2 text-center'>{profileInfo.username}</h4>
                <h3 className='font-semibold text-center'>Email: </h3>
                <h4 id="email" className='col-span-2 text-center'>{profileInfo.email}</h4>
+               <span className='grid place-items-end col-span-3 w-full'>
+                  <a href='/auth/me/user'>
+                     <button className='border border-white rounded-xl p-4 text-xl font-bold bg-cyan-500 text-black hover:bg-cyan-700 hover:text-white'>Modificar datos</button>
+                  </a>
+               </span>
             </div>
+
          }
 
          {profileInfo?.business && <BusinessProfile profile={profileInfo.business} />}

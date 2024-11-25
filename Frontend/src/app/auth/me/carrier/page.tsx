@@ -2,7 +2,7 @@
 import { useUpdateCarrier } from '@/hooks/Carrier/useUpdateCarrier';
 import React from 'react'
 
-const RegisterCarrier: React.FC = () => {
+const UpdateCarrier: React.FC = () => {
     const {
         carrierForm,
         carrierErrors,
@@ -82,4 +82,4 @@ const RegisterCarrier: React.FC = () => {
     );
 };
 
-export default RegisterCarrier;
+export default UpdateCarrier;

@@ -1,23 +1,22 @@
 import { useState, useEffect } from "react";
-import { Carrier, CarrierErrors } from "../../types/Carrier";
 import axiosConfig from "@/utils/axiosConfig";
-import { redirect } from "next/navigation";
+import { User } from "@/types/UserRegister";
 import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
-export const useUpdateCarrier = () => {
-    const [carrierErrors, setCarriertErrors] = useState<CarrierErrors>({})
+export const useUpdateUser = () => {
+    const [userErrors, setUserErrors] = useState<User>({})
     const [status, setStatus] = useState(0)
     const [userSession, setUserSession] = useState<Boolean | null>(null)
     const [linkUser, setLinkUser] = useState({ id: 0 })
 
     useEffect(() => {
-        function fetchCarrier() {
+        function fetchUser() {
             if (linkUser.id == 0) {
                 axiosConfig.get(`/api/auth/me`)
                     .then(r => {
-                        r.data.carrier.birthdate = r.data.carrier.birthdate.slice(0, 10)
                         setLinkUser(r.data.id)
-                        setCarrierForm(r.data.carrier)
+                        setUserForm(r.data)
                         setUserSession(true)
                         toast.success('Datos cargados! Modifique lo que necesite.')
                     })
@@ -25,49 +24,45 @@ export const useUpdateCarrier = () => {
             }
         }
 
-        fetchCarrier()
+        fetchUser()
     }, []);
 
+    const [userForm, setUserForm] = useState<User>({
+        username: '',
+        email: '',
+        password: ''
+    })
 
-    const [carrierForm, setCarrierForm] = useState<Carrier>({
-        name: '',
-        last_name: '',
-        vehicle_type: '',
-        phone: '',
-        birthdate: ''
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setCarrierForm({
-            ...carrierForm,
+    const handleChangeUpdate = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target
+        setUserForm({
+            ...userForm,
             [name]: value
-        });
-    };
+        })
+    }
 
-    const validateCarrier = (carrierForm: Carrier) => {
-        let tempErrors: { [k: string]: any } = {}
-        axiosConfig.post(`/api/carrier/valid`, carrierForm)
-            .then(() => { setCarriertErrors({}) })
+    const validateUser = (userForm: User) => {
+        let tempErrors: { [k: string]: any } = {};
+        axiosConfig.post(`/api/auth/valid`, userForm)
+            .then(() => { setUserErrors({}) })
             .catch(e => {
                 for (const key in e.response.data) {
                     if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
-                        tempErrors[key] = e.response.data[key]
+                        tempErrors[key] = e.response.data[key];
                     }
                 }
-                setCarriertErrors(tempErrors)
+                setUserErrors(tempErrors)
             })
-        return Object.keys(tempErrors).length === 0
+        return Object.keys(tempErrors).length === 0;
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (validateCarrier(carrierForm) && userSession) {
-            const formData = new FormData()
-            formData.append("carrier", new Blob([JSON.stringify(carrierForm)], { type: 'application/json' }))
-            formData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
-            axiosConfig.put('/api/carrier', formData)
+        if (validateUser(userForm) && userSession) {
+            const formUserData = new FormData()
+            formUserData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
+            axiosConfig.put(`/api/auth/update`, formUserData)
                 .then(r => {
                     setStatus(r.status)
                 })
@@ -78,7 +73,7 @@ export const useUpdateCarrier = () => {
                             tempErrors[key] = e.response.data[key]
                         }
                     }
-                    setCarriertErrors(tempErrors)
+                    setUserErrors(tempErrors)
                 })
         }
     }
@@ -89,10 +84,10 @@ export const useUpdateCarrier = () => {
     }
 
     return {
+        userForm,
+        userErrors,
         userSession,
-        carrierForm,
-        carrierErrors,
-        handleChange,
+        handleChangeUpdate,
         handleSubmit
     }
 }
