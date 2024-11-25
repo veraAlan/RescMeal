@@ -5,6 +5,8 @@ import dev.group21.rescmeal.model.PurchasedItem;
 import dev.group21.rescmeal.repository.PurchaseRepository;
 import dev.group21.rescmeal.repository.PurchasedItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.ArrayList;
@@ -62,4 +64,14 @@ public class PurchaseService {
     public void deletePurchase(Integer id) {
         purchaseRepository.deleteById(id);
     }
+
+        public Optional<Purchase> getLastPurchaseByClientId(Integer clientId) {
+            Pageable pageable = PageRequest.of(0, 1); // Página 0, 1 resultado
+            List<Purchase> purchases = purchaseRepository.findFirstByClientIdOrderByCreationDateDesc(clientId, pageable);
+            if (purchases.isEmpty()) {
+                return Optional.empty();
+            } else {
+                return Optional.of(purchases.get(0));
+            }
+        }
 }

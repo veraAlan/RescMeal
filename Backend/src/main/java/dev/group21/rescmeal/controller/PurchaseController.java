@@ -126,6 +126,13 @@ public class PurchaseController {
         }
     }
 
+    @GetMapping("/last/{clientId}")
+    public ResponseEntity<Purchase> getLastPurchaseByClientId(@PathVariable Integer clientId) {
+        Optional<Purchase> purchase = purchaseService.getLastPurchaseByClientId(clientId);
+        return purchase.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     private HttpHeaders errorHeader(Exception e) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Error-Message", e.getMessage());
