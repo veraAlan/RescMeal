@@ -10,25 +10,37 @@ const HomePage: React.FC = () => {
 
    return (
       <div className="container mx-auto px-4 flex flex-col items-center">
-         <h1 className="text-4xl font-bold my-4 text-center text-gray-800">RescMeal</h1>
-         <div className='container p-4 border border-red-500 text-center'>
-            <p>Descripcion de la pagina.</p>
-            <p className='pt-2'>
-               Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-               Quis veniam autem consequuntur aliquam error vitae numquam
-               repellendus aperiam, quae iusto porro perspiciatis tenetur
-               provident tempora aut fugiat cumque! Asperiores, voluptatum
-               accusamus. Est eaque omnis, quod ab perferendis magni molestias
-               quasi. Eum totam, dicta enim quidem assumenda explicabo id.
-               Quod laudantium laboriosam quam optio perferendis debitis
-               at eius magnam quo minima nemo ipsum asperiores reprehenderit,
-               incidunt tempora sequi dolores delectus numquam.
+         <h1 className="text-5xl font-extrabold my-6 text-center text-gray-900">RescMeal</h1>
+         <div className='container p-6 border border-red-400 text-center bg-white shadow-xl rounded-lg'>
+            <p className="text-2xl font-bold mb-4 text-red-600">Descripción</p>
+            <p className='text-lg text-gray-800'>
+               Nuestro objetivo principal es resolver el problema de qué hacer con el
+               excedente de comida de los comercios gastronómicos, para que al final
+               del día no se desperdicie.
+            </p>
+            <p className='mt-4 text-lg text-gray-800'>
+               Se busca el desarrollo de una aplicación la cual permita, la
+               compraventa de productos los cuales no se vendieron en tiempo a un
+               menor precio, evitando el desperdicio de alimentos que serían
+               desechados.
+            </p>
+            <p className='mt-4 text-lg text-gray-800'>
+               Los locales podrán registrar su local, publicar comidas,
+               gestionar las ventas, ver estadísticas respecto a las compras.
+               Mientras que los usuarios podrán realizar compras, pagar por
+               transferencia, localizar el local por medio de un mapa, escribir
+               comentarios de un local y calificar el servicio.
+            </p>
+            <p className='mt-4 text-lg text-gray-800'>
+               Para corroborar el correcto funcionamiento de la aplicación,
+               dispondremos de contacto de soporte tanto para clientes como
+               comercios.
             </p>
          </div>
-         <div>
+         <div className="mt-8">
             {isLoggedIn ?
-               (<button className='p-2 m-2 border rounded-md border-slate-400 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-xl'><a href='/food'>Ver comidas</a></button>) :
-               (<h2 className='p-4'>Registrese o inicie sesion para poder ver el catalogo</h2>)
+               (<button className='px-6 py-3 mt-4 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-lg hover:shadow-lg transition-transform transform hover:scale-105'><a href='/food'>Ver comidas</a></button>) :
+               (<h2 className='p-4 text-xl text-gray-900'>Regístrese o inicie sesión para poder ver el catálogo</h2>)
             }
          </div>
       </div>
