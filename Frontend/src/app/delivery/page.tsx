@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Page: React.FC = () => {
     const { purchases, loading, error, setPurchases } = useDelivery();
     const [carrierId, setCarrierId] = useState<number | null>(null);
+    const [coords, setCoords] = useState<{ lat: number, lon: number } | null>(null);
 
     useEffect(() => {
         const fetchCarrierId = async () => {
@@ -22,13 +23,30 @@ const Page: React.FC = () => {
             }
         };
 
+        const fetchLocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+                        setCoords({ lat: latitude, lon: longitude });
+                    },
+                    error => {
+                        console.error('Error obteniendo la ubicación:', error);
+                    }
+                );
+            } else {
+                console.error('La geolocalización no es compatible con este navegador.');
+            }
+        };
+
         fetchCarrierId();
+        fetchLocation();
     }, []);
 
     const handleTakeOrder = async (purchaseId: number) => {
-        if (carrierId === null) {
-            console.error('Carrier ID no disponible');
-            toast.error('Carrier ID no disponible');
+        if (carrierId === null || coords === null) {
+            console.error('Carrier ID o coordenadas no disponibles');
+            toast.error('Carrier ID o coordenadas no disponibles');
             return;
         }
 
@@ -39,6 +57,8 @@ const Page: React.FC = () => {
                 carrier: { id: carrierId },
                 delivery_state: 'Tomado',
                 delivery_time: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
+                address_lat: coords.lat,
+                address_long: coords.lon
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}`

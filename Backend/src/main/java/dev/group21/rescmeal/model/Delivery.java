@@ -36,6 +36,10 @@ public class Delivery {
     private LocalTime arrival_time;
     private LocalTime waiting_time;
     private String delivery_state;
+
     @Column(name = "tip", precision = 10, scale = 2)
     private BigDecimal tip;
+
+    private Float address_lat;
+    private Float address_long;
 }

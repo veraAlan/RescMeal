@@ -50,7 +50,7 @@ const TakenOrdersPage: React.FC = () => {
 
     const handleCompleteDelivery = async (orderId: number) => {
         try {
-            const currentTime = new Date().toLocaleTimeString();
+            const currentTime = new Date().toISOString().split('T')[1].split('.')[0];
             const orderToUpdate = takenOrders.find(order => order.id === orderId);
 
             if (!orderToUpdate) {
@@ -70,6 +70,7 @@ const TakenOrdersPage: React.FC = () => {
 
             setTakenOrders(takenOrders.filter(order => order.id !== orderId));
             toast.success('Entrega finalizada');
+            toast.success('Recorrido terminado');
             console.log(`Entrega terminada para el pedido con ID: ${orderId}`);
         } catch (error) {
             toast.error('Error al completar la entrega');
@@ -81,6 +82,7 @@ const TakenOrdersPage: React.FC = () => {
         <div className="flex flex-col items-center justify-center h-screen">
             <h2 className="text-2xl font-bold mb-4 text-gray-700">No has tomado ningún pedido aún.</h2>
             <p className="text-lg text-gray-500">Por favor, selecciona un pedido para ver los detalles aquí.</p>
+            <ToastContainer />
         </div>
     );
 
