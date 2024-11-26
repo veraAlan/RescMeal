@@ -32,7 +32,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodHolder> {
         Food food = foodList.get(position);
         holder.name.setText(food.getName());
         holder.businessName.setText(food.getBusiness().getName());
-        holder.price.setText(String.format("AR$ %s", food.getPrice().toString()));
+        holder.price.setText(String.format("AR$ %s", food.getPrice()));
+        holder.description.setText(food.getDescription());
     }
 
     @Override

@@ -93,9 +93,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
                                 .requestMatchers(HttpMethod.POST, "/api/purchase").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
                                 .requestMatchers(HttpMethod.GET, "/api/business/list", "/api/purchase/{id}").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
-//                    .requestMatchers(HttpMethod.PUT, "").hasAnyRole("")
-//                    .requestMatchers(HttpMethod.PATCH, "").hasAnyRole("")
-//                    .requestMatchers(HttpMethod.GET, "").hasAnyRole("")
+    //                    .requestMatchers(HttpMethod.PUT, "").hasAnyRole("")
+    //                    .requestMatchers(HttpMethod.PATCH, "").hasAnyRole("")
+    //                    .requestMatchers(HttpMethod.GET, "").hasAnyRole("")
                                 // ADMIN
                                 .requestMatchers("/api/**").hasRole("ADMIN")
                 )
