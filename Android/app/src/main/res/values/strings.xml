@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RescMeal</string>
+    <string name="form_name">formName</string>
+    <string name="form_password">form_password</string>
+    <string name="button_login">button_login</string>
+    <string name="image_description">image_description</string>
+    <string name="ir_a_login">Ir a Login</string>
+</resources>

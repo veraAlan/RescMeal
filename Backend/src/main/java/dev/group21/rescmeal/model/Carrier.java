@@ -1,115 +1,46 @@
 package dev.group21.rescmeal.model;
 
-
+import dev.group21.rescmeal.validation.MinAge;
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
+@Table(name = "carrier", uniqueConstraints = @UniqueConstraint(columnNames = {"phone"}))
+@Data
+@DynamicUpdate
+@NoArgsConstructor
+@AllArgsConstructor
 public class Carrier {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_carrier;
+    private Long id;
 
-    @Column(length = 50)
+    @NotEmpty(message = "Este campo es obligatorio")
+    @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")
     private String name;
 
-    @Column(length = 50)
-    private String lastName;
+    @NotEmpty(message = "Este campo es obligatorio")
+    @Size(min = 2, max = 20, message = "El apellido debe tener entre 2 y 20 caracteres")
+    private String last_name;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String email;
+    @NotEmpty(message = "Este campo es obligatorio")
+    private String vehicle_type;
 
-    @Column(length = 100, nullable = false)
-    private String password;
-
-    @Column(length = 30)
-    private String vehicleType;
-
-    @Column(length = 15)
+    @NotEmpty(message = "Este campo es obligatorio")
+    @Size(min = 10, max = 15, message = "El teléfono debe tener entre 10 y 15 caracteres")
     private String phone;
 
-    private LocalDate date;
+    @NotNull(message = "Este campo es obligatorio")
+    @Past(message = "La fecha de nacimiento debe ser anterior a la actual")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    private LocalDate birthdate;
 
-
-    protected Carrier() {
-    }
-
-    public Carrier(String name, String lastName, String email, String password, String vehicleType, String phone, LocalDate date) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.vehicleType = vehicleType;
-        this.phone = phone;
-        this.date = date;
-    }
-    //Getters
-
-    public Integer getIdCarrier() {
-        return id_carrier;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public String getPassword() {
-        return password;
-    }
-
-    public String getVehicleType() {
-        return vehicleType;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    //Setters
-    public void setIdCarrier(Integer idCarrier) {
-        this.id_carrier = idCarrier;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 }
-

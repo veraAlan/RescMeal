@@ -1,64 +1,146 @@
 package dev.group21.rescmeal.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.group21.rescmeal.model.Client;
-import dev.group21.rescmeal.repository.ClientRepository;
+import dev.group21.rescmeal.security.jwt.JwtUtils;
+import dev.group21.rescmeal.services.ClientService;
+import dev.group21.rescmeal.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
 
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/client")
 public class ClientController {
+    @Autowired
+    JwtUtils jwtUtils;
+    private final ClientService clientService;
+    private final UserService userService;
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @GetMapping
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    public ClientController(ClientService clientService, UserService userService) {
+        this.clientService = clientService;
+        this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable Integer id) {
-        Optional<Client> client = clientRepository.findById(id);
-        return client.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    /**
+     * Validate the form of Client.
+     * @param client Client Object
+     * @return ResponseEntity
+     */
+    @PostMapping("/valid")
+    public ResponseEntity<Client> validateClient(@Valid @RequestBody Client client){
+        return ResponseEntity.ok().body(client);
     }
 
     @PostMapping
-    public Client createClient(@RequestBody Client client) {
-        return clientRepository.save(client);
+    public ResponseEntity<Client> createClient(@Valid @RequestPart("client") Client client, @RequestPart(value = "user") Long userid) {
+        try {
+            Client createdClient = clientService.createClient(client);
+            userService.updateClient(userid, createdClient);
+            return ResponseEntity.ok(createdClient);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Integer id, @RequestBody Client clientDetails) {
-        Optional<Client> client = clientRepository.findById(id);
-        if (client.isPresent()) {
-            Client updatedClient = client.get();
-            updatedClient.setName(clientDetails.getName());
-            updatedClient.setLastName(clientDetails.getLastName());
-            updatedClient.setEmail(clientDetails.getEmail());
-            updatedClient.setPhone(clientDetails.getPhone());
-            updatedClient.setPassword(clientDetails.getPassword());
-            updatedClient.setBalance(clientDetails.getBalance());
-            updatedClient.setAddress(clientDetails.getAddress());
-            updatedClient.setBirthdate(clientDetails.getBirthdate());
-            return ResponseEntity.ok(clientRepository.save(updatedClient));
-        } else {
-            return ResponseEntity.notFound().build();
+    @PutMapping
+    public ResponseEntity<Client> updateClient(@RequestPart("client") Client newClient) {
+        try {
+            if (clientService.getClient(newClient.getId()) == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(clientService.updateClient(newClient));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @PatchMapping
+    public ResponseEntity<Client> dynamicUpdateClient(@Valid @RequestBody Client newClient) {
+        try {
+            Client oldClient = clientService.getClient(newClient.getId());
+            if (oldClient == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(clientService.dynamicUpdateClient(oldClient, newClient));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Integer id) {
-        Optional<Client> client = clientRepository.findById(id);
-        if (client.isPresent()) {
-            clientRepository.delete(client.get());
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+        try {
+            if (id != null) {
+                clientService.deleteClient(id);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Client> getClient(@PathVariable Long id) {
+        try {
+            Client client = clientService.getClient(id);
+            if (client != null) {
+                return ResponseEntity.ok(client);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<PagedModel<EntityModel<Client>>> getAllClients(Pageable pageable, PagedResourcesAssembler<Client> assembler) {
+        try {
+            Page<Client> clientPage = clientService.getAllClients(pageable);
+            if (clientPage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(assembler.toModel(clientPage));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @PostMapping("/{id}/add")
+    public ResponseEntity<Client> addBalance(@PathVariable Long id, @RequestParam BigDecimal amount) {
+        try {
+            Client updatedClient = clientService.addBalance(id, amount);
+            return ResponseEntity.ok(updatedClient);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    /**
+     * Add error message to header and log Exception thrown.
+     * @param e Exception thrown
+     * @return HttpHeader
+     */
+    private HttpHeaders errorHeader(Exception e) {
+        System.err.println(e.toString());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Error-Message", e.getMessage());
+        return headers;
     }
 }
