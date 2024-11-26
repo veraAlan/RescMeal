@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/client")
@@ -115,6 +117,16 @@ public class ClientController {
             } else {
                 return ResponseEntity.ok(assembler.toModel(clientPage));
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
+        }
+    }
+
+    @PostMapping("/{id}/add")
+    public ResponseEntity<Client> addBalance(@PathVariable Long id, @RequestParam BigDecimal amount) {
+        try {
+            Client updatedClient = clientService.addBalance(id, amount);
+            return ResponseEntity.ok(updatedClient);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }

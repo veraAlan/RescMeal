@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 
@@ -84,4 +85,11 @@ public class ClientService {
 
 
     public Optional<Client> getClientById(Long id) { return clientRepository.findById(id); }
+
+
+    public Client addBalance(Long clientId, BigDecimal balance) throws Exception {
+        Client client = clientRepository.findById(clientId).orElseThrow(() -> new Exception("Cliente no encontrado"));
+        client.setBalance(client.getBalance().add(balance));
+        return clientRepository.save(client);
+    }
 }

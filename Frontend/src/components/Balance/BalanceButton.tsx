@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import Link from 'next/link';
 
 const BalanceButton: React.FC = () => {
     const [balance, setBalance] = useState<number | null>(null);
@@ -34,11 +35,13 @@ const BalanceButton: React.FC = () => {
     return (
         <>
             <div className="balance-info">
-                <button
-                    className="bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300"
-                >
-                    ${balance !== null ? balance.toFixed(2) : '0.00'}
-                </button>
+                <Link href="/add">
+                    <button
+                        className="bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300"
+                    >
+                        ${balance !== null ? balance.toFixed(2) : '0.00'}
+                    </button>
+                </Link>
             </div>
         </>
     );

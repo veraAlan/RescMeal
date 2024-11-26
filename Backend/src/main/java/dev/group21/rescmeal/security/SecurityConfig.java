@@ -74,7 +74,7 @@ public class SecurityConfig {
                                 // Food
                                 .requestMatchers(HttpMethod.GET, "/api/food/list").permitAll()
                                 // Client
-                                .requestMatchers(HttpMethod.POST, "/api/client","/api/review","/api/comment").hasRole("CLIENT")
+                                .requestMatchers(HttpMethod.POST, "/api/client","/api/review","/api/comment","/api/client/{id}/add").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.GET, "/api/purchase/last/{id}","/api/delivery/carrierByPurchase/{id}","/api/review/last/{id}","/api/comment/last/{id}").hasRole("CLIENT")
                                 .requestMatchers("/api/purchase").hasAnyRole("CLIENT")
