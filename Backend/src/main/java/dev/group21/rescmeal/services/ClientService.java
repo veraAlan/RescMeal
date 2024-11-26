@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -79,4 +81,7 @@ public class ClientService {
     public Page<Client> getAllClients(Pageable parameters) {
         return clientRepository.findAll(parameters);
     }
+
+
+    public Optional<Client> getClientById(Long id) { return clientRepository.findById(id); }
 }

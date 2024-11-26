@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDate;
 
@@ -15,21 +16,24 @@ import java.time.LocalDate;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "business_id")
+    @JsonManagedReference
     private Business business;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonManagedReference
     private Client client;
 
-    @Temporal(TemporalType.DATE)
-    private LocalDate review_date;
+    @ManyToOne
+    @JoinColumn(name = "purchase_id")
+    private Purchase purchase;
 
-    @Column(name = "mark")
-    private int mark;
+    private LocalDate review_date;
+    private Integer mark;
 
     @Column(name = "description", columnDefinition = "text")
     private String description;

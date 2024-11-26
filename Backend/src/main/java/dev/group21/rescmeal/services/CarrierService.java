@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 
 
 @Service
@@ -46,4 +47,6 @@ public class CarrierService {
     public void deleteCarrier(Long id) {
         carrierRepository.deleteById(id);
     }
+
+    public Optional<Carrier> getCarrierById(Long id) { return carrierRepository.findById(id); }
 }

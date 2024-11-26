@@ -14,19 +14,23 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
-    }
-
-    public Optional<Review> getReviewById(int id) {
-        return reviewRepository.findById(id);
-    }
-
     public Review saveReview(Review review) {
         return reviewRepository.save(review);
     }
 
-    public void deleteReview(int id) {
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
+    }
+
+    public Optional<Review> getReviewById(Long id) {
+        return reviewRepository.findById(id);
+    }
+
+    public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    public List<Review> getReviewsByClientId(Long clientId) {
+        return reviewRepository.findByClientId(clientId);
     }
 }

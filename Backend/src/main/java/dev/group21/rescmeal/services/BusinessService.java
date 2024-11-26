@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -94,4 +95,6 @@ public class BusinessService {
     public Page<Business> getAllBusiness(Pageable parameters) {
         return businessRepository.findAll(parameters);
     }
+
+    public Optional<Business> getBusinessById(Long id) { return businessRepository.findById(id); }
 }

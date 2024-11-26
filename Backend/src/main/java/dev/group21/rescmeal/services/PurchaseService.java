@@ -65,13 +65,15 @@ public class PurchaseService {
         purchaseRepository.deleteById(id);
     }
 
-        public Optional<Purchase> getLastPurchaseByClientId(Integer clientId) {
-            Pageable pageable = PageRequest.of(0, 1); // Página 0, 1 resultado
-            List<Purchase> purchases = purchaseRepository.findFirstByClientIdOrderByCreationDateDesc(clientId, pageable);
-            if (purchases.isEmpty()) {
-                return Optional.empty();
-            } else {
-                return Optional.of(purchases.get(0));
-            }
+    public Optional<Purchase> getLastPurchaseByClientId(Integer clientId) {
+        Pageable pageable = PageRequest.of(0, 1); // Página 0, 1 resultado
+        List<Purchase> purchases = purchaseRepository.findFirstByClientIdOrderByCreationDateDesc(clientId, pageable);
+        if (purchases.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(purchases.get(0));
         }
+    }
+
+    public Optional<Purchase> getPurchaseById(Long id) { return purchaseRepository.findById(id.intValue()); }
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -21,7 +21,11 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "carrier_id")
-    private Business carrier;
+    private Carrier carrier;
+
+    @ManyToOne
+    @JoinColumn(name = "purchase_id")
+    private Purchase purchase;
 
     @Column(name = "description", columnDefinition = "text")
     private String description;
