@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
-
     @Query("SELECT d FROM Delivery d WHERE d.delivery_state = 'Tomado'")
     List<Delivery> findTakenDeliveries();
 

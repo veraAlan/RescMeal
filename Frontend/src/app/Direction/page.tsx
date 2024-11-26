@@ -228,7 +228,7 @@ const DirectionPage: React.FC = () => {
                 </Link>
             </div>
         </div>
-    );    
-    };
-    
-    export default DirectionPage;    
+    );
+};
+
+export default DirectionPage;    

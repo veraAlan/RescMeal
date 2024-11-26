@@ -23,7 +23,6 @@ export function useCarrierDelivery() {
                     setError('An unknown error occurred')
                 }
             })
-    } , [page])
-console.log(carrierDeliverys)
-    return { carrierDeliverys, error}
+    }, [page])
+    return { carrierDeliverys, error }
 }

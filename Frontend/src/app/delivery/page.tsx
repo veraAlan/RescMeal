@@ -18,6 +18,7 @@ const Page: React.FC = () => {
             try {
                 const id = await getSessionId();
                 setCarrierId(id);
+                console.log("Carrier ID: ", id)
             } catch (error) {
                 console.error('Error obteniendo el ID del carrier:', error);
             }
@@ -29,6 +30,7 @@ const Page: React.FC = () => {
                     position => {
                         const { latitude, longitude } = position.coords;
                         setCoords({ lat: latitude, lon: longitude });
+                        console.log("Cords: ", latitude, longitude)
                     },
                     error => {
                         console.error('Error obteniendo la ubicación:', error);

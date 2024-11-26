@@ -33,6 +33,11 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
                 </div>
                 <div className="mt-4 flex justify-between items-center">
                     <span className="text-gray-900 font-bold">${food.price}</span>
+                    <a href={'/Map/' + food.business.id}>
+                        <button className="bg-cyan-600 text-white px-4 py-2 rounded" >
+                            Encontrar Local
+                        </button>
+                    </a>
                     <button
                         onClick={handleAddToCart}
                         className="bg-blue-500 text-white px-4 py-2 rounded"

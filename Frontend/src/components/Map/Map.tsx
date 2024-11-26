@@ -30,9 +30,9 @@ const MapComponent = ({ id }: { id: number }) => {
                 )}
             </div>
             <div ref={mapContainerRef} className="w-full h-96 border-2 border-blue-500 rounded-lg shadow-lg mb-4" />
-            <a href='/'>
+            <a href='/food'>
                 <button className="bg-blue-500 text-white px-4 py-2 rounded shadow">
-                    Volver al home
+                    Volver al las Comidas
                 </button>
             </a>
         </div>

@@ -54,6 +54,5 @@ public class UserService implements UserDetailsService {
         user.setEmail(updateUser.getEmail());
         user.setUsername(updateUser.getUsername());
         return userRepository.save(user);
-
     }
 }

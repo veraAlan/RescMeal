@@ -72,7 +72,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/*/valid").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/user/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                                 // Food
-                                .requestMatchers(HttpMethod.GET, "/api/food/list").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/food/list", "/api/business/*").permitAll()
                                 // Client
                                 .requestMatchers(HttpMethod.POST, "/api/client","/api/review","/api/comment","/api/client/{id}/add").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT")
@@ -86,7 +86,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/food/me", "/api/food/*","/api/sales/dashboard", "/api/sales/stock", "/api/sales/revenue", "/api/sales/customers").hasRole("BUSINESS")
                                 // Carrier
                                 .requestMatchers(HttpMethod.POST, "/api/delivery", "/api/purchase", "/api/carrier", "/api/delivery/{id}").hasRole("CARRIER")
-                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/{id}", "/api/carrier/{id}", "/api/delivery/carrierByPurchase/{id}").hasRole("CARRIER")
+                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/{id}", "/api/carrier/{id}", "/api/delivery/carrierByPurchase/*").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PUT, "/api/purchase", "/api/carrier", "/api/delivery/{id}").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PATCH, "/api/carrier").hasRole("CARRIER")
                                 // MultiRole

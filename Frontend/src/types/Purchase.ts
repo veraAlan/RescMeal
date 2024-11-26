@@ -1,4 +1,4 @@
-import { Food } from './Food';
+import { PurchasedItem } from './PurchasedItem';
 
 export interface Client {
     id: number;
@@ -16,12 +16,6 @@ export interface Business {
     image: string;
     email: string;
     phone: string;
-}
-
-export interface PurchasedItem {
-    food: Food | { id: number };
-    quantity: number;
-    price: number;
 }
 
 export interface Purchase {
