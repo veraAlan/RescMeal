@@ -33,17 +33,13 @@ const BalanceButton: React.FC = () => {
     }, []);
 
     return (
-        <>
-            <div className="balance-info">
-                <Link href="/add">
-                    <button
-                        className="bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300"
-                    >
-                        ${balance !== null ? balance.toFixed(2) : '0.00'}
-                    </button>
-                </Link>
-            </div>
-        </>
+        <Link href="/add">
+            <button
+                className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300"
+            >
+                ${balance !== null ? balance.toFixed(2) : '0.00'}
+            </button>
+        </Link>
     );
 }
 

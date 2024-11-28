@@ -10,7 +10,7 @@ const CartIcon: React.FC = () => {
 
     return (
         <Link href="/cart">
-            <button className="flex items-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">
+            <button className="flex justify-center items-center w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">
                 <FaShoppingCart className="w-6 h-6" />
                 {itemCount > 0 && (
                     <span className="ml-2">{itemCount}</span>

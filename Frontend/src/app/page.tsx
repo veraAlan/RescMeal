@@ -9,10 +9,10 @@ const HomePage: React.FC = () => {
    const { isLoggedIn } = authContext
 
    return (
-      <div className="container mx-auto px-4 flex flex-col items-center">
+      <div className="container mx-auto px-4 flex flex-col items-center mt-16">
          <h1 className="text-5xl font-extrabold my-6 text-center text-gray-900">RescMeal</h1>
-         <div className='container p-6 border border-red-400 text-center bg-white shadow-xl rounded-lg'>
-            <p className="text-2xl font-bold mb-4 text-red-600">Descripción</p>
+         <main className='container p-6 border border-teal-400 text-center bg-white shadow-xl rounded-lg'>
+            <h2 className="text-2xl font-bold mb-4 text-teal-600">Descripción</h2>
             <p className='text-lg text-gray-800'>
                Nuestro objetivo principal es resolver el problema de qué hacer con el
                excedente de comida de los comercios gastronómicos, para que al final
@@ -36,10 +36,10 @@ const HomePage: React.FC = () => {
                dispondremos de contacto de soporte tanto para clientes como
                comercios.
             </p>
-         </div>
+         </main>
          <div className="mt-8">
             {isLoggedIn ?
-               (<button className='px-6 py-3 mt-4 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-lg hover:shadow-lg transition-transform transform hover:scale-105'><a href='/food'>Ver comidas</a></button>) :
+               (<button className='px-6 py-3 mt-4 rounded-md bg-gradient-to-r from-teal-500 to-purple-500 text-white font-semibold text-lg hover:shadow-lg transition-transform transform hover:scale-105'><a href='/food'>Ver comidas</a></button>) :
                (<h2 className='p-4 text-xl text-gray-900'>Regístrese o inicie sesión para poder ver el catálogo</h2>)
             }
          </div>

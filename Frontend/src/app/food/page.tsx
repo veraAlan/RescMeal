@@ -1,5 +1,7 @@
 'use client'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { redirect } from 'next/navigation'
+import { AuthContext } from '@/context/AuthContext'
 import Search from '../../components/Search/Search'
 import FoodCard from '../../components/Food/FoodCard'
 import useListFoods from '../../hooks/Food/useListFoods'
@@ -8,6 +10,17 @@ import useSearch from '../../hooks/Search/Search'
 const HomePage: React.FC = () => {
     const { foods, error } = useListFoods()
     const { filteredFoods, handleSearch } = useSearch(foods)
+    const authContext = useContext(AuthContext)
+
+    useEffect(() => {
+        if (!authContext?.isLoggedIn) {
+            redirect('/auth/login')
+        }
+    }, [authContext?.isLoggedIn])
+
+    if (!authContext?.isLoggedIn) {
+        return <div>Redirigiendo...</div>
+    }
 
     return (
         <div className="container mx-auto px-4 flex flex-col items-center">

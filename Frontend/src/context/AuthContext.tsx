@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                localStorage.removeItem('token')
                localStorage.removeItem('role')
                setIsLoggedIn(false)
+               redirect('/')
             })
             .catch(e => { setSessionError(e) })
       }
@@ -74,6 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                progress: undefined,
                theme: "dark"
             })
+            redirect("/")
          })
          .catch(e => {
             toast.error(e, {
@@ -87,7 +89,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                theme: "dark"
             })
          })
-      redirect("/")
    }
 
    return (

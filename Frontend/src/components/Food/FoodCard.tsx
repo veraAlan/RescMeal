@@ -1,20 +1,21 @@
-"use client"
-import React from 'react'
-import { Food } from '../../types/Food'
-import { useCart } from '../../hooks/Cart/useCart'
-import { toast } from 'react-toastify'
+"use client";
+import React from 'react';
+import { Food } from '../../types/Food';
+import { useCart } from '../../hooks/Cart/useCart';
+import { toast } from 'react-toastify';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 interface FoodCardProps {
-    food: Food
+    food: Food;
 }
 
 const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
-    const { addToCart } = useCart()
+    const { addToCart } = useCart();
 
     const handleAddToCart = () => {
-        addToCart(food)
-        toast.success(`${food.name} se añadió al carrito!`)
-    }
+        addToCart(food);
+        toast.success(`${food.name} se añadió al carrito!`);
+    };
 
     return (
         <div className="flex flex-col md:flex-row w-full max-w-4xl rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 duration-300 bg-white mb-4 mx-auto min-h-[300px]">
@@ -22,7 +23,14 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
             <div className="p-4 flex flex-col justify-between leading-normal flex-grow">
                 <div>
                     <div className="text-gray-900 font-bold text-xl mb-2">{food.name}</div>
-                    <div className="text-gray-700 text-sm mb-2">Negocio: {food.business.name}</div>
+                    <div className="text-gray-700 text-sm mb-2 flex items-center">
+                        Negocio: {food.business.name}
+                        <a href={'/Map/' + food.business.id} className="ml-2">
+                            <button className="bg-transparent p-0">
+                                <FaMapMarkerAlt className="text-green-600 text-lg" />
+                            </button>
+                        </a>
+                    </div>
                     <p className="text-gray-700 text-base">{food.description}</p>
                 </div>
                 <div className="text-gray-500 text-sm mt-2">
@@ -32,13 +40,10 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
                     <p>Fecha de Producción: {formatDate(food.production_date)}</p>
                 </div>
                 <div className="mt-4 flex justify-between items-center">
-                    <span className="text-gray-500 font-bold text-3xl"><s>${food.price && (food.price * 1.5)}</s></span>
-                    <span className="text-gray-900 font-bold text-xl">${food.price}</span>
-                    <a href={'/Map/' + food.business.id}>
-                        <button className="bg-cyan-600 text-white px-4 py-2 rounded" >
-                            Encontrar Local
-                        </button>
-                    </a>
+                    <div>
+                        <span className="text-gray-900 text-2xl line-through">${(food.price * 2).toFixed(2)}</span>
+                        <span className="text-gray-900 font-bold text-2xl ml-2">${food.price}</span>
+                    </div>
                     <button
                         onClick={handleAddToCart}
                         className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -48,12 +53,12 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' }
-    return new Date(dateString).toLocaleDateString('es-AR', options)
-}
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('es-AR', options);
+};
 
-export default FoodCard
+export default FoodCard;
