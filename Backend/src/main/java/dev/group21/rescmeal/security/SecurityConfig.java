@@ -74,9 +74,9 @@ public class SecurityConfig {
                                 // Food
                                 .requestMatchers(HttpMethod.GET, "/api/food/list", "/api/business/*").permitAll()
                                 // Client
-                                .requestMatchers(HttpMethod.POST, "/api/client","/api/review","/api/comment","/api/client/{id}/add").hasRole("CLIENT")
+                                .requestMatchers(HttpMethod.POST, "/api/client","/api/review","/api/comment","/api/client/*/add").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/api/purchase/last/{id}","/api/delivery/carrierByPurchase/{id}","/api/review/last/{id}","/api/comment/last/{id}").hasRole("CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/api/purchase/last/*","/api/delivery/carrierByPurchase/*","/api/review/last/*","/api/comment/last/*").hasRole("CLIENT")
                                 .requestMatchers("/api/purchase").hasAnyRole("CLIENT")
                                 .requestMatchers(HttpMethod.PATCH, "/api/client", "/api/food/updateQuantity").hasRole("CLIENT")
                                 // Business
@@ -85,14 +85,14 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PATCH, "/api/business").hasRole("BUSINESS")
                                 .requestMatchers(HttpMethod.GET, "/api/food/me", "/api/food/*","/api/sales/dashboard", "/api/sales/stock", "/api/sales/revenue", "/api/sales/customers").hasRole("BUSINESS")
                                 // Carrier
-                                .requestMatchers(HttpMethod.POST, "/api/delivery", "/api/purchase", "/api/carrier", "/api/delivery/{id}").hasRole("CARRIER")
-                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/{id}", "/api/carrier/{id}", "/api/delivery/carrierByPurchase/*").hasRole("CARRIER")
-                                .requestMatchers(HttpMethod.PUT, "/api/purchase", "/api/carrier", "/api/delivery/{id}").hasRole("CARRIER")
+                                .requestMatchers(HttpMethod.POST, "/api/delivery", "/api/purchase", "/api/carrier", "/api/delivery/*").hasRole("CARRIER")
+                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/*", "/api/carrier/*", "/api/delivery/carrierByPurchase/*").hasRole("CARRIER")
+                                .requestMatchers(HttpMethod.PUT, "/api/purchase", "/api/carrier", "/api/delivery/*").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PATCH, "/api/carrier").hasRole("CARRIER")
                                 // MultiRole
                                 .requestMatchers(HttpMethod.POST, "/api/purchase/process-payment").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
                                 .requestMatchers(HttpMethod.POST, "/api/purchase").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/api/business/list", "/api/purchase/{id}").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/api/business/list", "/api/purchase/*").hasAnyRole("CARRIER", "ADMIN", "CLIENT")
     //                    .requestMatchers(HttpMethod.PUT, "").hasAnyRole("")
     //                    .requestMatchers(HttpMethod.PATCH, "").hasAnyRole("")
     //                    .requestMatchers(HttpMethod.GET, "").hasAnyRole("")

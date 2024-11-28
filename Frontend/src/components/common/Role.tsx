@@ -23,6 +23,7 @@ const RoleHeader: React.FC = () => {
       case "CLIENT": return (<>
          <CartIcon />
          <BalanceButton />
+         <Link href="/comment" className="bg-cyan-500 text-white font-bold py-2 px-4 rounded">Pedido</Link>
          <Link href="/comment" className="bg-yellow-500 text-white font-bold py-2 px-4 rounded">Comentar Ultima Compra</Link>
       </>);
       case "ADMIN": return (<>

@@ -23,7 +23,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/delivery")
-public class DeliveryController {
+public class    DeliveryController {
     @Autowired
     private final AuthController authController;
     private final DeliveryService deliveryService;

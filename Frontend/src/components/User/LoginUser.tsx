@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLoginUser } from '../../hooks/User/useLoginUser'
 
-const RegisterBusiness: React.FC = () => {
+const LoginUser: React.FC = () => {
    const {
       loginData,
       error,
@@ -42,4 +42,4 @@ const RegisterBusiness: React.FC = () => {
    )
 }
 
-export default RegisterBusiness
+export default LoginUser
