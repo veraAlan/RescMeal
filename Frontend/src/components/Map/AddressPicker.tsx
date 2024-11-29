@@ -1,7 +1,5 @@
-"use client";
 import React, { useState, useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { SearchBox } from '@mapbox/search-js-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -23,7 +21,7 @@ const AddressPicker: React.FC<AddressPickerProps> = ({ setAddress, setAddressLat
     const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
     const markerRef = useRef<mapboxgl.Marker | null>(null);
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>('');
+    const [selectedAddress, setSelectedAddress] = useState<string>('Neuquén Capital');
 
     useEffect(() => {
         if (mapInstanceRef.current) return;
@@ -38,9 +36,6 @@ const AddressPicker: React.FC<AddressPickerProps> = ({ setAddress, setAddressLat
 
             mapInstanceRef.current.on('load', () => {
                 setMapLoaded(true);
-                setAddressLat(-38.9517);
-                setAddressLong(-68.0591);
-                setAddress('Neuquén Capital');
             });
 
             mapInstanceRef.current.on('click', async (e) => {
@@ -73,9 +68,11 @@ const AddressPicker: React.FC<AddressPickerProps> = ({ setAddress, setAddressLat
                     // Eliminar cualquier coma adicional al inicio o al final de la dirección
                     address = address.replace(/^,|,$/g, '').trim();
                     setAddress(address);
+                    setSelectedAddress(address);
                 } catch (error) {
                     console.error('Error fetching address:', error);
                     setAddress('Dirección desconocida');
+                    setSelectedAddress('Dirección desconocida');
                 }
             });
         };
@@ -85,18 +82,11 @@ const AddressPicker: React.FC<AddressPickerProps> = ({ setAddress, setAddressLat
 
     return (
         <div className="relative">
-            <div className="absolute top-2 left-2 right-2 z-10">
-                {mapLoaded && (
-                    <SearchBox
-                        accessToken={accessToken}
-                        map={mapInstanceRef.current}
-                        mapboxgl={mapboxgl}
-                        value={inputValue}
-                        onChange={(value) => setInputValue(value)}
-                        marker={true}
-                    />
-                )}
-            </div>
+            {mapLoaded && (
+                <div className="absolute top-2 left-2 right-2 z-10 p-2 bg-white rounded-lg shadow-md">
+                    <p className="text-center font-semibold">{selectedAddress}</p>
+                </div>
+            )}
             <div ref={mapContainerRef} className="w-full h-96 mt-12" />
         </div>
     );

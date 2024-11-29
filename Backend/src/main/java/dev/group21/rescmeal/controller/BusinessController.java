@@ -1,5 +1,6 @@
 package dev.group21.rescmeal.controller;
 
+import dev.group21.rescmeal.security.jwt.JwtUtils;
 import dev.group21.rescmeal.services.UserService;
 import jakarta.validation.Valid;
 import org.imgscalr.Scalr;
@@ -26,6 +27,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/business")
 public class BusinessController {
+    @Autowired
+    JwtUtils jwtUtils;
     private final String businessImages = System.getProperty("user.dir") + "/../Frontend/public/Business/";
     private final BusinessService businessService;
     private final UserService userService;
