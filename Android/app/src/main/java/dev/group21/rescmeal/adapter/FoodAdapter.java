@@ -38,6 +38,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodHolder> {
 
     @Override
     public int getItemCount() {
+        System.out.println("FOOD LIST: " + foodList);
+        if(foodList == null) return 0;
         return foodList.size();
     }
 }

@@ -5,4 +5,5 @@
     <string name="button_login">button_login</string>
     <string name="image_description">image_description</string>
     <string name="ir_a_login">Ir a Login</string>
+    <string name="preference_rescmeal_cookies" />
 </resources>
