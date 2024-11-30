@@ -1,31 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Business } from '../../types/Business';
+import axiosConfig from '@/utils/axiosConfig';
+
+interface BusinessPage extends Array<Business> { }
 
 export function useListBusinesses() {
-    const [businesses, setBusinesses] = useState<Business[] | null>(null);
+    const [page, setPage] = useState<number>()
+    const [size, setSize] = useState<number>()
+    const [businesses, setBusinesses] = useState<BusinessPage | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function fetchBusinesses() {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/business/list`);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                const data: Business[] = await res.json();
-                setBusinesses(data);
-            } catch (err) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError('An unknown error occurred');
-                }
-            } finally {
-                setLoading(false);
+        axiosConfig.get(`/api/business/list`, { params: { page, size } })
+        .then(r => {
+            for(const business of r.data._embedded.businessList) {
+                business.image = '/Business/' + business.image
             }
-        }
-        fetchBusinesses();
+            setBusinesses(r.data._embedded.businessList)
+        })
+        .catch(e => {
+            console.error('Error fetching data: ', e)
+            if (e instanceof Error){
+                setError(e.message)
+            }else {
+                setError('An unknown error occurred')
+            }
+        })
     }, []);
 
     return { businesses, loading, error };

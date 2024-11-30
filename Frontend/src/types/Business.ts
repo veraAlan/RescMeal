@@ -1,6 +1,6 @@
 export interface Business {
     id?: number;
-    image: string | File;
+    image: string;
     name: string;
     type: string;
     address: string;

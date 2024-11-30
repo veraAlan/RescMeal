@@ -1,57 +1,29 @@
-import { useEffect, useState } from 'react'
-import { getAllBusiness } from './apiBusiness'
+import { useListBusinesses } from '@/hooks/Business/useListBusinesses'
 
-export interface Business {
-   id?: number
-   name?: string
-   type?: string
-   address?: string
-   schedule?: string
-   cvu?: string
-   image?: string
-   phone?: string
-}
 
 export default () => {
-   const [businesses, setBusinesses] = useState<Business[]>([])
-   const [loading, setLoading] = useState<boolean>(true)
-   const [error, setError] = useState<string | null>(null)
-   const [page, setPage] = useState<number>(0)
 
-   useEffect(() => {
-      const fetchBusinesses = async () => {
-         try {
-            const data = await getAllBusiness(page, 2) // Initial fetch with page 0 and size 10
-            setBusinesses(data._embedded.businessList) // Assuming the API returns the 'content' of the page 
-            setLoading(false)
-         } catch (error) {
-            setError('Failed to fetch businesses')
-            setLoading(false)
-         }
-      }
-      fetchBusinesses()
-   }, [page])
-
-   if (loading) {
-      return <div>Loading...</div>
-   }
-
-   if (error) {
-      return <div>{error}</div>
-   }
+   const { businesses } = useListBusinesses()
 
    return (
       <div className="container mx-auto my-4 p-4 border rounded-2xl border-4 border">
-         <button onClick={() => { setPage(page.valueOf() + 1) }}>Siguiente pagina</button>
-         <h1>Business List</h1>
-         <ul>
-            {businesses.map((business) =>
-               <li key={business.id} className='p-2'>
-                  <h2>{business.name}</h2>
-                  <p>{business.type}</p>
-               </li>
+         <h1>Encontra tu local favorito</h1>
+         <div>
+            {businesses == null ? (
+               <p className="text-center text-gray-500 p-4">No hay locales registrados.</p>
+            ) : (
+               <div className="flex flex-col items-center w-full max-w-4xl p-4">
+                  {businesses.map((business) => (
+                     <div>
+                        <img className="w-full h-48 object-cover md:w-48 md:h-auto" src={business.image} alt={business.name} />
+                        <div key={business.name} className='w-full gap-2 flex flex-cols-2 p-4'>
+                        <h3 className='border border-2 rounded-xl border-slate-500 p-4 text-xl fit-content h-25'> {business.name}</h3>
+                        </div>
+                     </div>
+                  ))}
+               </div>
             )}
-         </ul>
+         </div>
       </div >
    )
 }
