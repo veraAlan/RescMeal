@@ -57,9 +57,15 @@ public class BusinessController {
      * @return ResponseEntity business created.
      */
     @PostMapping
-    public ResponseEntity<Business> createBusiness(@Valid @RequestPart("business") Business business, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart("user") Long userid) {
+    public ResponseEntity<Object> createBusiness(@Valid @RequestPart("business") Business business, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart("user") Long userid) {
         try {
-            if(image != null) {
+            // Verificar si el CVU ya existe
+            if (businessService.isCvuExists(business.getCvu())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("El CVU ya existe.");
+            }
+
+            if (image != null) {
                 ResponseEntity<String> createdImage = uploadImage(business.getName(), image);
                 business.setImage(String.valueOf(createdImage.getBody()));
             }
@@ -71,6 +77,7 @@ public class BusinessController {
         }
     }
 
+
     /**
      * Update business using a complete new Business JSON and an image.
      * @param newBusiness Business Object
@@ -80,8 +87,14 @@ public class BusinessController {
     @PutMapping
     public ResponseEntity<Business> updateBusiness(@RequestPart("business") Business newBusiness, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            if(businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
-            if(image != null) {
+            if (businessService.getBusiness(newBusiness.getId()) == null) return ResponseEntity.notFound().build();
+
+            // Verificar si el CVU ya existe (excepto para el negocio que se está actualizando)
+            if (!businessService.getBusiness(newBusiness.getId()).getCvu().equals(newBusiness.getCvu()) && businessService.isCvuExists(newBusiness.getCvu())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // O retorna un mensaje adecuado
+            }
+
+            if (image != null) {
                 ResponseEntity<String> createdImage = uploadImage(newBusiness.getName(), image);
                 newBusiness.setImage(String.valueOf(createdImage.getBody()));
             } else {
@@ -211,3 +224,10 @@ public class BusinessController {
         return headers;
     }
 }
+
+
+
+
+
+
+

@@ -83,7 +83,7 @@ const AddressPicker: React.FC<AddressPickerProps> = ({ setAddress, setAddressLat
     return (
         <div className="relative">
             {mapLoaded && (
-                <div className="absolute top-2 left-2 right-2 z-10 p-2 bg-white rounded-lg shadow-md">
+                <div className=" top-2 left-2 right-2 z-10 p-2 bg-white rounded-lg shadow-md">
                     <p className="text-center font-semibold">{selectedAddress}</p>
                 </div>
             )}

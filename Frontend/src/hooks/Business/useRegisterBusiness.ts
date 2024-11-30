@@ -60,61 +60,10 @@ export const useRegisterBusiness = () => {
     const [userErrors, setUserErrors] = useState<User>({});
     const [businessErrors, setBusinessErrors] = useState<Business>({});
 
-    useEffect(() => {
-        if (userSession == null) {
-            axiosConfig.get(`/api/auth/validate`)
-                .then(() => setUserSession(true))
-                .catch(() => setUserSession(false));
-        }
-
-        if (hasBusiness == null) {
-            axiosConfig.get(`/api/auth/session-id`)
-                .then(r => { if (r.status === 200) setHasBusiness(true); })
-                .catch(() => setHasBusiness(false));
-        }
-    }, [userSession, hasBusiness]);
-
-    useEffect(() => {
-        setBusinessData(prevState => ({
-            ...prevState,
-            address,
-            address_lat,
-            address_long
-        }));
-    }, [address, address_lat, address_long]);
-
-    const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setRegisterData({
-            ...userForm,
-            [name]: value
-        });
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setBusinessData({
-            ...businessForm,
-            [name]: value
-        });
-    };
-
-    const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            const file = e.target.files[0];
-            if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-                setImageData(file);
-            } else {
-                setImageError('Solo se permiten imágenes JPEG o PNG');
-            }
-        }
-    };
-
     const validateUser = async (userForm: User) => {
         let tempErrors: { [k: string]: any } = {};
-
         try {
-            await axiosConfig.post(`/api/auth/valid`, userForm, { withCredentials: true });
+            await axiosConfig.post(`/api/auth/valid`, userForm);
             setUserErrors({});
         } catch (error: unknown) {
             if (typeof error === 'object' && error !== null && 'response' in error) {
@@ -127,15 +76,13 @@ export const useRegisterBusiness = () => {
             }
             setUserErrors(tempErrors);
         }
-
         return Object.keys(tempErrors).length === 0;
     };
 
     const validateBusiness = async (businessForm: Business) => {
         let tempErrors: { [k: string]: any } = {};
-
         try {
-            await axiosConfig.post(`/api/business/valid`, businessForm, { withCredentials: true });
+            await axiosConfig.post(`/api/business/valid`, businessForm);
             setBusinessErrors({});
         } catch (error: unknown) {
             if (typeof error === 'object' && error !== null && 'response' in error) {
@@ -145,10 +92,12 @@ export const useRegisterBusiness = () => {
                         tempErrors[key] = err.response.data[key];
                     }
                 }
+                if (err.response.status === 409 && err.response.data.message === "El CVU ya existe.") {
+                    tempErrors.cvu = "El CVU ya existe.";
+                }
             }
             setBusinessErrors(tempErrors);
         }
-
         return Object.keys(tempErrors).length === 0;
     };
 
@@ -209,14 +158,68 @@ export const useRegisterBusiness = () => {
                             tempErrors[key] = err.response.data[key];
                         }
                     }
+                    if (err.response.status === 409) {
+                        tempErrors.cvu = err.response.data;
+                    }
                 }
                 setBusinessErrors(tempErrors);
             }
         }
     };
 
+    useEffect(() => {
+        if (userSession == null) {
+            axiosConfig.get(`/api/auth/validate`)
+                .then(() => setUserSession(true))
+                .catch(() => setUserSession(false));
+        }
+
+        if (hasBusiness == null) {
+            axiosConfig.get(`/api/auth/session-id`)
+                .then(r => { if (r.status === 200) setHasBusiness(true); })
+                .catch(() => setHasBusiness(false));
+        }
+    }, [userSession, hasBusiness]);
+
+    useEffect(() => {
+        setBusinessData(prevState => ({
+            ...prevState,
+            address,
+            address_lat,
+            address_long
+        }));
+    }, [address, address_lat, address_long]);
+
+    const handleChangeRegister = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setRegisterData({
+            ...userForm,
+            [name]: value
+        });
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setBusinessData({
+            ...businessForm,
+            [name]: value
+        });
+    };
+
+    const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+                setImageData(file);
+            } else {
+                setImageError('Solo se permiten imágenes JPEG o PNG');
+            }
+        }
+    };
+
     if (status === 200 || status === 201) {
-        setTimeout(() => redirect("/"), 1000);
+        setTimeout(redirect("/food"), 1000)
+        redirect("/food")
     }
 
     return {

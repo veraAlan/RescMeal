@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BusinessRepository extends JpaRepository<Business, Long> {
     Optional<Business> findById(Long id);
+    Optional<Business> findByCvu(String cvu);
 }

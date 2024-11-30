@@ -151,15 +151,17 @@ const RegisterBusiness: React.FC = () => {
                                 {businessErrors.schedule && <p className="text-red-500">{businessErrors.schedule}</p>}
                             </div>
                             <div>
-                                <label className="block mb-1 font-medium">CVU:</label>
-                                <input
-                                    type="text"
-                                    name="cvu"
-                                    value={businessForm.cvu}
-                                    onChange={handleChange}
-                                    className="border rounded-lg p-2 w-full"
-                                />
-                                {businessErrors.cvu && <p className="text-red-500">{businessErrors.cvu}</p>}
+                                <div>
+                                    <label className="block mb-1 font-medium">CVU:</label>
+                                    <input
+                                        type="text"
+                                        name="cvu"
+                                        value={businessForm.cvu}
+                                        onChange={handleChange}
+                                        className="border rounded-lg p-2 w-full"
+                                    />
+                                    {businessErrors.cvu && <p className="text-red-500">{businessErrors.cvu}</p>}
+                                </div>
                             </div>
                             <div>
                                 <label className="block mb-1 font-medium">Teléfono:</label>

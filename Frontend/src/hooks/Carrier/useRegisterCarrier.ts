@@ -140,8 +140,8 @@ export const useRegisterCarrier = () => {
     }
 
     if (status === 200 || status === 201) {
-        setTimeout(redirect("/"), 1000)
-        redirect("/")
+        setTimeout(redirect("/food"), 1000)
+        redirect("/food")
     }
 
 

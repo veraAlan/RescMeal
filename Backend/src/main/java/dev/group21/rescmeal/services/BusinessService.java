@@ -97,4 +97,8 @@ public class BusinessService {
     }
 
     public Optional<Business> getBusinessById(Long id) { return businessRepository.findById(id); }
+
+    public boolean isCvuExists(String cvu) {
+        return businessRepository.findByCvu(cvu).isPresent();
+    }
 }
