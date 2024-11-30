@@ -1,24 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Food } from '../../types/Food';
 
 const useSearch = (foods: Food[]) => {
+    const [query, setQuery] = useState('');
     const [filteredFoods, setFilteredFoods] = useState<Food[]>(foods);
 
     useEffect(() => {
         setFilteredFoods(foods);
     }, [foods]);
 
-    const handleSearch = (query: string) => {
-        if (!query) {
-            setFilteredFoods(foods);
-            return;
-        }
-
-        const filtered = foods.filter((food) =>
-            food.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredFoods(filtered);
+    const handleSearch = (searchQuery: string) => {
+        setQuery(searchQuery.toLowerCase());
     };
+
+    const filteredFoodsMemo = useMemo(() => {
+        if (!query) {
+            return foods;
+        }
+        return foods.filter(food => 
+            food.name?.toLowerCase().includes(query) ||
+            food.description?.toLowerCase().includes(query) ||
+            food.category?.toLowerCase().includes(query) ||
+            food.business?.name?.toLowerCase().includes(query)
+        );
+    }, [query, foods]);
+
+    useEffect(() => {
+        setFilteredFoods(filteredFoodsMemo);
+    }, [filteredFoodsMemo]);
 
     return { filteredFoods, handleSearch };
 };

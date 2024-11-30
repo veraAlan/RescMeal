@@ -1,9 +1,9 @@
-"use client";
+'use client';
 import React from 'react';
 import { Food } from '../../types/Food';
 import { useCart } from '../../hooks/Cart/useCart';
 import { toast } from 'react-toastify';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import normalizeDate from '../../utils/normalizeDate';
 
 interface FoodCardProps {
     food: Food;
@@ -18,35 +18,27 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
     };
 
     return (
-        <div className="flex flex-col md:flex-row w-full max-w-4xl rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 duration-300 bg-white mb-4 mx-auto min-h-[300px]">
+        <div className="flex flex-col md:flex-row w-full max-w-4xl rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 duration-300 bg-white mb-6 mx-auto min-h-[300px]">
             <img className="w-full h-48 object-cover md:w-48 md:h-auto" src={food.image} alt={food.name} />
-            <div className="p-4 flex flex-col justify-between leading-normal flex-grow">
+            <div className="p-6 flex flex-col justify-between leading-normal flex-grow">
                 <div>
-                    <div className="text-gray-900 font-bold text-xl mb-2">{food.name}</div>
-                    <div className="text-gray-700 text-sm mb-2 flex items-center">
-                        Negocio: {food.business.name}
-                        <a href={'/Map/' + food.business.id} className="ml-2">
-                            <button className="bg-transparent p-0">
-                                <FaMapMarkerAlt className="text-green-600 text-lg" />
-                            </button>
-                        </a>
-                    </div>
-                    <p className="text-gray-700 text-base">{food.description}</p>
+                    <div className="text-gray-800 font-bold text-3xl mb-2">{food.name}</div>
+                    <p className="text-gray-700 text-lg">{food.description}</p>
                 </div>
-                <div className="text-gray-500 text-sm mt-2">
-                    <p>Categoría: {food.category}</p>
-                    <p>Cantidad: {food.quantity}</p>
-                    <p>Fecha de Expiración: {formatDate(food.expiration_date)}</p>
-                    <p>Fecha de Producción: {formatDate(food.production_date)}</p>
+                <div className="text-gray-600 text-lg mt-4 space-y-1">
+                    <p><span className="font-semibold">Categoría:</span> {food.category}</p>
+                    <p><span className="font-semibold">Cantidad:</span> {food.quantity}</p>
+                    <p><span className="font-semibold">Fecha de Expiración:</span> {normalizeDate(food.expiration_date)}</p>
+                    <p><span className="font-semibold">Fecha de Producción:</span> {normalizeDate(food.production_date)}</p>
                 </div>
-                <div className="mt-4 flex justify-between items-center">
+                <div className="mt-6 flex justify-between items-center">
                     <div>
-                        <span className="text-gray-900 text-2xl line-through">${(food.price * 2).toFixed(2)}</span>
-                        <span className="text-gray-900 font-bold text-2xl ml-2">${food.price}</span>
+                        <span className="text-gray-500 text-xl line-through">${(food.price * 2).toFixed(2)}</span>
+                        <span className="text-gray-800 font-bold text-3xl ml-2">${food.price}</span>
                     </div>
                     <button
                         onClick={handleAddToCart}
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors shadow-md"
                     >
                         Añadir al Carrito
                     </button>
@@ -54,11 +46,6 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
             </div>
         </div>
     );
-};
-
-const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString('es-AR', options);
 };
 
 export default FoodCard;
