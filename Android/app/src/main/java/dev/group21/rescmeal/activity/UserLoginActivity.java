@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import dev.group21.rescmeal.R;
 import dev.group21.rescmeal.controller.UserController;
 import dev.group21.rescmeal.model.LoginRequest;
+import dev.group21.rescmeal.model.User;
 import dev.group21.rescmeal.model.UserInfoResponse;
 import dev.group21.rescmeal.services.RetrofitService;
 import retrofit2.Call;
@@ -39,6 +40,21 @@ public class UserLoginActivity extends AppCompatActivity {
         RetrofitService retrofitService = new RetrofitService();
         UserController userController = retrofitService.getRetrofit().create(UserController.class);
 
+        userController.authenticateUser()
+            .enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    System.out.print("Response for authenticator: ");
+                    System.out.println(response.body());
+                    Toast.makeText(UserLoginActivity.this, "Sesion encontrada! Redirigiendo...", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Toast.makeText(UserLoginActivity.this, "Por favor, inicie sesion.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         buttonLogin.setOnClickListener(view -> {
             String identifier = String.valueOf(inputIdentifier.getText());
             String password = String.valueOf(inputPassword.getText());
@@ -47,7 +63,7 @@ public class UserLoginActivity extends AppCompatActivity {
             loginRequest.setIdentifier(identifier);
             loginRequest.setPassword(password);
 
-            userController.authenticateUser(loginRequest)
+            userController.loginUser(loginRequest)
                 .enqueue(new Callback<UserInfoResponse>() {
                     @Override
                     public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {

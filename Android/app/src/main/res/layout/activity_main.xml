@@ -18,7 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
+            android:padding="6dp"
+            android:background="@drawable/button_background"
             />
+        <!-- Change this to an input drawable, better for view -->
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/form_passwordInput"

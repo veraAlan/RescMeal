@@ -1,7 +1,6 @@
 package dev.group21.rescmeal.adapter;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;

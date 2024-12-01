@@ -16,14 +16,12 @@ public class RetrofitService {
     }
 
     private void initializeRetrofit() {
-//        CookieManager cookieManager = CookieManager.getInstance();
-        RescMealJar rescMealJar = new RescMealJar();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
 
         retrofit = new Retrofit.Builder()
                 .client(new OkHttpClient().newBuilder()
-                        .cookieJar(rescMealJar)
-                        .addInterceptor(new CookiesInterceptor(rescMealJar))
-                        .build())
+                        .cookieJar(new RescMealJar(cookieManager)).build())
                 .baseUrl("http://192.168.100.8:8080")
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
