@@ -20,7 +20,7 @@ const TakenOrders: React.FC = () => {
 
     const filteredOrders = takenOrders.filter(order =>
         (order.purchase.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.purchase.purchasedItems.some(item => item.food.name.toLowerCase().includes(searchTerm.toLowerCase()))) &&
+            order.purchase.purchasedItems.some(item => item.food.name.toLowerCase().includes(searchTerm.toLowerCase()))) &&
         (selectedClient ? order.purchase.client.name === selectedClient : true)
     );
 
@@ -85,13 +85,13 @@ const TakenOrders: React.FC = () => {
                             <ul className="ml-6">
                                 {order.purchase.purchasedItems.map(item => (
                                     <li key={item.food.id} className="text-lg">
-                                        { 'name' in item.food ? item.food.name : `Food ID: ${item.food.id}` } - Cantidad: {item.quantity} - Precio: ${item.price}
+                                        {'name' in item.food ? item.food.name : `Food ID: ${item.food.id}`} - Cantidad: {item.quantity} - Precio: ${item.price}
                                     </li>
                                 ))}
                             </ul>
                             <p className="text-lg"><strong>Tomado a las</strong> {order.delivery_time}</p>
                             <div className="flex justify-between mt-4">
-                                <Link href={`/Direction?purchaseId={order.purchase.id}`} legacyBehavior>
+                                <Link href={`/direction?purchaseId=${order.purchase.id}`} legacyBehavior>
                                     <a className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200">
                                         Ver mi Ruta
                                     </a>
