@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import mapboxgl, { Map } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
+import axiosConfig from '@/utils/axiosConfig';
 
 const useMap = ({ businessId }: { businessId: number }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -26,7 +27,7 @@ const useMap = ({ businessId }: { businessId: number }) => {
         // Set map loaded state
         mapInstanceRef.current.on("load", () => {
             setMapLoaded(true);
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/business/${businessId}`, { withCredentials: true })
+            axiosConfig.get(`/api/business/${businessId}`)
                 .then(response => {
                     if (response.data && response.data.address_long && response.data.address_long) setAddress(response.data.address_long + "," + response.data.address_lat);
                 })
@@ -42,35 +43,33 @@ const useMap = ({ businessId }: { businessId: number }) => {
     }, []);
 
     const setAddress = async (address: string) => {
-        try {
-            // Realiza una solicitud a la API de Mapbox Geocoding
-            const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`);
-            const data = await response.json();
+        // Realiza una solicitud a la API de Mapbox Geocoding
+        axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`)
+            .then(response => {
+                if (response.data.features && response.data.features.length > 0) {
+                    const [lng, lat] = response.data.features[0].geometry.coordinates;
+                    // Centrar el mapa en la nueva ubicación
+                    if (mapInstanceRef.current) {
+                        mapInstanceRef.current.flyTo({
+                            center: [lng, lat],
+                            zoom: 15,
+                            essential: true, // esta opción permite que la animación sea esencial para la interacción del usuario.
+                            maxDuration: 50
+                        });
+                        new mapboxgl.Marker()
+                            .setLngLat([lng, lat])
+                            .addTo(mapInstanceRef.current);
+                    }
 
-            if (data.features && data.features.length > 0) {
-                const [lng, lat] = data.features[0].geometry.coordinates;
-
-                // Centrar el mapa en la nueva ubicación
-                if (mapInstanceRef.current) {
-                    mapInstanceRef.current.flyTo({
-                        center: [lng, lat],
-                        zoom: 15,
-                        essential: true, // esta opción permite que la animación sea esencial para la interacción del usuario.
-                        maxDuration: 50
-                    });
-                    new mapboxgl.Marker()
-                        .setLngLat([lng, lat])
-                        .addTo(mapInstanceRef.current);
+                    setInputValue(address);
+                } else {
+                    console.error("No se encontraron resultados para la dirección proporcionada.");
                 }
-
-                setInputValue(address);
-            } else {
-                console.error("No se encontraron resultados para la dirección proporcionada.");
-            }
-        } catch (error) {
-            console.error("Error al buscar la dirección:", error);
-        }
-    };
+            })
+            .catch(error => {
+                console.error("Error al buscar la dirección:", error);
+            })
+    }
 
     return {
         mapContainerRef,

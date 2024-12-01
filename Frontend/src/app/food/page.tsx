@@ -1,7 +1,6 @@
 'use client';
 import React, { useContext, useEffect } from 'react';
 import { redirect } from 'next/navigation';
-import { AuthContext } from '@/context/AuthContext';
 import Search from '../../components/Search/Search';
 import FoodCard from '../../components/Food/FoodCard';
 import useListFoods from '../../hooks/Food/useListFoods';
@@ -13,17 +12,13 @@ const HomePage: React.FC = () => {
     const { foods, error } = useListFoods();
     const { filteredFoods, handleSearch } = useSearch(foods as Food[]);
 
-    const authContext = useContext(AuthContext);
-
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
             redirect('/auth/login');
         }
     }, []);
 
-    if (!authContext?.isLoggedIn) {
-        return <div>Redirigiendo...</div>;
-    }
+
 
     const foodsByBusiness = filteredFoods.reduce((acc: Record<string, Food[]>, food: Food) => {
         if (!acc[food.business.name]) {
@@ -32,7 +27,7 @@ const HomePage: React.FC = () => {
         acc[food.business.name].push(food);
         return acc;
     }, {});
-
+    console.log(foodsByBusiness)
     return (
         <div className="container mx-auto px-4 flex flex-col items-center">
             <h1 className="text-4xl font-bold my-4 text-center text-gray-800" style={{ marginBottom: '2rem' }}>Comidas</h1>

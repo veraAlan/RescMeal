@@ -9,7 +9,6 @@ export function useListClients() {
 
     useEffect(() => {
         async function fetchClients() {
-            console.log("Client call.")
             try {
                 const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/client`, { headers: {}, withCredentials: true })
                     .then(response => {
