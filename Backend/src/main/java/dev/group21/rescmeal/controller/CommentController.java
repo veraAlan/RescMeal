@@ -10,6 +10,11 @@ import dev.group21.rescmeal.services.CommentService;
 import dev.group21.rescmeal.services.PurchaseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,6 +108,20 @@ public class CommentController {
             return ResponseEntity.ok(lastComment);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/commentsCarrier/{carrierId}")
+    public ResponseEntity<PagedModel<EntityModel<Comment>>> getCommentsByCarrierId(@PathVariable Long carrierId, Pageable pageable, PagedResourcesAssembler<Comment> assembler) {
+        try {
+            Page<Comment> commentPage = commentService.getCarrierComments(carrierId, pageable);
+            if (commentPage.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(assembler.toModel(commentPage));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 

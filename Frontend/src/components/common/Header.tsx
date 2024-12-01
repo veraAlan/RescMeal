@@ -48,7 +48,7 @@ const Header: React.FC = () => {
                         <>
                             <CartIcon />
                             <BalanceButton />
-                            <Link href="/comment" className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Pedido</Link>
+                            <Link href="/delivery/client" className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Pedido</Link>
                             <Link href="/comment" className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Comentar Última Compra</Link>
                             <button onClick={handleLogout} className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Cerrar Sesión</button>
                         </>

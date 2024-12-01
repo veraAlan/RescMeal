@@ -63,7 +63,7 @@ export default (props: { profile: Role | null }) => {
                         <p><strong>Estado:</strong> {delivery.delivery_state}</p>
                         <p><strong>Propina:</strong> {delivery.tip ? delivery.tip : "Sin Propina"}</p>
                         <div className='grid grid-cols-1 gap-2 border-t border-gray-200 pt-2 mt-2'>
-                           <h4 className='font-semibold text-center'>Comidas compradas:</h4>
+                           <h4 className='font-semibold text-center'>Comidas del reparto:</h4>
                            {delivery.purchase.purchasedItems.map(item => (
                               <h2 className='text-center'>{item.food.name}</h2>
                            ))}
