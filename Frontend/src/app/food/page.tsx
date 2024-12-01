@@ -16,10 +16,10 @@ const HomePage: React.FC = () => {
     const authContext = useContext(AuthContext);
 
     useEffect(() => {
-        if (!authContext?.isLoggedIn) {
+        if (localStorage.getItem('token') === null) {
             redirect('/auth/login');
         }
-    }, [authContext?.isLoggedIn]);
+    }, []);
 
     if (!authContext?.isLoggedIn) {
         return <div>Redirigiendo...</div>;
