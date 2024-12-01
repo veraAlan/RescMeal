@@ -18,8 +18,8 @@ const MapCoordinates = ({ lat, lng }: { lat: number; lng: number }) => {
             });
 
             new mapboxgl.Marker().setLngLat([lng, lat]).addTo(mapInstanceRef.current);
-            mapInstanceRef.current.dragPan.disable(); // Deshabilitar el movimiento del mapa
-            mapInstanceRef.current.scrollZoom.disable(); // Deshabilitar el zoom con scroll
+            mapInstanceRef.current.dragPan.disable(); 
+            mapInstanceRef.current.scrollZoom.disable();
         }
     }, [mapLoaded, lat, lng, mapboxgl]);
 
