@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { getSessionId } from '../../utils/getSessionId';
 import { getEmailById } from '../../utils/getEmailById';
-import axiosInstance from '../../utils/axiosConfig'; // Updated import
 import { PurchasedItem, PurchaseErrors } from '../../types/Purchase';
 import { useCart } from '../../hooks/Cart/useCart';
+import axiosConfig from '../../utils/axiosConfig';
 
 export const usePurchase = () => {
     const { cart, clearCart } = useCart();
@@ -50,7 +50,7 @@ export const usePurchase = () => {
                 payload.pickup = pickup === "true";
             }
 
-            const { data: preferenceUrl } = await axiosInstance.post(`/api/purchase/process-payment`, payload, {
+            const { data: preferenceUrl } = await axiosConfig.post(`/api/purchase/process-payment`, payload, {
                 params: { email },
             });            
     

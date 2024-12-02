@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import Search from '../../components/Search/Search';
 import FoodCard from '../../components/Food/FoodCard';
@@ -11,6 +11,7 @@ import { Food } from '../../types/Food';
 const HomePage: React.FC = () => {
     const { foods, error } = useListFoods();
     const { filteredFoods, handleSearch } = useSearch(foods as Food[]);
+    const [selectedType, setSelectedType] = useState<string | null>(null);
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
@@ -18,7 +19,15 @@ const HomePage: React.FC = () => {
         }
     }, []);
 
-    const foodsByBusiness = filteredFoods.reduce((acc: Record<string, Food[]>, food: Food) => {
+    const handleTypeClick = (type: string) => {
+        setSelectedType(type);
+    };
+
+    const filteredByType = selectedType
+        ? filteredFoods.filter((food) => food.category === selectedType)
+        : filteredFoods;
+
+    const foodsByBusiness = filteredByType.reduce((acc: Record<string, Food[]>, food: Food) => {
         if (!acc[food.business.name]) {
             acc[food.business.name] = [];
         }
@@ -26,11 +35,30 @@ const HomePage: React.FC = () => {
         return acc;
     }, {});
 
+    const foodTypes = Array.from(new Set(foods.map((food) => food.category)));
+
     return (
         <div className="container mx-auto px-4 flex flex-col items-center" style={{ paddingTop: '4rem' }}>
             <h1 className="text-4xl font-bold my-4 text-center text-gray-800" style={{ marginBottom: '2rem' }}>Comidas</h1>
             <div className="w-full max-w-4xl mb-4">
                 <Search onSearch={handleSearch} />
+            </div>
+            <div className="flex flex-wrap justify-center mb-4">
+                {foodTypes.map((type) => (
+                    <button
+                        key={type}
+                        onClick={() => handleTypeClick(type)}
+                        className={`px-4 py-2 m-2 rounded-md ${selectedType === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+                    >
+                        {type}
+                    </button>
+                ))}
+                <button
+                    onClick={() => handleTypeClick(null)}
+                    className={`px-4 py-2 m-2 rounded-md ${selectedType === null ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+                >
+                    Todos
+                </button>
             </div>
             {Object.keys(foodsByBusiness).length === 0 ? (
                 <p className="text-center text-gray-500">No se encontró la comida.</p>

@@ -45,8 +45,8 @@ const useDelivery = () => {
         try {
             const token = localStorage.getItem('authToken');
             const [purchasesResponse, takenIdsResponse] = await Promise.all([
-                axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/purchase/list`),
-                axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/taken`)
+                axiosConfig.get(`/api/purchase/list`),
+                axiosConfig.get(`/api/delivery/taken`)
             ]);
 
             const purchasesData: Purchase[] = purchasesResponse.data;
@@ -77,8 +77,7 @@ const useDelivery = () => {
         }
 
         try {
-            const token = localStorage.getItem('authToken');
-            const response = await axiosConfig.post(`${process.env.NEXT_PUBLIC_API_URL}/delivery`, {
+            const response = await axiosConfig.post(`/api/delivery`, {
                 purchase: { id: purchaseId },
                 carrier: { id: carrierId },
                 delivery_state: 'Tomado',
