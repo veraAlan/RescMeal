@@ -28,7 +28,7 @@ public class UserLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         initializeComponents();
     }
 
@@ -44,14 +44,17 @@ public class UserLoginActivity extends AppCompatActivity {
             .enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    System.out.print("Response for authenticator: ");
-                    System.out.println(response.body());
-                    Toast.makeText(UserLoginActivity.this, "Sesion encontrada! Redirigiendo...", Toast.LENGTH_SHORT).show();
+                    if(response.body() != null) {
+                        Toast.makeText(UserLoginActivity.this, "Sesion encontrada! Redirigiendo...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(UserLoginActivity.this, FoodListActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    Toast.makeText(UserLoginActivity.this, "Por favor, inicie sesion.", Toast.LENGTH_SHORT).show();
+                    Logger.getLogger(UserLoginActivity.class.getName()).log(Level.SEVERE, "Error occurred: " + t.getMessage(), t);
                 }
             });
 
@@ -67,17 +70,20 @@ public class UserLoginActivity extends AppCompatActivity {
                 .enqueue(new Callback<UserInfoResponse>() {
                     @Override
                     public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                        Toast.makeText(UserLoginActivity.this, "Sesion iniciada!", Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(UserLoginActivity.this, FoodListActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if(response.body() != null) {
+                            Toast.makeText(UserLoginActivity.this, "Sesion iniciada!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(UserLoginActivity.this, FoodListActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(UserLoginActivity.this, "Email o Contraseña incorrecta.", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<UserInfoResponse> call, Throwable throwable) {
-                        Toast.makeText(UserLoginActivity.this, "No se pudo iniciar sesion.", Toast.LENGTH_SHORT).show();
-                        Logger.getLogger(UserLoginActivity.class.getName()).log(Level.SEVERE, "Ocurrio un error.", throwable);
+                        Toast.makeText(UserLoginActivity.this, "No se pudo iniciar sesion.\nIntentelo en otro momento.", Toast.LENGTH_SHORT).show();
+                        Logger.getLogger(UserLoginActivity.class.getName()).log(Level.SEVERE, "Ocurrio un error.\n", throwable);
                     }
                 });
         });

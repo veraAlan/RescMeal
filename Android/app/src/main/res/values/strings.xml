@@ -6,4 +6,26 @@
     <string name="image_description">image_description</string>
     <string name="ir_a_login">Ir a Login</string>
     <string name="preference_rescmeal_cookies" />
+    <string name="iniciar_sesion">Iniciar Sesion</string>
+    <string name="nombre_de_usuario_o_email">Nombre de Usuario o Email</string>
+    <string name="password">Contraseña</string>
+    <string name="identifier">Nombre de Usuario o Email</string>
+    <string name="rescmeal_logo">RescMeal Logo</string>
+    <string name="goto_register">Registrarse</string>
+    <string name="goto_client_register">Registrarse como Comprador</string>
+    <string name="goto_carrier_register">Registrarse como Repartidor</string>
+    <string name="rescmeal">RescMeal</string>
+    <string name="description_text">Rescatando Comida, menos desperdicio, mas descuentos.</string>
+    <string name="foodListItem_price">Price Number</string>
+    <string name="foodListItem_business_name">Business Name</string>
+    <string name="foodListItem_food_name">Food Name</string>
+    <string name="foodListItem_description">Description</string>
+    <string name="foodlistitem_image_description">Description of food (item list) image</string>
+    <string name="deliveries_button">Mis Pedidos</string>
+    <string name="profile_button">Mi Perfil</string>
+    <string name="search_food">Buscar Comida</string>
+    <string name="profile_lastname">Apellido</string>
+    <string name="profile_name">Nombre</string>
+    <string name="profile_balance">Balance</string>
+    <string name="profile_phone">Telefono</string>
 </resources>

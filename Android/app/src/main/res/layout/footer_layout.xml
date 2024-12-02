@@ -2,7 +2,8 @@
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Footer content here -->
 
     <LinearLayout
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/button_background"
-            android:backgroundTint="#1D4ED8"
+            app:backgroundTint="#1C58A0"
             android:drawableTop="@drawable/ic_launcher_foreground" />
 
         <Button
@@ -27,7 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
-            android:backgroundTint="#1D4ED8"
+            android:background="@drawable/button_background"
+            app:backgroundTint="#1C58A0"
             android:drawableTop="@drawable/ic_launcher_foreground" />
 
         <Button
@@ -35,7 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#1D4ED8"
+            android:background="@drawable/button_background"
+            app:backgroundTint="#1C58A0"
             android:drawableTop="@drawable/ic_launcher_foreground" />
     </LinearLayout>
 </LinearLayout>

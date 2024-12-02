@@ -9,10 +9,10 @@ public class Client {
     private String last_name;
     private String phone;
     private BigDecimal balance;
-    private LocalDate birthdate;
+    private String birthdate;
 
     // Constructor with all fields
-    public Client(Long id, String name, String last_name, String phone, BigDecimal balance, LocalDate birthdate) {
+    public Client(Long id, String name, String last_name, String phone, BigDecimal balance, String birthdate) {
         this.id = id;
         this.name = name;
         this.last_name = last_name;
@@ -70,11 +70,11 @@ public class Client {
     }
 
     // Getter and Setter for birthdate
-    public LocalDate getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
+    public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
     }
 }
