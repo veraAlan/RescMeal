@@ -120,7 +120,6 @@ const Page: React.FC = () => {
 
         if (clientId !== null && rating !== null && lastPurchaseId !== null && review) {
             if (businesses)
-                console.log("Businesses: " + businesses)
             for (const business of businesses) {
                 await axiosConfig.post(`api/review`, {
                     clientId,
