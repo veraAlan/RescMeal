@@ -1,7 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#256DC3"
+    android:padding="25dp"
+    tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_background"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:contentDescription="@string/rescmeal_logo"
+            app:srcCompat="@drawable/logo_foreground"
+            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            />
+
+        <TextView
+            android:id="@+id/main_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rescmeal"
+            android:textAlignment="center"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_marginVertical="5dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/main_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/description_text"
+            android:textAlignment="center"
+            android:textSize="13sp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/black" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/form_identifierInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:background="@drawable/input_background"
+            android:hint="@string/identifier"
+            android:minHeight="10dp"
+            android:padding="10dp"
+            android:shadowColor="#525151"
+            android:textColorHint="@color/black"
+            android:textSize="18sp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/form_passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:background="@drawable/input_background"
+            android:hint="@string/password"
+            android:minHeight="10dp"
+            android:padding="10dp"
+            android:shadowColor="#525151"
+            android:textColorHint="@color/black"
+            android:textSize="18sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/form_buttonLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp"
+            android:text="@string/iniciar_sesion"
+            android:layout_margin="20dp"
+            android:textSize="18sp"
+            app:backgroundTint="#0D2F59"
+            app:strokeColor="#CAC9C9"
+            app:strokeWidth="1dp" />
+    </LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_alignParentBottom="true"
+    >
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/form_registerClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:text="@string/goto_client_register"
+        android:layout_marginHorizontal="20dp"
+        android:textSize="18sp"
+        app:backgroundTint="#0D2F59"
+        app:strokeColor="#CAC9C9"
+        app:strokeWidth="1dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/form_registerCarrier"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:text="@string/goto_carrier_register"
+        android:layout_margin="20dp"
+        android:textSize="18sp"
+        app:backgroundTint="#0D2F59"
+        app:strokeColor="#CAC9C9"
+        app:strokeWidth="1dp" />
+</LinearLayout>
+</RelativeLayout>

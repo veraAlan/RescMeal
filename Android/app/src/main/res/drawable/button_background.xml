@@ -10,7 +10,7 @@
     <item>
         <shape android:shape="rectangle">
             <solid android:color="#3b82f6"/> <!-- Default background color -->
-            <stroke android:width="2dp" android:color="#C2C2C288"/> <!-- Border color -->
+            <stroke android:width="4dp" android:color="#C2C2C288"/> <!-- Border color -->
             <corners android:radius="10dp"/> <!-- Rounded corners -->
         </shape>
     </item>
