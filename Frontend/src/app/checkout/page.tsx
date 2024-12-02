@@ -16,9 +16,9 @@ const CheckoutPage: React.FC = () => {
     const [addressLong, setAddressLong] = useState<number>(-68.0591);
 
     return (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold my-4 text-center text-gray-800">Finalizar Compra</h1>
-            <form>
+            <form className="bg-white p-6 shadow rounded-lg max-w-xl mx-auto">
                 <PaymentMethod
                     paymentMethod={paymentMethod}
                     setPaymentMethod={setPaymentMethod}
@@ -34,13 +34,13 @@ const CheckoutPage: React.FC = () => {
                     setAddressLat={setAddressLat}
                     setAddressLong={setAddressLong}
                 />
-                <div className="mt-4 flex justify-center space-x-4">
-                    <button type="button" onClick={() => handleMercadoPago(paymentMethod, pickup, address, addressLat, addressLong)} className="bg-blue-500 text-white px-4 py-2 rounded">Confirmar Compra con Mercado Pago</button>
+                <div className="mt-4 flex flex-col sm:flex-row justify-center sm:justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button type="button" onClick={() => handleMercadoPago(paymentMethod, pickup, address, addressLat, addressLong)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 mx-auto block">Mercado Pago</button>
                 </div>
             </form>
             <div className="mt-4 flex justify-center">
                 <Link href="/">
-                    <button className="bg-gray-500 text-white px-4 py-2 rounded">Volver</button>
+                    <button className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200">Volver</button>
                 </Link>
             </div>
         </div>

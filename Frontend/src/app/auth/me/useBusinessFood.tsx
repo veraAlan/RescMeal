@@ -2,7 +2,6 @@ import { Business } from '@/types/Business'
 import axiosConfig from '@/utils/axiosConfig'
 import normlizeDate from '@/utils/normalizeDate'
 import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
 
 interface FoodItem {
    id: number

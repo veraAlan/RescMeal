@@ -10,7 +10,7 @@ const CartPage: React.FC = () => {
             <Cart />
             <div className="mt-4 flex justify-center">
                 <Link href="/food">
-                    <button className="bg-gray-500 text-white px-4 py-2 rounded">Volver para seguir comprando</button>
+                    <button className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-300 ease-in-out">Volver para seguir comprando</button>
                 </Link>
             </div>
         </div>

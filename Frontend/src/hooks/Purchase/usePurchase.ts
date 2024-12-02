@@ -1,14 +1,14 @@
 import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
 import { getSessionId } from '../../utils/getSessionId';
 import { getEmailById } from '../../utils/getEmailById';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosConfig'; // Updated import
 import { PurchasedItem, PurchaseErrors } from '../../types/Purchase';
 import { useCart } from '../../hooks/Cart/useCart';
 
 export const usePurchase = () => {
     const { cart, clearCart } = useCart();
     const [errors, setErrors] = useState<PurchaseErrors>({});
+    
     const handleMercadoPago = async (
         paymentMethod: string,
         pickup: string,
@@ -36,9 +36,9 @@ export const usePurchase = () => {
                 client: { id: client_id },
                 total_cost: cart.reduce((total, item) => total + item.food.price * item.quantity, 0),
                 creation_date: new Date().toISOString().split('T')[0],
-                address, // Usar el parámetro de dirección
-                address_lat, // Usar el parámetro de latitud
-                address_long, // Usar el parámetro de longitud
+                address,
+                address_lat,
+                address_long,
                 purchasedItems
             };
     
@@ -49,15 +49,9 @@ export const usePurchase = () => {
             if (pickup !== '') {
                 payload.pickup = pickup === "true";
             }
-    
-            const token = localStorage.getItem("token");
 
-            const { data: preferenceUrl } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/purchase/process-payment`, payload, {
+            const { data: preferenceUrl } = await axiosInstance.post(`/api/purchase/process-payment`, payload, {
                 params: { email },
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
             });            
     
             if (preferenceUrl) {
