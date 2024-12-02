@@ -8,10 +8,8 @@ import Image from 'next/image' // Import the Image component
 export default () => {
    const searchParams = useSearchParams()
    const {
-      formData,
-      errors,
-      successImage,
-      generalError,
+      foodForm,
+      foodErrors,
       handleChange,
       handleImage,
       handleSubmit
@@ -20,27 +18,25 @@ export default () => {
    return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-gray-300 mt-16">
-            <h2 className="text-3xl mb-6 text-center font-bold text-blue-600">Modificar {formData.name}</h2>
-            {successImage && <p className="text-green-500 text-center">{successImage}</p>}
-            {generalError && <p className="text-red-500 text-center">{generalError}</p>}
+            <h2 className="text-3xl mb-6 text-center font-bold text-blue-600">Modificar {foodForm.name}</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                <div>
                   <label className="block mb-1 font-medium">Nombre:</label>
                   <input
                      type="text"
                      name="name"
-                     value={formData.name}
+                     value={foodForm.name}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                      maxLength={50}
                   />
-                  {errors.name && <p className="text-red-500">{errors.name}</p>}
+                  {foodErrors.name && <p className="text-red-500">{foodErrors.name}</p>}
                </div>
                <div>
                   <label className="block mb-1 font-medium">Categoría:</label>
                   <select
                      name="category"
-                     value={formData.category}
+                     value={foodForm.category}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                   >
@@ -53,18 +49,18 @@ export default () => {
                      <option value="quesadillas">Quesadillas</option>
                      <option value="entradas">Entradas</option>
                   </select>
-                  {errors.category && <p className="text-red-500">{errors.category}</p>}
+                  {foodErrors.category && <p className="text-red-500">{foodErrors.category}</p>}
                </div>
                <div>
                   <label className="block mb-1 font-medium">Precio:</label>
                   <input
                      type="number"
                      name="price"
-                     value={formData.price}
+                     value={foodForm.price}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                   />
-                  {errors.price && <p className="text-red-500">{errors.price}</p>}
+                  {foodErrors.price && <p className="text-red-500">{foodErrors.price}</p>}
                </div>
                <div>
                   <label className="block mb-1 font-medium">Imagen:</label>
@@ -74,11 +70,11 @@ export default () => {
                      onChange={handleImage}
                      className="border rounded-lg p-2 w-full"
                   />
-                  {errors.image && <p className="text-red-500">{errors.image}</p>}
-                  {formData.image && (
+                  {foodErrors.image && <p className="text-red-500">{foodErrors.image}</p>}
+                  {foodForm.image && (
                      <div className="mt-4">
                         <Image
-                           src={formData.image}
+                           src={"/food/" + foodForm.image}
                            alt="Imagen de previsualización"
                            width={100}
                            height={100}
@@ -91,34 +87,34 @@ export default () => {
                   <label className="block mb-1 font-medium">Descripción:</label>
                   <textarea
                      name="description"
-                     value={formData.description}
+                     value={foodForm.description}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                      maxLength={200}
                   ></textarea>
-                  {errors.description && <p className="text-red-500">{errors.description}</p>}
+                  {foodErrors.description && <p className="text-red-500">{foodForm.description}</p>}
                </div>
                <div>
                   <label className="block mb-1 font-medium">Cantidad:</label>
                   <input
                      type="number"
                      name="quantity"
-                     value={formData.quantity}
+                     value={foodForm.quantity}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                   />
-                  {errors.quantity && <p className="text-red-500">{errors.quantity}</p>}
+                  {foodErrors.quantity && <p className="text-red-500">{foodForm.quantity}</p>}
                </div>
                <div>
                   <label className="block mb-1 font-medium">Fecha de Vencimiento:</label>
                   <input
                      type="date"
                      name="expiration_date"
-                     value={formData.expiration_date}
+                     value={foodForm.expiration_date}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                   />
-                  {errors.expiration_date && <p className="text-red-500">{errors.expiration_date}</p>}
+                  {foodErrors.expiration_date && <p className="text-red-500">{foodErrors.expiration_date}</p>}
                </div>
                <div>
                   <label className="block mb-1 font-medium">Fecha de Producción:</label>
@@ -126,11 +122,11 @@ export default () => {
                      type="date"
                      placeholder="dd-mm-YYYY"
                      name="production_date"
-                     value={formData.production_date}
+                     value={foodForm.production_date}
                      onChange={handleChange}
                      className="border rounded-lg p-2 w-full"
                   />
-                  {errors.production_date && <p className="text-red-500">{errors.production_date}</p>}
+                  {foodErrors.production_date && <p className="text-red-500">{foodErrors.production_date}</p>}
                </div>
                <button type="submit" className="bg-blue-500 text-white p-3 rounded-lg w-full hover:bg-blue-600 transition duration-300">
                   Modificar

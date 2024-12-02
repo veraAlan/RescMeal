@@ -38,6 +38,11 @@ public class FoodController {
         this.foodService = foodService;
     }
 
+    @PostMapping("/valid")
+    public ResponseEntity<Food> validateFood(@Valid @RequestBody Food food){
+        return ResponseEntity.ok().body(food);
+    }
+
     @PostMapping
     public ResponseEntity<Food> createFood(@Valid @RequestPart("food") String foodJson, @RequestPart("image") MultipartFile image) {
         try {
@@ -54,15 +59,17 @@ public class FoodController {
     }
 
     @PutMapping
-    public ResponseEntity<Food> updateFood(@RequestBody Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<Food> updateFood(@RequestPart Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
             if (foodService.getFood(newFood.getId()) == null) {
                 return ResponseEntity.notFound().build();
             }
             if(image != null) {
                 ResponseEntity<String> createdImage = uploadImage(newFood.getBusiness().getId() + "-" + newFood.getName(), image);
-                newFood.setImage(createdImage.getBody());
-            }
+                newFood.setImage(String.valueOf(createdImage.getBody()));
+            } else {
+            newFood.setImage(foodService.getFood(newFood.getId()).getImage());
+        }
             return ResponseEntity.ok(foodService.updateFood(newFood));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();

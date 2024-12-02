@@ -2,11 +2,11 @@ import { Business } from './Business';
 
 export interface Food {
     id?: number;
-    business: Business;
+    business?: Business;
     name: string;
     category: string;
     price: number;
-    image: string;
+    image?: string;
     description?: string;
     quantity: number;
     expiration_date: string;
