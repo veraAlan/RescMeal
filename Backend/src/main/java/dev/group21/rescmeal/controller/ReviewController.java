@@ -112,6 +112,16 @@ public class ReviewController {
         }
     }
 
+    @GetMapping("/list/{businessId}")
+    public ResponseEntity<List<Review>> getReviewsByBusinessId(@PathVariable Long businessId) {
+        List<Review> reviews = reviewService.getReviewsByBusinessId(businessId);
+        if (!reviews.isEmpty()) {
+            return ResponseEntity.ok(reviews);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private HttpHeaders errorHeader(Exception e) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Error-Message", e.getMessage());

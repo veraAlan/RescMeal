@@ -1,27 +1,30 @@
-'use client'
+'use client';
 import React from 'react';
-import Map from '@/components/Map/Map';
-import useBusinessById from '@/hooks/Business/useBusiness';
+import Business from '../../../components/Business/Business';
+import useBusinessData from '../../../hooks/Business/useBusinessData';
 
-//TODO esta deberia ser una pagina que visualice un bussines especifico junto al mapa
-// Aca pueden probar el mapa, revisar el tiempo de carga porque hay veces que el servidor se muere
-export default function Page({ params }: { params: { business: number } }) {
-    const { business } = useBusinessById({ businessId: params.business })
-    if (!business) { return <div>Error No se encuentra ningun Local</div> }
-    console.log(business)
+interface Params {
+    business: number;
+}
+
+export default function Page({ params }: { params: Params }) {
+    const { business, businessLoading, foodsLoading, error, filteredFoods, reviews, normalizeDate, normalizePhone } = useBusinessData(params.business);
+
+    if (businessLoading || foodsLoading) {
+        return <div className="text-center text-blue-500 text-xl mt-10">Cargando...</div>;
+    }
+
+    if (!business) {
+        return <div className="text-center text-red-500 text-xl mt-10">Error: No se encuentra ningún Local</div>;
+    }
+
     return (
-        <div>
-            <div>
-            <h3 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Local </h3>
-            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{business.name}</h4>
-            <h3 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Celular: </h3>
-            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{business.phone}</h4>
-            <h3 className='w-full h-full rounded-xl font-semibold text-3xl text-center'>Horario: </h3>
-            <h4 className='w-full h-full rounded-xl col-span-2 p-2 text-3xl text-center'>{business.schedule}</h4>
-            </div>
-            <div>
-                <Map id={params.business} />
-            </div>
-        </div>
-    )
+        <Business
+            business={business}
+            foods={filteredFoods}
+            reviews={reviews}
+            normalizeDate={normalizeDate}
+            normalizePhone={normalizePhone}
+        />
+    );
 }

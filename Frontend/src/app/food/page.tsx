@@ -27,7 +27,6 @@ const HomePage: React.FC = () => {
         acc[food.business.name].push(food);
         return acc;
     }, {});
-    console.log(foodsByBusiness)
     return (
         <div className="container mx-auto px-4 flex flex-col items-center">
             <h1 className="text-4xl font-bold my-4 text-center text-gray-800" style={{ marginBottom: '2rem' }}>Comidas</h1>
