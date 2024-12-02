@@ -8,10 +8,8 @@ export interface Role {
    address?: string
    schedule?: string
    cvu?: string
-   image?: string
    last_name?: string
    balance?: number
-   vehicle_type?: string
    phone?: string
    birthdate?: string
 }
@@ -22,31 +20,36 @@ export default (props: { profile: Role | null }) => {
    if (props.profile?.birthdate) birthdate = normalizeDate(props.profile.birthdate)
 
    return (
-      <div className='relative grid grid-cols-1 md:grid-cols-3 gap-4 w-full p-6 bg-white text-black shadow-lg rounded-lg'>
-         <div className='col-span-1'>
-            <h3 className='font-semibold text-lg text-center'>Nombre:</h3>
-            <p className='text-center'>{props.profile?.name}</p>
-         </div>
-         <div className='col-span-1'>
-            <h3 className='font-semibold text-lg text-center'>Apellido:</h3>
-            <p className='text-center'>{props.profile?.last_name}</p>
-         </div>
-         <div className='col-span-1'>
-            <h3 className='font-semibold text-lg text-center'>Celular:</h3>
-            <p className='text-center'>{phone}</p>
-         </div>
-         <div className='col-span-1'>
-            <h3 className='font-semibold text-lg text-center'>Balance:</h3>
-            <p className='text-center'>AR$ {props.profile?.balance}</p>
-         </div>
-         <div className='col-span-1'>
-            <h3 className='font-semibold text-lg text-center'>Fecha de Nacimiento:</h3>
-            <p className='text-center'>{birthdate}</p>
-         </div>
-         <div className='col-span-1 md:col-span-3 flex justify-end'>
-            <a href='/auth/me/client'>
-               <button className='border border-gray-300 rounded-xl px-4 py-2 text-xl font-bold bg-blue-500 text-white hover:bg-blue-700 transition duration-300'>Modificar datos</button>
-            </a>
+      <div className="container mx-auto mt-16 mb-8 p-4 sm:p-8 bg-white text-black shadow-xl rounded-lg max-w-screen-lg">
+         <div className="flex flex-col gap-4 sm:gap-6 p-4 sm:p-6 text-lg border rounded-xl border-gray-300">
+            <div className="w-full flex flex-col items-start">
+               <h3 className="font-semibold text-xl text-gray-700 mb-2">Información del Cliente</h3>
+               <div className="w-full mb-2">
+                  <strong>Nombre: </strong>
+                  <span className="text-gray-900">{props.profile?.name}</span>
+               </div>
+               <div className="w-full mb-2">
+                  <strong>Apellido: </strong>
+                  <span className="text-gray-900">{props.profile?.last_name}</span>
+               </div>
+               <div className="w-full mb-2">
+                  <strong>Celular: </strong>
+                  <span className="text-gray-900">{phone}</span>
+               </div>
+               <div className="w-full mb-2">
+                  <strong>Balance: </strong>
+                  <span className="text-gray-900">AR$ {props.profile?.balance}</span>
+               </div>
+               <div className="w-full mb-2">
+                  <strong>Fecha de Nacimiento: </strong>
+                  <span className="text-gray-900">{birthdate}</span>
+               </div>
+               <div className="flex justify-center w-full mt-4">
+                  <a href="/auth/me/client">
+                     <button className="border border-gray-300 rounded-lg px-6 py-2 font-bold bg-blue-600 text-white hover:bg-blue-700 transition duration-300">Modificar Datos</button>
+                  </a>
+               </div>
+            </div>
          </div>
       </div>
    )
