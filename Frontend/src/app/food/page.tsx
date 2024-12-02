@@ -18,8 +18,6 @@ const HomePage: React.FC = () => {
         }
     }, []);
 
-
-
     const foodsByBusiness = filteredFoods.reduce((acc: Record<string, Food[]>, food: Food) => {
         if (!acc[food.business.name]) {
             acc[food.business.name] = [];
@@ -27,8 +25,9 @@ const HomePage: React.FC = () => {
         acc[food.business.name].push(food);
         return acc;
     }, {});
+
     return (
-        <div className="container mx-auto px-4 flex flex-col items-center">
+        <div className="container mx-auto px-4 flex flex-col items-center" style={{ paddingTop: '4rem' }}>
             <h1 className="text-4xl font-bold my-4 text-center text-gray-800" style={{ marginBottom: '2rem' }}>Comidas</h1>
             <div className="w-full max-w-4xl mb-4">
                 <Search onSearch={handleSearch} />
