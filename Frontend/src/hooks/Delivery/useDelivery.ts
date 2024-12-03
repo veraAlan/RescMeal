@@ -15,7 +15,6 @@ const useDelivery = () => {
         try {
             const id = await getSessionId();
             setCarrierId(id);
-            console.log("Carrier ID: ", id);
         } catch (err) {
             console.error('Error obteniendo el ID del carrier:', err);
             toast.error('Error obteniendo el ID del carrier');
@@ -28,7 +27,6 @@ const useDelivery = () => {
                 position => {
                     const { latitude, longitude } = position.coords;
                     setCoords({ lat: latitude, lon: longitude });
-                    console.log("Coords: ", latitude, longitude);
                 },
                 err => {
                     console.error('Error obteniendo la ubicación:', err);
@@ -43,7 +41,6 @@ const useDelivery = () => {
 
     const fetchData = useCallback(async () => {
         try {
-            const token = localStorage.getItem('authToken');
             const [purchasesResponse, takenIdsResponse] = await Promise.all([
                 axiosConfig.get(`/api/purchase/list`),
                 axiosConfig.get(`/api/delivery/taken`)

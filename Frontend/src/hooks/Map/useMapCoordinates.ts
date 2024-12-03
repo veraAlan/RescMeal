@@ -21,7 +21,7 @@ const useMapCoordinates = ({ lat, lng }: UseMapCoordinatesProps) => {
         // Initialize the map
         mapInstanceRef.current = new mapboxgl.Map({
             container: mapContainerRef.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
+            style: 'mapbox://styles/syaitul/cm2i59b8z002101pecb7e8u3i',
             center: [lng, lat],
             zoom: 12
         });

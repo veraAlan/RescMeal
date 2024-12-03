@@ -91,8 +91,8 @@ const TakenOrders: React.FC = () => {
                             </ul>
                             <p className="text-lg"><strong>Tomado a las</strong> {order.delivery_time}</p>
                             <div className="flex justify-between mt-4">
-                                <Link href={`/direction?purchaseId=${order.purchase.id}`} legacyBehavior>
-                                    <a className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200">
+                                <Link href={`/Direction?purchaseId=${order.purchase.id}`} legacyBehavior>
+                                    <a  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200">
                                         Ver mi Ruta
                                     </a>
                                 </Link>

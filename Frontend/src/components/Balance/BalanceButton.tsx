@@ -41,7 +41,6 @@ const BalanceButton: React.FC = () => {
     const getOwnInformation = async () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, { withCredentials: true });
-            console.log('client id:', response.data.client.id);
             return response.data;
         } catch (error) {
             console.error('Error fetching own information', error);

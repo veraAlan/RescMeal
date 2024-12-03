@@ -87,7 +87,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/food/me", "/api/food/*","/api/sales/dashboard", "/api/sales/stock", "/api/sales/revenue", "/api/sales/customers").hasRole("BUSINESS")
                                 // Carrier
                                 .requestMatchers(HttpMethod.POST, "/api/delivery", "/api/purchase", "/api/carrier", "/api/delivery/*").hasRole("CARRIER")
-                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/delivery/taken", "/api/delivery/*", "/api/carrier/*", "/api/delivery/carrierByPurchase/*").hasRole("CARRIER")
+                                .requestMatchers(HttpMethod.GET, "/api/delivery/me","/api/delivery/list", "/api/purchase/list", "/api/purchase/*", "/api/delivery/taken", "/api/delivery/*", "/api/carrier/*", "/api/delivery/carrierByPurchase/*").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PUT, "/api/purchase", "/api/carrier", "/api/delivery/*").hasRole("CARRIER")
                                 .requestMatchers(HttpMethod.PATCH, "/api/carrier").hasRole("CARRIER")
                                 // MultiRole

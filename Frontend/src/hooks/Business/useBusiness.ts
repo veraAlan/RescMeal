@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Business } from "./useRegisterBusiness"
 import axiosConfig from "@/utils/axiosConfig"
+import { Business } from "@/types/Business"
 
 const useBusinessById = ({ businessId }: { businessId: number }) => {
     const [business, setBusiness] = useState<Business | null>(null)

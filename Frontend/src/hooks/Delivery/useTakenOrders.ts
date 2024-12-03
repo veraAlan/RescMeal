@@ -59,7 +59,6 @@ export const useTakenOrders = () => {
             setTakenOrders(takenOrders.filter(order => order.id !== orderId));
             toast.success('Entrega finalizada');
             toast.success('Recorrido terminado');
-            console.log(`Entrega terminada para el pedido con ID: ${orderId}`);
         } catch (error) {
             toast.error('Error al completar la entrega');
             console.error('Error al completar la entrega:', error);

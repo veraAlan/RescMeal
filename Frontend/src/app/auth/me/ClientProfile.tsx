@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import normalizePhone from '@/utils/normalizePhone';
 import normalizeDate from '@/utils/normalizeDate';
-import axiosInstance from '@/utils/axiosConfig';
 import { FaShoppingBag } from 'react-icons/fa';
+import axiosConfig from '@/utils/axiosConfig';
 
 export interface Role {
    id?: number;
@@ -19,13 +19,12 @@ export interface Role {
 
 const fetchAllPurchases = async (clientId) => {
    try {
-      const response = await axiosInstance.get(`/api/purchase/client/${clientId}`);
+      const response = await axiosConfig.get(`/api/purchase/client/${clientId}`);
       const purchases = response.data;
 
       // Find the last purchase by checking the maximum ID value
-      const lastPurchaseId = purchases.length > 0 ? Math.max(...purchases.map(p => p.id)) : null;
+      const lastPurchaseId = purchases.length > 0 ? Math.max(...purchases.map((p: { id: any; }) => p.id)) : null;
 
-      console.log('Last purchase ID:', lastPurchaseId); // Log the last purchase ID
       return { purchases, lastPurchaseId };
    } catch (error) {
       console.error('Error fetching purchases:', error);
@@ -35,8 +34,7 @@ const fetchAllPurchases = async (clientId) => {
 
 const fetchDeliveryDetails = async (purchaseId) => {
    try {
-      const response = await axiosInstance.get(`/api/delivery/carrierByPurchase/${purchaseId}`);
-      console.log('Delivery details:', response.data); // Log the delivery details
+      const response = await axiosConfig.get(`/api/delivery/carrierByPurchase/${purchaseId}`);
       return response.data;
    } catch (error) {
       console.error('Error fetching delivery details:', error);
@@ -143,9 +141,6 @@ export default (props: { profile: Role | null }) => {
                   <div className="flex flex-col items-center justify-center overflow-hidden shadow-lg p-8 rounded-b-lg">
                      <p className="text-center text-gray-700">No has realizado ninguna compra o tu pedido no ha sido tomado.</p>
                      <div className="mt-4 w-full flex justify-around">
-                        <a href="/comment">
-                           <button className="rounded-lg px-6 py-2 font-bold bg-blue-200 text-gray-900 hover:bg-blue-300 transition duration-300">Dejar un Comentario</button>
-                        </a>
                      </div>
                   </div>
                </div>

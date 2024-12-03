@@ -39,7 +39,7 @@ const Direction: React.FC = () => {
         if (currentLocation && mapContainer.current && !map.current) {
             map.current = new mapboxgl.Map({
                 container: mapContainer.current,
-                style: 'mapbox://styles/mapbox/streets-v11',
+                style: 'mapbox://styles/syaitul/cm2i59b8z002101pecb7e8u3i',
                 center: currentLocation,
                 zoom: 14
             });

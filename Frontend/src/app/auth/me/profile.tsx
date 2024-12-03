@@ -36,28 +36,22 @@ export default function UserProfile() {
          {profileInfo ? (
             <div className="flex flex-col gap-4 sm:gap-6 p-4 sm:p-6 text-lg border rounded-xl border-gray-300">
                <div className="w-full flex flex-col items-start text-center">
-                  <h3 className="font-semibold text-xl text-gray-700 mb-2">
-                     Nombre de Usuario: <span className="text-gray-900">{profileInfo.username}</span>
-                  </h3>
+                  <h3 className="font-semibold text-xl text-gray-700 mb-2">Información del Usuario</h3>
+                  <strong> Nombre de Usuario: </strong><span className="text-gray-900">{profileInfo.username}</span>
                </div>
                <div className="w-full flex flex-col items-start text-center">
-                  <h3 className="font-semibold text-xl text-gray-700 mb-2">
-                     Email: <span className="text-gray-900">{profileInfo.email}</span>
-                  </h3>
+                  <strong> Email: </strong><span className="text-gray-900">{profileInfo.email}</span>
                </div>
                <div className="flex justify-center w-full mt-4">
-                  <a href="/auth/me/user">
-                     <button className="border border-gray-300 rounded-lg px-6 py-2 font-bold bg-blue-600 text-white hover:bg-blue-700 transition duration-300">Modificar datos</button>
-                  </a>
                </div>
             </div>
          ) : (
             <p className="text-center text-red-500">Cargando...</p>
          )}
-         
+
          {profileInfo?.business && <BusinessProfile profile={profileInfo.business} />}
          {profileInfo?.client && <ClientProfile profile={profileInfo.client} />}
          {profileInfo?.carrier && <CarrierProfile profile={profileInfo.carrier} />}
       </div>
-   )   
+   )
 }

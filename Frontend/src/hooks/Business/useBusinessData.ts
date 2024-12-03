@@ -19,9 +19,11 @@ const useBusinessData = (businessId) => {
         }
     }, [business]);
 
+    if(business){
     const filteredFoods = useMemo(() => foods.filter(food => food.business.id === business.id), [foods, business]);
-
+    
     return { business, businessLoading, foodsLoading, error, filteredFoods, reviews, normalizeDate, normalizePhone };
 };
+}
 
 export default useBusinessData;
