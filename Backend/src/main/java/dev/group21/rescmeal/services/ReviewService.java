@@ -33,4 +33,14 @@ public class ReviewService {
     public List<Review> getReviewsByClientId(Long clientId) {
         return reviewRepository.findByClientId(clientId);
     }
+
+    public List<Review> getReviewsByBusinessId(Long businessId) {
+        return reviewRepository.findByBusinessId(businessId);
+    }
+
+
+        public List<Review> getReviewsByPurchaseId(Long purchaseId) {
+            return reviewRepository.findReviewsByPurchaseId(purchaseId);
+        }
+
 }

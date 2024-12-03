@@ -1,13 +1,30 @@
-'use client'
+'use client';
 import React from 'react';
-import Map from '@/components/Map/Map';
+import Business from '../../../components/Business/Business';
+import useBusinessData from '../../../hooks/Business/useBusinessData';
 
-//TODO esta deberia ser una pagina que visualice un bussines especifico junto al mapa
-// Aca pueden probar el mapa, revisar el tiempo de carga porque hay veces que el servidor se muere
-export default function Page({ params }: { params: { business: number } }) {
+interface Params {
+    business: number;
+}
+
+export default function Page({ params }: { params: Params }) {
+    const { business, businessLoading, foodsLoading, error, filteredFoods, reviews, normalizeDate, normalizePhone } = useBusinessData(params.business);
+
+    if (businessLoading || foodsLoading) {
+        return <div className="text-center text-blue-500 text-xl mt-10">Cargando...</div>;
+    }
+
+    if (!business) {
+        return <div className="text-center text-red-500 text-xl mt-10">Error: No se encuentra ningún Local</div>;
+    }
+
     return (
-        <div>
-            <Map id={params.business} />
-        </div>
-    )
+        <Business
+            business={business}
+            foods={filteredFoods}
+            reviews={reviews}
+            normalizeDate={normalizeDate}
+            normalizePhone={normalizePhone}
+        />
+    );
 }

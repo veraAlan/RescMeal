@@ -101,12 +101,21 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/last/{clientId}")
-    public ResponseEntity<Review> getLastReviewByClientId(@PathVariable Long clientId) {
-        List<Review> reviews = reviewService.getReviewsByClientId(clientId);
+    @GetMapping("/purchase/{purchaseId}")
+    public ResponseEntity<List<Review>> getReviewsByPurchaseId(@PathVariable Long purchaseId) {
+        List<Review> reviews = reviewService.getReviewsByPurchaseId(purchaseId);
         if (!reviews.isEmpty()) {
-            Review lastReview = reviews.get(reviews.size() - 1);
-            return ResponseEntity.ok(lastReview);
+            return ResponseEntity.ok(reviews);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/list/{businessId}")
+    public ResponseEntity<List<Review>> getReviewsByBusinessId(@PathVariable Long businessId) {
+        List<Review> reviews = reviewService.getReviewsByBusinessId(businessId);
+        if (!reviews.isEmpty()) {
+            return ResponseEntity.ok(reviews);
         } else {
             return ResponseEntity.notFound().build();
         }

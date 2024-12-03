@@ -10,7 +10,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#256DC3"
+        android:background="#ffff"
         tools:context=".activity.ProfileActivity">
 
         <LinearLayout
@@ -30,7 +30,8 @@
                 android:textAlignment="center"
                 android:textSize="26sp"
                 android:layout_marginVertical="5dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/profile_email"
@@ -40,16 +41,16 @@
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:layout_marginVertical="5dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/profile_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_name"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="26sp"
-                android:textStyle="bold"
                 android:layout_marginVertical="5dp"
                 android:textColor="@color/black"/>
 
@@ -58,9 +59,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_lastname"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 android:layout_marginBottom="5dp"
                 android:textColor="@color/black" />
 
@@ -69,9 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_balance"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="26sp"
-                android:textStyle="bold"
                 android:layout_marginBottom="5dp"
                 android:textColor="@color/black" />
 
@@ -80,9 +79,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/profile_phone"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="26sp"
-                android:textStyle="bold"
                 android:layout_marginBottom="5dp"
                 android:textColor="@color/black" />
         </LinearLayout>
