@@ -68,6 +68,7 @@ public class SecurityConfig {
                                 // Session methods
                                 .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/purchase/**").permitAll()
                                 // User
                                 .requestMatchers(HttpMethod.POST, "/api/*/valid").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/user/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
@@ -77,7 +78,7 @@ public class SecurityConfig {
                                 // Client
                                 .requestMatchers(HttpMethod.POST, "/api/client","/api/review","/api/comment","/api/client/*/add").hasRole("CLIENT")
                                 .requestMatchers(HttpMethod.PUT, "/api/client").hasRole("CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/api/purchase/last/*","/api/delivery/carrierByPurchase/*","/api/review/purchase/*","/api/comment/last/*", "/api/comment/commentsCarrier/*", "/api/purchase/client/*", "/api/carrier/*", "/api/comment/commentsCarrier/*", "/api/review/last/").hasRole("CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/api/purchase/last/*","/api/purchase/{id}","/api/delivery/carrierByPurchase/*","/api/review/purchase/*","/api/comment/last/*", "/api/comment/commentsCarrier/*", "/api/purchase/client/*", "/api/carrier/*", "/api/comment/commentsCarrier/*", "/api/review/last/").hasRole("CLIENT")
                                 .requestMatchers("/api/purchase").hasAnyRole("CLIENT")
                                 .requestMatchers(HttpMethod.PATCH, "/api/client", "/api/food/updateQuantity").hasRole("CLIENT")
                                 // Business
