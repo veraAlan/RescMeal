@@ -149,13 +149,13 @@ public class FoodController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Food>> getAllFoods() {
+    public ResponseEntity<PagedModel<EntityModel<Food>>> getAllFoods(Pageable pageable, PagedResourcesAssembler<Food> assembler) {
         try {
-            List<Food> foodList = foodService.getAllFoods();
-            if (foodList.isEmpty()) {
+            Page<Food> foodPage = foodService.getAllFoods(pageable);
+            if (foodPage.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
-                return ResponseEntity.ok(foodList);
+                return ResponseEntity.ok(assembler.toModel(foodPage));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();

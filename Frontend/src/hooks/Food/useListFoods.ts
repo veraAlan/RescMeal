@@ -1,58 +1,30 @@
-import { useState, useEffect } from 'react';
-import { Food } from '../../types/Food';
-import axiosConfig from '@/utils/axiosConfig';
+import { useState, useEffect, useRef } from 'react'
+import { FoodPage } from '../../types/Food'
+import axiosConfig from '@/utils/axiosConfig'
+import { toast } from 'react-toastify'
+import normlizeDate from '@/utils/normalizeDate'
 
 export function useListFoods() {
-    const [foods, setFoods] = useState<Food[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [foods, setFoods] = useState<FoodPage>([])
 
     useEffect(() => {
         async function fetchFoods() {
-            await axiosConfig.get(`/api/food/list`)
+            await axiosConfig.get(`/api/food/list`, { params: { page: 0, size: 100 } })
                 .then(response => {
-                    const result = response.data;
-                    if (result) {
-                        const data: Food[] = result.map((item: any) => {
-                            const business = item.business || {};
-                            const imageUrl = item.image || '';
-                            const fullImageUrl = imageUrl ? `/Food/${imageUrl}` : ''
-                            // Formatear fechas
-                            const formattedExpirationDate = item.expiration_date ? item.expiration_date.split('T')[0] : '';
-                            const formattedProductionDate = item.production_date ? item.production_date.split('T')[0] : '';
+                    for (const food of response.data._embedded.foodList) {
+                        food.image = '/Food/' + food.image
+                        food.expiration_date = normlizeDate(food.expiration_date)
+                        food.production_date = normlizeDate(food.production_date)
+                    }
+                    setFoods(response.data._embedded.foodList)
+                })
+                .catch(() => { toast.error("No se pudo cargar las comidas. Intente en otro momento.") })
 
-                            return {
-                                id: item.id,
-                                name: item.name,
-                                category: item.category,
-                                price: item.price,
-                                image: fullImageUrl,
-                                description: item.description,
-                                quantity: item.quantity,
-                                expiration_date: formattedExpirationDate,
-                                production_date: formattedProductionDate,
-                                business: {
-                                    id: business.id,
-                                    name: business.name
-                                },
-                            };
-                        });
-                        setFoods(data);
-                    }
-                })
-                .catch(err => {
-                    console.error('Error fetching data:', err);
-                    if (err instanceof Error) {
-                        setError(err.message);
-                    } else {
-                        setError('An unknown error occurred');
-                    }
-                })
         }
+        fetchFoods()
+    }, [])
 
-        fetchFoods();
-    }, []);
-
-    return { foods, error };
+    return { foods }
 }
 
-export default useListFoods;
+export default useListFoods

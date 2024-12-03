@@ -1,37 +1,27 @@
-'use client';
-import React, { useContext, useEffect } from 'react';
-import { redirect } from 'next/navigation';
-import { AuthContext } from '@/context/AuthContext';
-import Search from '../../components/Search/Search';
-import FoodCard from '../../components/Food/FoodCard';
-import useListFoods from '../../hooks/Food/useListFoods';
-import useSearch from '../../hooks/Search/Search';
-import { FaMapMarkerAlt } from 'react-icons/fa';
-import { Food } from '../../types/Food';
+'use client'
+import React, { useContext, useRef } from 'react'
+import { AuthContext } from '@/context/AuthContext'
+import Search from '../../components/Search/Search'
+import FoodCard from '../../components/Food/FoodCard'
+import useListFoods from '../../hooks/Food/useListFoods'
+import useSearch from '../../hooks/Search/Search'
+import { FaMapMarkerAlt } from 'react-icons/fa'
+import { Food, FoodPage } from '../../types/Food'
 
 const HomePage: React.FC = () => {
-    const { foods, error } = useListFoods();
-    const { filteredFoods, handleSearch } = useSearch(foods as Food[]);
+    const { foods } = useListFoods()
+    const { filteredFoods, handleSearch } = useSearch(foods as FoodPage)
 
-    const authContext = useContext(AuthContext);
+    const authContext = useContext(AuthContext)
+    if (!authContext?.isLoggedIn) return <div>Redirigiendo...</div>
 
-    useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            redirect('/auth/login');
+    const foodsByBusiness = filteredFoods.reduce((prevValue: Record<string, FoodPage>, food: Food) => {
+        if (!prevValue[food.business.name]) {
+            prevValue[food.business.name] = []
         }
-    }, []);
-
-    if (!authContext?.isLoggedIn) {
-        return <div>Redirigiendo...</div>;
-    }
-
-    const foodsByBusiness = filteredFoods.reduce((acc: Record<string, Food[]>, food: Food) => {
-        if (!acc[food.business.name]) {
-            acc[food.business.name] = [];
-        }
-        acc[food.business.name].push(food);
-        return acc;
-    }, {});
+        prevValue[food.business.name].push(food)
+        return prevValue
+    }, {})
 
     return (
         <div className="container mx-auto px-4 flex flex-col items-center">
@@ -61,7 +51,7 @@ const HomePage: React.FC = () => {
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
 
-export default HomePage;
+export default HomePage

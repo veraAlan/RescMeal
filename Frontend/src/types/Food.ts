@@ -1,7 +1,9 @@
 import { Business } from './Business';
 
+export interface FoodPage extends Array<Food> { }
+
 export interface Food {
-    id?: number;
+    id: number;
     business: Business;
     name: string;
     category: string;

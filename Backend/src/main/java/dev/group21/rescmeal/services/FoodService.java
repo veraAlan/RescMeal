@@ -94,8 +94,8 @@ public class FoodService {
      * Retrieve all Food entities.
      * @return List of Food entities
      */
-    public List<Food> getAllFoods() {
-        return foodRepository.findAll();
+    public Page<Food> getAllFoods(Pageable parameters) {
+        return foodRepository.findAll(parameters);
     }
 
     /**
