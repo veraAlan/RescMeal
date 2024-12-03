@@ -1,97 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#256DC3">
+        android:background="#ffffff">
 
-        <LinearLayout
-            android:layout_alignParentBottom="@+id/footer_span"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:layout_margin="10dp" >
+            android:layout_margin="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="#D1E8FF">
 
-            <TextView
-                android:id="@+id/cart_food_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cart_food_name"
-                android:textAlignment="center"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_marginVertical="5dp"
-                android:textColor="@color/black"/>
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <TextView
-                android:id="@+id/cart_food_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart_food_category"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/cart_food_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_name"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginVertical="5dp"
+                    android:textColor="@color/black"/>
 
-            <TextView
-                android:id="@+id/cart_food_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart_food_description"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/cart_food_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_category"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"/>
 
-            <TextView
-                android:id="@+id/cart_food_business"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart_food_business"
-                android:textAlignment="center"
-                android:textSize="26sp"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/cart_food_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_description"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"/>
 
-            <TextView
-                android:id="@+id/cart_food_prod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart_food_prod"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/cart_food_business"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_business"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"/>
 
-            <TextView
-                android:id="@+id/cart_food_exp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart_food_exp"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/cart_food_prod"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_prod"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:textSize="22sp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"/>
 
-            <TextView
-                android:id="@+id/cart_food_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart_food_price"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/black" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/cart_food_exp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_exp"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:textSize="22sp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/cart_food_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cart_food_price"
+                    android:textAlignment="viewEnd"
+                    android:gravity="end"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:id="@+id/footer_span"
@@ -113,7 +124,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_background"
                 android:drawableTop="@drawable/ic_launcher_foreground"
-                app:backgroundTint="#1C58A0" />
+                app:backgroundTint="#1C58A0"/>
 
             <Button
                 android:text="@string/deliveries_button"
@@ -125,7 +136,7 @@
                 android:layout_weight="1"
                 app:backgroundTint="#074081"
                 android:background="@drawable/button_background"
-                android:drawableTop="@drawable/ic_launcher_foreground" />
+                android:drawableTop="@drawable/ic_launcher_foreground"/>
 
             <Button
                 android:text="@string/profile_button"
@@ -136,8 +147,7 @@
                 android:layout_weight="1"
                 app:backgroundTint="#1C58A0"
                 android:background="@drawable/button_background"
-                android:drawableTop="@drawable/ic_launcher_foreground" />
+                android:drawableTop="@drawable/ic_launcher_foreground"/>
         </LinearLayout>
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
