@@ -19,5 +19,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("FROM Comment C WHERE C.carrier.id = :carrierId")
     Page<Comment> findAllByCarrierId(@Param("carrierId") Long carrierId, Pageable pageable);
-
 }
