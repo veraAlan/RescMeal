@@ -28,4 +28,15 @@
     <string name="profile_name">Nombre</string>
     <string name="profile_balance">Balance</string>
     <string name="profile_phone">Telefono</string>
+    <string name="button_toCart">Agregar a Carrito</string>
+    <string name="cart_food_price">Price\n</string>
+    <string name="cart_food_business">Business\n</string>
+    <string name="cart_food_description">Description\n</string>
+    <string name="cart_food_name">Name</string>
+    <string name="button_to_cart">Comprar</string>
+    <string name="cart_food_prod">Production Date</string>
+    <string name="cart_food_exp">Expiration Date</string>
+    <string name="cart_food_category">Category</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_username">Username</string>
 </resources>

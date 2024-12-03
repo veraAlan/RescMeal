@@ -1,6 +1,7 @@
 package dev.group21.rescmeal.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -45,21 +46,15 @@ public class FoodListActivity extends AppCompatActivity {
 
     private void loadFoods() {
         // Footer buttons
-        findViewById(R.id.mainPageButton).setOnClickListener(v -> {
-            Intent intent = new Intent(FoodListActivity.this, FoodListActivity.class);
-            startActivity(intent);
-            finish();
-        });
         findViewById(R.id.deliveriesButton).setOnClickListener(v -> {
-            Intent intent = new Intent(FoodListActivity.this, FoodListActivity.class); // Create List
-            startActivity(intent);
-            finish();
+            Toast.makeText(FoodListActivity.this, "Agregue algun producto al carrito.", Toast.LENGTH_LONG).show();
         });
         findViewById(R.id.profileButton).setOnClickListener(v -> {
-            Intent intent = new Intent(FoodListActivity.this, FoodListActivity.class); // Create Profile
+            Intent intent = new Intent(FoodListActivity.this, ProfileActivity.class); // Create Profile
             startActivity(intent);
             finish();
         });
+
 
         RetrofitService retrofitService = new RetrofitService();
         FoodController foodController = retrofitService.getRetrofit().create(FoodController.class);
@@ -72,7 +67,7 @@ public class FoodListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable throwable) {
-                Toast.makeText(FoodListActivity.this, "Error loading foods.", Toast.LENGTH_LONG).show();
+                Toast.makeText(FoodListActivity.this, "Intente nuevamente en otro momento.", Toast.LENGTH_LONG).show();
                 Logger.getLogger(MainActivity.class.getName()).log(Level.SEVERE, "Error occurred: " + throwable.getMessage(), throwable);
             }
         });
