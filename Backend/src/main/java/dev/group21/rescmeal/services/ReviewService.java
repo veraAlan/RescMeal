@@ -37,4 +37,10 @@ public class ReviewService {
     public List<Review> getReviewsByBusinessId(Long businessId) {
         return reviewRepository.findByBusinessId(businessId);
     }
+
+
+        public List<Review> getReviewsByPurchaseId(Long purchaseId) {
+            return reviewRepository.findReviewsByPurchaseId(purchaseId);
+        }
+
 }

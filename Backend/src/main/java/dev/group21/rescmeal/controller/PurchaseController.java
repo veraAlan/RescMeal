@@ -126,11 +126,13 @@ public class PurchaseController {
         }
     }
 
-    @GetMapping("/last/{clientId}")
-    public ResponseEntity<Purchase> getLastPurchaseByClientId(@PathVariable Integer clientId) {
-        Optional<Purchase> purchase = purchaseService.getLastPurchaseByClientId(clientId);
-        return purchase.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<Purchase>> getAllPurchasesByClientId(@PathVariable Integer clientId) {
+        List<Purchase> purchases = purchaseService.getAllPurchasesByClientId(clientId);
+        if (purchases.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(purchases);
     }
 
     private HttpHeaders errorHeader(Exception e) {
