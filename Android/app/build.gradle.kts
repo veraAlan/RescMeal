@@ -46,4 +46,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.github.bumptech.glide:glide:5.0.0-rc01")
 }
