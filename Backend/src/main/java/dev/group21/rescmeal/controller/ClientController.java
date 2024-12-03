@@ -132,6 +132,7 @@ public class ClientController {
         }
     }
 
+
     /**
      * Add error message to header and log Exception thrown.
      * @param e Exception thrown
