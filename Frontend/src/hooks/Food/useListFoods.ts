@@ -19,7 +19,6 @@ export function useListFoods() {
                     setFoods(response.data._embedded.foodList)
                 })
                 .catch(() => { toast.error("No se pudo cargar las comidas. Intente en otro momento.") })
-
         }
         fetchFoods()
     }, [])
