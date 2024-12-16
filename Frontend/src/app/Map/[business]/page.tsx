@@ -8,7 +8,7 @@ interface Params {
 }
 
 export default function Page({ params }: { params: Params }) {
-    const { business, businessLoading, foodsLoading, error, filteredFoods, reviews, normalizeDate, normalizePhone } = useBusinessData(params.business);
+    const { business, businessLoading, foodsLoading, filteredFoods, reviews, normalizeDate, normalizePhone } = useBusinessData(params.business) || {};
 
     if (businessLoading || foodsLoading) {
         return <div className="text-center text-blue-500 text-xl mt-10">Cargando...</div>;

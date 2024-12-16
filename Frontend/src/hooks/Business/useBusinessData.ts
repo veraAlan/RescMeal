@@ -6,9 +6,9 @@ import useListFoods from '@/hooks/Food/useListFoods';
 import normalizeDate from '../../utils/normalizeDate';
 import normalizePhone from '../../utils/normalizePhone';
 
-const useBusinessData = (businessId) => {
-    const { business, isLoading: businessLoading } = useBusinessById({ businessId });
-    const { foods, error, isLoading: foodsLoading } = useListFoods();
+const useBusinessData = (businessId: number) => {
+    const { business, isLoading: businessLoading, error: businessError } = useBusinessById({ businessId });
+    const { foods, error: foodsError, isLoading: foodsLoading } = useListFoods();
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
@@ -19,11 +19,11 @@ const useBusinessData = (businessId) => {
         }
     }, [business]);
 
-    if(business){
-    const filteredFoods = useMemo(() => foods.filter(food => food.business.id === business.id), [foods, business]);
-    
-    return { business, businessLoading, foodsLoading, error, filteredFoods, reviews, normalizeDate, normalizePhone };
+    const filteredFoods = useMemo(() => {
+        return business ? foods.filter(food => food.business.id === business.id) : [];
+    }, [foods, business]);
+
+    return { business, businessLoading, foodsLoading, businessError, foodsError, filteredFoods, reviews, normalizeDate, normalizePhone };
 };
-}
 
 export default useBusinessData;
