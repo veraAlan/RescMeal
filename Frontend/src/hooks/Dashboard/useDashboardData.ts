@@ -47,7 +47,7 @@ export const useDashboardData = () => {
 
                     const [stockResponse, salesResponse, revenueResponse, customerResponse] = await Promise.all(
                         endpoints.map(endpoint =>
-                            axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/${endpoint}`, {
+                            axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/api/${endpoint}`, {
                                 params: { businessId }
                             })
                         )

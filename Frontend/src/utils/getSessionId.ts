@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const getSessionId = async (): Promise<number> => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/session-id`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/session-id`, {
         withCredentials: true,
     });
     if (response.status !== 200) {

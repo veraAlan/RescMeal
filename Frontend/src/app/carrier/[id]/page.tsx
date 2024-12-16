@@ -4,6 +4,9 @@ import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { FaUserCircle, FaCar, FaMotorcycle } from 'react-icons/fa';
 import axiosConfig from '../../../utils/axiosConfig';
+import normalizeDate from '../../../utils/normalizeDate';
+import normalizePhone from '../../../utils/normalizePhone';
+
 
 const CarrierPage = () => {
     const { id } = useParams();
@@ -15,12 +18,8 @@ const CarrierPage = () => {
     useEffect(() => {
         const fetchCarrierData = async () => {
             try {
-                console.log(`Fetching data for carrier ID: ${id}`);
                 const response = await axiosConfig.get(`/api/carrier/${id}`);
-                console.log('API Response:', response);
-
                 const data = response.data;
-                console.log('Carrier data:', data);
                 setCarrierData(data);
                 setLoading(false);
             } catch (error) {
@@ -88,8 +87,8 @@ const CarrierPage = () => {
                         <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Nombre:</strong> {carrierData.name}</p>
                         <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Apellido:</strong> {carrierData.last_name}</p>
                         <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Tipo de Vehículo:</strong> {carrierData.vehicle_type}</p>
-                        <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Teléfono:</strong> {carrierData.phone}</p>
-                        <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Fecha de Nacimiento:</strong> {carrierData.birthdate}</p>
+                        <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Teléfono:</strong> {normalizePhone(carrierData.phone)}</p>
+                        <p className="text-lg sm:text-xl lg:text-2xl mb-2"><strong>Fecha de Nacimiento:</strong> {normalizeDate(carrierData.birthdate)}</p>
                         <div className="flex justify-center mt-4">
                             <a href="/auth/me">
                                 <button className="rounded-lg px-6 py-2 font-bold bg-gray-200 text-gray-900 hover:bg-gray-300 transition duration-300">Volver Atrás</button>
