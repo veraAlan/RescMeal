@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin(origins = {"http://localhost:3000", "http://10.0.2.2:3000"}, allowCredentials = "true")
 @RestController
@@ -49,7 +50,7 @@ public class FoodController {
             Food food = new ObjectMapper().readValue(foodJson, Food.class);
             if(image != null) {
                 ResponseEntity<String> createdImage = uploadImage(food.getBusiness().getId() + "-" + food.getName(), image);
-                food.setImage(createdImage.getBody());
+                food.setImage(String.valueOf(createdImage.getBody()));
             }
             Food createdFood = foodService.createFood(food);
             return ResponseEntity.ok(createdFood);
@@ -179,7 +180,7 @@ public class FoodController {
         try {
             BufferedImage originalImage = ImageIO.read(image.getInputStream());
             BufferedImage resizedImage = Scalr.resize(originalImage, 800);
-            String extension = image.getContentType().split("/")[1];
+            String extension = Objects.requireNonNull(image.getContentType()).split("/")[1];
             String imagePath = foodImages + foodName + "." + extension;
             ImageIO.write(resizedImage, extension, new File(imagePath));
             return ResponseEntity.ok(foodName + "." + extension);

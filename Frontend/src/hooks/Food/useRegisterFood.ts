@@ -79,7 +79,7 @@ export const useRegisterFood = () => {
                 formDataToSend.append("image", imageData);
             }
             try {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/food`, formDataToSend, {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/food`, formDataToSend, {
                     headers: {
                         'Accept': 'application/json',
                     },
