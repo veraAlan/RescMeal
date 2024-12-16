@@ -1,11 +1,2 @@
 @ECHO OFF
-ECHO Press Enter to initialize backend and frontend of the app.
-
-PAUSE
-CLS
-
-cd "%~dp0Backend"
-start cmd /t:8 /k "%~dp0Backend\gradlew bootRun"
-
-cd "%~dp0Frontend"
-start cmd /t:3 /k "npm run dev"
+wt -M -p "Command Prompt" --title="Spring Boot" -d "%~dp0Backend" cmd /k ".\gradlew bootRun"; nt -p "Command Prompt" -d "%~dp0Frontend" cmd /k "npm run dev"
