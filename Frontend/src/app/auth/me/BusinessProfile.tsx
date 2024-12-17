@@ -2,6 +2,7 @@ import React from 'react';
 import normalizeDate from '../../../utils/normalizeDate';
 import useBusinessFoods from './useBusinessFood';
 import { Food } from '../../../types/Food';
+import normalizePhone from '@/utils/normalizePhone';
 
 export interface Role {
    name?: string;
@@ -44,7 +45,7 @@ export default (props: { profile: Role | null }) => {
                </div>
                <div className="flex flex-col sm:flex-row justify-between mb-4">
                   <h3 className='font-semibold text-xl text-gray-700'>Celular:</h3>
-                  <p className='text-gray-900'>{props.profile?.phone}</p>
+                  <p className='text-gray-900'>{props.profile?.phone ? (normalizePhone(props.profile?.phone)) : ("")}</p>
                </div>
                <div className="flex flex-col sm:flex-row justify-between mb-4">
                   <h3 className='font-semibold text-xl text-gray-700'>Horario:</h3>
@@ -53,10 +54,6 @@ export default (props: { profile: Role | null }) => {
                <div className="flex flex-col sm:flex-row justify-between mb-4">
                   <h3 className='font-semibold text-xl text-gray-700'>CVU:</h3>
                   <p className='text-gray-900'>{props.profile?.cvu}</p>
-               </div>
-               <div className="flex flex-col sm:flex-row justify-between mb-4">
-                  <h3 className='font-semibold text-xl text-gray-700'>Tipo de Vehículo:</h3>
-                  <p className='text-gray-900'>{props.profile?.vehicle_type}</p>
                </div>
                <div className="flex justify-center">
                   <a href='/auth/me/business'>
@@ -81,8 +78,8 @@ export default (props: { profile: Role | null }) => {
                            <div className="text-black text-md mt-4 space-y-1">
                               <p><span className="font-semibold">Categoría: </span>{food.category}</p>
                               <p><span className="font-semibold">Cantidad: </span>{food.quantity}</p>
-                              <p><span className="font-semibold">Fecha de Expiración: </span>{normalizeDate(food.expiration_date)}</p>
-                              <p><span className="font-semibold">Fecha de Producción: </span>{normalizeDate(food.production_date)}</p>
+                              <p><span className="font-semibold">Fecha de Expiración: </span>{food.expiration_date}</p>
+                              <p><span className="font-semibold">Fecha de Producción: </span>{food.production_date}</p>
                            </div>
                            <div className="mt-6 flex justify-between items-center w-full">
                               <span className="text-black text-xl sm:text-lg lg:text-xl line-through">${(food.price * 2).toFixed(2)}</span>

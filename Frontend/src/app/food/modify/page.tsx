@@ -41,13 +41,13 @@ export default () => {
                      className="border rounded-lg p-2 w-full"
                   >
                      <option value="">Seleccione una categoría</option>
-                     <option value="sopa">Sopa</option>
-                     <option value="hamburguesa">Hamburguesa</option>
-                     <option value="postre">Postre</option>
-                     <option value="panadería">Panadería</option>
-                     <option value="tacos">Tacos</option>
-                     <option value="quesadillas">Quesadillas</option>
-                     <option value="entradas">Entradas</option>
+                     <option value="Sopas">Sopas</option>
+                     <option value="Hamburguesas">Hamburguesas</option>
+                     <option value="Postre">Postre</option>
+                     <option value="Facturas">Facturas</option>
+                     <option value="Tacos">Tacos</option>
+                     <option value="Quesadillas">Quesadillas</option>
+                     <option value="Entradas">Entradas</option>
                   </select>
                   {foodErrors.category && <p className="text-red-500">{foodErrors.category}</p>}
                </div>
@@ -74,7 +74,7 @@ export default () => {
                   {foodForm.image && (
                      <div className="mt-4">
                         <Image
-                           src={"/food/" + foodForm.image}
+                           src={foodForm.image}
                            alt="Imagen de previsualización"
                            width={100}
                            height={100}

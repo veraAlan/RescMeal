@@ -2,7 +2,6 @@ import React from 'react';
 import Map from '@/components/Map/Map';
 import StarRatings from 'react-star-ratings';
 import { FaUserCircle } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 
 const Business = ({ business, foods, reviews, normalizeDate, normalizePhone }) => {
 

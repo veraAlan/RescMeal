@@ -102,6 +102,21 @@ const RegisterBusiness: React.FC = () => {
                                     onChange={handleChange}
                                     className="border rounded-lg p-2 w-full"
                                 />
+                                <select
+                                    name="type"
+                                    value={businessForm.type}
+                                    onChange={handleChange}
+                                    className="border rounded-lg p-2 w-full"
+                                >
+                                    <option value="">Seleccione una categoría</option>
+                                    <option value="Panaderia">Panaderia</option>
+                                    <option value="Bar">Bar</option>
+                                    <option value="Restaurante">Restaurante</option>
+                                    <option value="Pizzeria">Pizzeria</option>
+                                    <option value="Comida Rapida">Comida Rapida</option>
+                                    <option value="Rotiseria">Rotiseria</option>
+                                    <option value="Confiteria">Confiteria</option>
+                                </select>
                                 {businessErrors.type && <p className="text-red-500">{businessErrors.type}</p>}
                             </div>
                             <div>

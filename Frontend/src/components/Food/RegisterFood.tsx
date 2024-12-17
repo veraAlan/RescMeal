@@ -40,13 +40,13 @@ const RegisterFood: React.FC = () => {
                             className="border rounded-lg p-2 w-full"
                         >
                             <option value="">Seleccione una categoría</option>
-                            <option value="sopa">Sopa</option>
-                            <option value="hamburguesa">Hamburguesa</option>
-                            <option value="postre">Postre</option>
-                            <option value="panadería">Panadería</option>
-                            <option value="tacos">Tacos</option>
-                            <option value="quesadillas">Quesadillas</option>
-                            <option value="entradas">Entradas</option>
+                            <option value="Sopas">Sopas</option>
+                            <option value="Hamburguesas">Hamburguesas</option>
+                            <option value="Postres">Postres</option>
+                            <option value="Facturas">Facturas</option>
+                            <option value="Tacos">Tacos</option>
+                            <option value="Quesadillas">Quesadillas</option>
+                            <option value="Entradas">Entradas</option>
                         </select>
                         {errors.category && <p className="text-red-500">{errors.category}</p>}
                     </div>

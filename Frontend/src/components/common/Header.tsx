@@ -49,7 +49,6 @@ const Header: React.FC = () => {
                             <CartIcon />
                             <BalanceButton />
                             <Link href="/auth/me" className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Perfil</Link>
-                            <Link href="/comment" className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Comentario</Link>
                             <button onClick={handleLogout} className="w-full lg:w-auto text-center bg-white text-blue-500 font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition duration-300">Cerrar Sesión</button>
                         </>
                     ) : isLoggedIn && sessionRole === 'BUSINESS' ? (

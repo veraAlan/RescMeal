@@ -60,41 +60,41 @@ public class FoodController {
     }
 
     @PutMapping
-    public ResponseEntity<Food> updateFood(@RequestPart Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<Food> updateFood(@RequestPart Food food, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            if (foodService.getFood(newFood.getId()) == null) {
+            if (foodService.getFood(food.getId()) == null) {
                 return ResponseEntity.notFound().build();
             }
             if(image != null) {
-                ResponseEntity<String> createdImage = uploadImage(newFood.getBusiness().getId() + "-" + newFood.getName(), image);
-                newFood.setImage(String.valueOf(createdImage.getBody()));
+                ResponseEntity<String> createdImage = uploadImage(food.getBusiness().getId() + "-" + food.getName(), image);
+                food.setImage(String.valueOf(createdImage.getBody()));
             } else {
-            newFood.setImage(foodService.getFood(newFood.getId()).getImage());
+            food.setImage(foodService.getFood(food.getId()).getImage());
         }
-            return ResponseEntity.ok(foodService.updateFood(newFood));
+            return ResponseEntity.ok(foodService.updateFood(food));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
     @PatchMapping("/updateQuantity")
-    public ResponseEntity<Food> updateFoodQuantity(@RequestBody Food newFood) {
+    public ResponseEntity<Food> updateFoodQuantity(@RequestBody Food food) {
         try {
-            Food storeFood = foodService.getFood(newFood.getId());
-            if (storeFood.getQuantity() < newFood.getQuantity()) {
+            Food storeFood = foodService.getFood(food.getId());
+            if (storeFood.getQuantity() < food.getQuantity()) {
               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
-            newFood.setQuantity(storeFood.getQuantity() - newFood.getQuantity());
-            return ResponseEntity.ok(foodService.updateFood(newFood));
+            food.setQuantity(storeFood.getQuantity() - food.getQuantity());
+            return ResponseEntity.ok(foodService.updateFood(food));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }
     }
 
     @PatchMapping
-    public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food newFood, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<Food> dynamicUpdateFood(@RequestBody Food food, @RequestPart(value = "image", required = false) MultipartFile image) {
         try {
-            Food oldFood = foodService.getFood(newFood.getId());
+            Food oldFood = foodService.getFood(food.getId());
             if (oldFood == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -103,11 +103,11 @@ public class FoodController {
                     File oldImage = new File(foodImages + oldFood.getImage());
                     Boolean deleted = oldImage.delete();
                 }
-                String foodName = newFood.getName() == null ? newFood.getBusiness().getId() + "-" + newFood.getName() : oldFood.getBusiness().getId() + "-" + oldFood.getName();
+                String foodName = food.getName() == null ? food.getBusiness().getId() + "-" + food.getName() : oldFood.getBusiness().getId() + "-" + oldFood.getName();
                 ResponseEntity<String> createdImage = uploadImage(foodName, image);
-                newFood.setImage(createdImage.getBody());
+                food.setImage(createdImage.getBody());
             }
-            return ResponseEntity.ok(foodService.dynamicUpdateFood(oldFood, newFood));
+            return ResponseEntity.ok(foodService.dynamicUpdateFood(oldFood, food));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(errorHeader(e)).build();
         }

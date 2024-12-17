@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Food, FoodErrors } from '../../../types/Food'
 import axiosConfig from '@/utils/axiosConfig'
 import { toast } from 'react-toastify'
-import normlizeDate from '@/utils/normalizeDate'
 import { redirect } from 'next/navigation'
 
 export const useModifyFoods = (foodId: string | null) => {
@@ -27,6 +26,7 @@ export const useModifyFoods = (foodId: string | null) => {
             .then(r => {
                r.data.expiration_date = r.data.expiration_date.slice(0, 10)
                r.data.production_date = r.data.production_date.slice(0, 10)
+               r.data.image = "/Food/" + r.data.image
                setFoodData(r.data)
                setUserSession(true)
                toast.success("Datos de la comida Cargados! Modifique lo que necesite")
@@ -36,30 +36,6 @@ export const useModifyFoods = (foodId: string | null) => {
 
       fetchFood()
    }, [])
-
-   // // const [formData, setFormData] = useState<any>({
-   // //    name: null,
-   // //    category: null,
-   // //    price: null,
-   // //    image: null,
-   // //    description: null,
-   // //    quantity: null,
-   // //    expiration_date: null,
-   // //    production_date: null
-   // // })
-
-   // useEffect(() => {
-   //    axiosConfig.get('/api/food/' + foodId)
-   //       .then(r => {
-   //          r.data.image = '/Food/' + r.data.image
-   //          r.data.expiration_date = r.data.expiration_date.slice(0, 10)
-   //          r.data.production_date = r.data.production_date.slice(0, 10)
-   //          setFormData(r.data)
-   //          setUserSession(true)
-   //          toast.success('Se cargo la comida')
-   //       })
-   //       .catch(e => { toast.error('Error cargando la comida: ', e) })
-   // }, []);
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target

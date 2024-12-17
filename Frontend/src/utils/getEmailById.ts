@@ -1,9 +1,7 @@
-import axios from 'axios';
+import axiosConfig from './axiosConfig';
 
 export const getEmailById = async (id: number): Promise<string> => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/email/${id}`, {
-        withCredentials: true,
-    });
+    const response = await axiosConfig.get(`/api/auth/email/${id}`);
     if (response.status !== 200) {
         throw new Error('Error obteniendo el email');
     }

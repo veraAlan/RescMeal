@@ -3,7 +3,6 @@ import React from 'react';
 import { Food } from '../../types/Food';
 import { useCart } from '../../hooks/Cart/useCart';
 import { toast } from 'react-toastify';
-import normalizeDate from '../../utils/normalizeDate';
 
 interface FoodCardProps {
     food: Food;
@@ -28,8 +27,8 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
                 <div className="text-gray-600 text-lg mt-4 space-y-1">
                     <p><span className="font-semibold">Categoría:</span> {food.category}</p>
                     <p><span className="font-semibold">Cantidad:</span> {food.quantity}</p>
-                    <p><span className="font-semibold">Fecha de Expiración:</span> {normalizeDate(food.expiration_date)}</p>
-                    <p><span className="font-semibold">Fecha de Producción:</span> {normalizeDate(food.production_date)}</p>
+                    <p><span className="font-semibold">Fecha de Expiración:</span> {food.expiration_date}</p>
+                    <p><span className="font-semibold">Fecha de Producción:</span> {food.production_date}</p>
                 </div>
                 <div className="mt-6 flex justify-between items-center">
                     <div>

@@ -1,5 +1,7 @@
 import { Client } from './Client';
-import { PurchasedItem } from './PurchasedItem';
+// import { PurchasedItem } from './PurchasedItem';
+import { Business } from './Business';
+import { Food } from './Food';
 
 
 export interface Purchase {
@@ -13,6 +15,14 @@ export interface Purchase {
     address_lat: number;
     address_long: number;
     purchasedItems: PurchasedItem;
+}
+export interface PurchasedItem {
+    id?: number;
+    purchase: Purchase;
+    business: Business;
+    food: Food;
+    quantity: number;
+    price: number;
 }
 
 export interface PurchaseErrors {

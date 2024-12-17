@@ -3,6 +3,8 @@ import { Food, FoodErrors } from '../../types/Food';
 import { Business } from '../../types/Business';
 import { getSessionId } from '../../utils/getSessionId';
 import axios from 'axios';
+import axiosConfig from '@/utils/axiosConfig';
+import { redirect } from 'next/navigation';
 
 export const useRegisterFood = () => {
     const [formData, setFormData] = useState<Food>({
@@ -21,6 +23,7 @@ export const useRegisterFood = () => {
     const [errors, setErrors] = useState<FoodErrors>({});
     const [successMessage, setSuccessMessage] = useState('');
     const [generalError, setGeneralError] = useState('');
+    const [status, setStatus] = useState(400);
 
     useEffect(() => {
         const fetchSessionId = async () => {
@@ -79,11 +82,8 @@ export const useRegisterFood = () => {
                 formDataToSend.append("image", imageData);
             }
             try {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/food`, formDataToSend, {
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                    withCredentials: true,
+                const response = await axiosConfig.post(`/api/food`, formDataToSend, {
+                    headers: { 'Accept': 'application/json' }
                 });
                 if (response.status !== 200) {
                     const errorData = response.data;
@@ -104,6 +104,7 @@ export const useRegisterFood = () => {
                     expiration_date: '',
                     production_date: ''
                 });
+                setStatus(response.status)
                 setImageData(null);
                 setErrors({});
                 setGeneralError('');
@@ -111,7 +112,11 @@ export const useRegisterFood = () => {
                 setGeneralError('Error registrando alimento. Por favor, inténtelo de nuevo.');
             }
         }
-    };    
+    };
+
+    if (status === 200) {
+        setTimeout(redirect("/auth/me"), 5000)
+    }
 
     return {
         formData,

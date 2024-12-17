@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { FoodPage } from '../../types/Food'
 import axiosConfig from '@/utils/axiosConfig'
 import { toast } from 'react-toastify'
-import normlizeDate from '@/utils/normalizeDate'
+import normalize from '@/utils/normalizeDate'
 
 export function useListFoods() {
     const [foods, setFoods] = useState<FoodPage>([])
@@ -13,8 +13,8 @@ export function useListFoods() {
                 .then(response => {
                     for (const food of response.data._embedded.foodList) {
                         food.image = '/Food/' + food.image
-                        food.expiration_date = normlizeDate(food.expiration_date)
-                        food.production_date = normlizeDate(food.production_date)
+                        food.expiration_date = normalize(food.expiration_date)
+                        food.production_date = normalize(food.production_date)
                     }
                     setFoods(response.data._embedded.foodList)
                 })
