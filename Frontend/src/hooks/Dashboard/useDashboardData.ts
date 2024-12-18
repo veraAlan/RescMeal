@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import axiosConfig from '../../utils/axiosConfig';
 import { Chart, ChartType } from 'chart.js/auto';
-import { getSessionId } from '../../utils/getSessionId';
 
 interface ChartData {
     labels: string[];
@@ -23,10 +22,11 @@ export const useDashboardData = () => {
     useEffect(() => {
         const fetchBusinessId = async () => {
             try {
-                const id = await getSessionId();
+                const response = await axiosConfig.get('/api/auth/me');
+                const id = response.data.business.id;
                 setBusinessId(id);
             } catch (error) {
-                console.error('Error obteniendo el ID de la sesión:', error);
+                console.error('Error obteniendo el ID del negocio:', error);
             }
         };
 
@@ -37,7 +37,6 @@ export const useDashboardData = () => {
         const fetchData = async () => {
             try {
                 if (businessId) {
-                    const token = localStorage.getItem('authToken');
                     const endpoints = [
                         'sales/stock',
                         'sales/dashboard',
@@ -47,7 +46,7 @@ export const useDashboardData = () => {
 
                     const [stockResponse, salesResponse, revenueResponse, customerResponse] = await Promise.all(
                         endpoints.map(endpoint =>
-                            axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/api/${endpoint}`, {
+                            axiosConfig.get(`/api/${endpoint}`, {
                                 params: { businessId }
                             })
                         )
@@ -59,7 +58,7 @@ export const useDashboardData = () => {
                     setCustomerData(customerResponse.data);
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error obteniendo los datos:', error);
             }
         };
 
@@ -88,10 +87,10 @@ export const useDashboardData = () => {
         ];
 
         const createChart = (
-            ref: React.MutableRefObject<Chart | null>, 
-            ctx: CanvasRenderingContext2D | null, 
-            data: ChartData, 
-            type: ChartType, 
+            ref: React.MutableRefObject<Chart | null>,
+            ctx: CanvasRenderingContext2D | null,
+            data: ChartData,
+            type: ChartType,
             label: string
         ) => {
             if (ctx) {

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import axiosConfig from '../../utils/axiosConfig';
 import { Delivery } from '../../types/Delivery';
-import { getSessionId } from '../../utils/getSessionId';
 import { toast } from 'react-toastify';
 
 export const useTakenOrders = () => {
@@ -10,8 +9,13 @@ export const useTakenOrders = () => {
 
     const fetchCarrierId = useCallback(async () => {
         try {
-            const id = await getSessionId();
-            setCarrierId(id);
+            const response = await axiosConfig.get(`/api/auth/me`);
+            const { carrier } = response.data;
+            if (carrier) {
+                setCarrierId(carrier.id);
+            } else {
+                console.error('No carrier information found');
+            }
         } catch (error) {
             console.error('Error obteniendo el ID del carrier:', error);
         }
@@ -20,7 +24,7 @@ export const useTakenOrders = () => {
     const fetchTakenOrders = useCallback(async () => {
         if (carrierId === null) return;
         try {
-            const response = await axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/api/delivery/list`);
+            const response = await axiosConfig.get(`/api/delivery/list`);
             const filteredOrders = response.data.filter((order: Delivery) =>
                 order.carrier &&
                 order.carrier.id === carrierId &&
@@ -54,7 +58,7 @@ export const useTakenOrders = () => {
                 delivery_state: 'Terminado'
             };
 
-            await axiosConfig.put(`${process.env.NEXT_PUBLIC_API_URL}/api/delivery/${orderId}`, updatedOrder);
+            await axiosConfig.put(`/api/delivery/${orderId}`, updatedOrder);
 
             setTakenOrders(takenOrders.filter(order => order.id !== orderId));
             toast.success('Entrega finalizada');
