@@ -28,9 +28,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setCart((prevCart) => {
             const existingItem = prevCart.find(item => item.food.id === food.id);
             if (existingItem) {
-                return prevCart.map(item =>
-                    item.food.id === food.id ? { ...item, quantity: item.quantity + 1 } : item
-                );
+                if (existingItem.quantity < food.quantity) {
+                    return prevCart.map(item =>
+                        item.food.id === food.id ? { ...item, quantity: item.quantity + 1 } : item
+                    );
+                } else {
+                    return prevCart;
+                }
             }
             return [...prevCart, { food, quantity: 1 }];
         });
@@ -39,7 +43,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const incrementQuantity = (foodId: number) => {
         setCart((prevCart) =>
             prevCart.map(item =>
-                item.food.id === foodId ? { ...item, quantity: item.quantity + 1 } : item
+                item.food.id === foodId && item.quantity < item.food.quantity ? { ...item, quantity: item.quantity + 1 } : item
             )
         );
     };

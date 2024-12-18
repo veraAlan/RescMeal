@@ -15,13 +15,14 @@ const useSearch = (foods: Food[]) => {
 
     const filteredFoodsMemo = useMemo(() => {
         if (!query) {
-            return foods;
+            return foods.filter(food => food.quantity > 0);
         }
-        return foods.filter(food => 
-            food.name?.toLowerCase().includes(query) ||
-            food.description?.toLowerCase().includes(query) ||
-            food.category?.toLowerCase().includes(query) ||
-            food.business?.name?.toLowerCase().includes(query)
+        return foods.filter(food =>
+            food.quantity > 0 && (
+                food.name?.toLowerCase().includes(query) ||
+                food.description?.toLowerCase().includes(query) ||
+                food.category?.toLowerCase().includes(query) ||
+                food.business?.name?.toLowerCase().includes(query))
         );
     }, [query, foods]);
 

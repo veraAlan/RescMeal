@@ -23,19 +23,23 @@ public class PurchaseService {
     @Autowired
     private PurchasedItemRepository purchasedItemRepository;
 
-    /**
-     * Guarda una compra.
-     * @param purchase La compra a guardar.
-     * @return La compra guardada.
-     */
-    public Purchase savePurchase(Purchase purchase) {
+    @Autowired
+    private FoodService foodService;
+
+//    /**
+//     * Guarda una compra.
+//     * @param purchase La compra a guardar.
+//     * @return La compra guardada.
+//     */
+    public Purchase savePurchase(Purchase purchase) throws Exception {
         Purchase savedPurchase = purchaseRepository.save(purchase);
 
-        // Crear una nueva lista para evitar ConcurrentModificationException
         List<PurchasedItem> itemsToModify = new ArrayList<>(savedPurchase.getPurchasedItems());
         for (PurchasedItem item : itemsToModify) {
-            item.setPurchase(savedPurchase); // Establecer la relación de compra
-            purchasedItemRepository.save(item); // Guardar cada ítem comprado
+            item.setPurchase(savedPurchase);
+            purchasedItemRepository.save(item);
+            // Reduce el stock de cada alimento comprado
+            foodService.reduceStock(item.getFood().getId(), item.getQuantity());
         }
         return savedPurchase;
     }

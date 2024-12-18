@@ -30,8 +30,12 @@ public class PurchaseController {
      */
     @PostMapping
     public ResponseEntity<Object> createPurchase(@Valid @RequestBody Purchase purchase) {
-        Purchase newPurchase = purchaseService.savePurchase(purchase);
-        return ResponseEntity.ok(newPurchase);
+        try {
+            Purchase newPurchase = purchaseService.savePurchase(purchase);
+            return ResponseEntity.ok(newPurchase);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     //TODO Guarda con mercado pago la compra, cuando entra al Sanbox, aunque este aprovado o rechazo. Corregir
@@ -41,7 +45,7 @@ public class PurchaseController {
             // Verifica que no haya llamadas recursivas aquí
             String preferenceUrl = mercadoPagoService.createPreference(purchase, email);
 
-            // Guarda la compra en la base de datos
+            // Guarda la compra en la base de datos y reduce el stock
             Purchase newPurchase = purchaseService.savePurchase(purchase);
 
             return ResponseEntity.ok(preferenceUrl);
@@ -82,9 +86,13 @@ public class PurchaseController {
     public ResponseEntity<Purchase> updatePurchase(@PathVariable Integer id, @RequestBody Purchase purchaseDetails) {
         Optional<Purchase> optionalPurchase = purchaseService.getPurchaseById(id);
         if (optionalPurchase.isPresent()) {
-            updatePurchaseDetails(optionalPurchase.get(), purchaseDetails);
-            Purchase updatedPurchase = purchaseService.savePurchase(optionalPurchase.get());
-            return ResponseEntity.ok(updatedPurchase);
+            try {
+                updatePurchaseDetails(optionalPurchase.get(), purchaseDetails);
+                Purchase updatedPurchase = purchaseService.savePurchase(optionalPurchase.get());
+                return ResponseEntity.ok(updatedPurchase);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
         } else {
             return ResponseEntity.notFound().build();
         }

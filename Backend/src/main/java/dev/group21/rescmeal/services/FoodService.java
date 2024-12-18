@@ -105,4 +105,20 @@ public class FoodService {
     public Page<Food> getBusinessFoods(Pageable pageable, Business business) {
         return foodRepository.findAllByBusinessId(pageable, business);
     }
+
+    /**
+     * Reduce el stock de un alimento.
+     * @param foodId ID del alimento.
+     * @param quantity Cantidad a reducir.
+     * @return Food entidad actualizada.
+     * @throws Exception si el stock es insuficiente.
+     */
+    public Food reduceStock(Integer foodId, int quantity) throws Exception {
+        Food food = foodRepository.findById(foodId).orElseThrow(() -> new Exception("Food not found"));
+        if (food.getQuantity() < quantity) {
+            throw new Exception("Insufficient stock for food ID: " + foodId);
+        }
+        food.setQuantity(food.getQuantity() - quantity);
+        return foodRepository.save(food);
+    }
 }
