@@ -93,7 +93,9 @@ export default (props: { profile: Role | null }) => {
                </div>
                <div className="w-full mb-2">
                   <strong>Balance: </strong>
-                  <span className="text-gray-900">AR$ {props.profile?.balance}</span>
+                  <span className="text-gray-900">
+                     AR$ {props.profile?.balance ? props.profile.balance : "0"}
+                  </span>
                </div>
                <div className="flex justify-center w-full mt-4">
                   <a href="/auth/me/client">
@@ -108,8 +110,8 @@ export default (props: { profile: Role | null }) => {
                   <h3 className="font-semibold text-lg text-left p-2 mb-4 border-b border-gray-300">Última Compra Realizada</h3>
                   <div className="flex flex-col items-start overflow-hidden shadow-lg transition-transform transform hover:scale-105 duration-300 bg-green-100 p-8 rounded-lg">
                      <FaShoppingBag className="w-8 h-8 text-gray-500 mb-4 mx-auto" />
-                     <p><strong>Método de Pago:</strong> {lastPurchase.payment_method === 'credit_card' ? 'Tarjeta de crédito' : lastPurchase.payment_method}</p>
-                     <p><strong>Total:</strong> {lastPurchase.total_cost}</p>
+                     <p><strong>Método de Pago:</strong> {lastPurchase.payment_method === 'credit_card' ? 'Tarjeta de crédito' : lastPurchase.payment_method === 'debit_card' ? 'Tarjeta de débito' : lastPurchase.payment_method}</p>
+                     <p><strong>Total: </strong>${lastPurchase.total_cost}</p>
                      <p><strong>Fecha:</strong> {normalizeDate(lastPurchase.creation_date)}</p>
                      <div className="mt-4 w-full text-center">
                         <h4 className="font-semibold">Artículos Comprados:</h4>
@@ -156,8 +158,8 @@ export default (props: { profile: Role | null }) => {
                         .map((purchase, index) => (
                            <div key={purchase.id} className={`flex flex-col items-start w-full max-w-sm overflow-hidden shadow-lg transition-transform transform hover:scale-105 duration-300 ${colors[index % colors.length]} mb-4 sm:mb-6 lg:mb-8 p-4 sm:p-6 lg:p-8 rounded-lg`}>
                               <FaShoppingBag className="w-8 h-8 text-gray-500 mb-2 mx-auto" />
-                              <p><strong>Método de Pago:</strong> {purchase.payment_method === 'credit_card' ? 'Tarjeta de crédito' : purchase.payment_method}</p>
-                              <p><strong>Total:</strong> {purchase.total_cost}</p>
+                              <p><strong>Método de Pago:</strong> {purchase.payment_method === 'credit_card' ? 'Tarjeta de crédito' : purchase.payment_method === 'debit_card' ? 'Tarjeta de débito' : purchase.payment_method}</p>
+                              <p><strong>Total:</strong> ${purchase.total_cost}</p>
                               <p><strong>Fecha:</strong> {normalizeDate(purchase.creation_date)}</p>
                               <p><strong>Estado: Terminado</strong></p>
                               <div className="mt-4 w-full text-center">

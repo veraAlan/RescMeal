@@ -95,13 +95,6 @@ const RegisterBusiness: React.FC = () => {
                             </div>
                             <div>
                                 <label className="block mb-1 font-medium">Tipo de Negocio:</label>
-                                <input
-                                    type="text"
-                                    name="type"
-                                    value={businessForm.type}
-                                    onChange={handleChange}
-                                    className="border rounded-lg p-2 w-full"
-                                />
                                 <select
                                     name="type"
                                     value={businessForm.type}

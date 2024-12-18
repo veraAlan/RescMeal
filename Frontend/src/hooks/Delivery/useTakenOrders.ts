@@ -20,7 +20,7 @@ export const useTakenOrders = () => {
     const fetchTakenOrders = useCallback(async () => {
         if (carrierId === null) return;
         try {
-            const response = await axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/list`);
+            const response = await axiosConfig.get(`${process.env.NEXT_PUBLIC_API_URL}/api/delivery/list`);
             const filteredOrders = response.data.filter((order: Delivery) =>
                 order.carrier &&
                 order.carrier.id === carrierId &&
@@ -54,7 +54,7 @@ export const useTakenOrders = () => {
                 delivery_state: 'Terminado'
             };
 
-            await axiosConfig.put(`${process.env.NEXT_PUBLIC_API_URL}/delivery/${orderId}`, updatedOrder);
+            await axiosConfig.put(`${process.env.NEXT_PUBLIC_API_URL}/api/delivery/${orderId}`, updatedOrder);
 
             setTakenOrders(takenOrders.filter(order => order.id !== orderId));
             toast.success('Entrega finalizada');

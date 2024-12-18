@@ -62,7 +62,7 @@ const Direction: React.FC = () => {
 
     const fetchPurchase = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/purchase/${purchaseId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/purchase/${purchaseId}`, {
                 withCredentials: true,
             });
             setPurchase(response.data);
@@ -79,7 +79,7 @@ const Direction: React.FC = () => {
 
     const fetchCarrier = async () => {
         try {
-            const carrierResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/delivery/carrierByPurchase/${purchase.id}`, {
+            const carrierResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/delivery/carrierByPurchase/${purchase.id}`, {
                 withCredentials: true,
             });
             setCarrier(carrierResponse.data);

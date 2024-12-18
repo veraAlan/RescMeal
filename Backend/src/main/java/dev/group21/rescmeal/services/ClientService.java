@@ -88,8 +88,10 @@ public class ClientService {
 
 
     public Client addBalance(Long clientId, BigDecimal balance) throws Exception {
-        Client client = clientRepository.findById(clientId).orElseThrow(() -> new Exception("Cliente no encontrado"));
-        client.setBalance(client.getBalance().add(balance));
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new Exception("Cliente no encontrado"));
+        BigDecimal currentBalance = Optional.ofNullable(client.getBalance()).orElse(BigDecimal.ZERO);
+        client.setBalance(currentBalance.add(balance));
         return clientRepository.save(client);
     }
 }

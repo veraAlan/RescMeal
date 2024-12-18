@@ -188,12 +188,9 @@ const CommentPage = () => {
                 {!comment && (
                     <div className="w-full sm:w-1/2 p-4">
                         <div className="bg-white border border-gray-300 rounded-lg p-6 mb-4 shadow-lg h-full flex flex-col items-center">
-                            <h2 className="text-xl font-semibold">Crear un Comentario</h2>
+                            <h2 className="text-xl font-semibold">Comente sobre el Repartidor</h2>
                             <form onSubmit={handleSubmitComment} className="w-full flex flex-col items-center">
-                                <div className="mb-4 w-full">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-                                        Descripción
-                                    </label>
+                                <div className="mb-4 w-full"><br />
                                     <textarea
                                         id="description"
                                         value={description}
@@ -217,11 +214,11 @@ const CommentPage = () => {
                 {reviews.length === 0 && (
                     <div className="w-full sm:w-1/2 p-4">
                         <div className="bg-white border border-gray-300 rounded-lg p-6 mb-4 shadow-lg h-full flex flex-col items-center">
-                            <h2 className="text-xl font-semibold">Crear una Revisión</h2>
+                            <h2 className="text-xl font-semibold">Califique los Negocios</h2>
                             <form onSubmit={handleReviewSubmit} className="w-full flex flex-col items-center">
                                 <div className="mb-4 w-full">
                                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="reviewDescription">
-                                        Descripción de la Revisión
+                                        Descripción
                                     </label>
                                     <textarea
                                         id="reviewDescription"
