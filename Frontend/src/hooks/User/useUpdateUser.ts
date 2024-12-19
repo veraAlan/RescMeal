@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axiosConfig from "@/utils/axiosConfig";
-import { User } from "@/types/UserRegister";
+import { UserUpdate } from "@/types/UserRegister";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 export const useUpdateUser = () => {
-    const [userErrors, setUserErrors] = useState<User>({})
+    const [userErrors, setUserErrors] = useState<UserUpdate>({})
     const [status, setStatus] = useState(0)
     const [userSession, setUserSession] = useState<Boolean | null>(null)
     const [linkUser, setLinkUser] = useState({ id: 0 })
+    const authContext = useContext(AuthContext)
 
     useEffect(() => {
         function fetchUser() {
@@ -16,21 +18,25 @@ export const useUpdateUser = () => {
                 axiosConfig.get(`/api/auth/me`)
                     .then(r => {
                         setLinkUser(r.data.id)
+                        r.data.password = ''
                         setUserForm(r.data)
                         setUserSession(true)
                         toast.success('Datos cargados! Modifique lo que necesite.')
                     })
-                    .catch(e => toast.error(e))
+                    .catch(e => {
+                        toast.error(e)
+                        setStatus(401)
+                    })
             }
         }
 
         fetchUser()
     }, []);
 
-    const [userForm, setUserForm] = useState<User>({
+    const [userForm, setUserForm] = useState<UserUpdate>({
         username: '',
         email: '',
-        password: ''
+        password: null
     })
 
     const handleChangeUpdate = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -41,9 +47,10 @@ export const useUpdateUser = () => {
         })
     }
 
-    const validateUser = (userForm: User) => {
+    const validateUser = (userForm: UserUpdate) => {
         let tempErrors: { [k: string]: any } = {};
-        axiosConfig.post(`/api/auth/valid`, userForm)
+        if (userForm.password == '') userForm.password = null
+        axiosConfig.post(`/api/auth/validUpdate`, userForm)
             .then(() => { setUserErrors({}) })
             .catch(e => {
                 for (const key in e.response.data) {
@@ -60,18 +67,18 @@ export const useUpdateUser = () => {
         e.preventDefault()
 
         if (validateUser(userForm) && userSession) {
-            const formUserData = new FormData()
-            formUserData.append("user", new Blob([JSON.stringify(linkUser)], { type: 'application/json' }))
-            axiosConfig.put(`/api/auth/update`, formUserData)
+            axiosConfig.put(`/api/auth/update`, userForm)
                 .then(r => {
-                    setStatus(r.status)
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('role')
+                    axiosConfig.get('/api/auth/signout', { withCredentials: false })
+                        .then(() => setStatus(r.status))
+                        .catch(() => toast.error("Por favor, recargue la pagina.", { position: "bottom-right" }))
                 })
                 .catch(e => {
                     let tempErrors: { [k: string]: any } = {}
                     for (const key in e.response.data) {
-                        if (Object.prototype.hasOwnProperty.call(e.response.data, key)) {
-                            tempErrors[key] = e.response.data[key]
-                        }
+                        if (Object.prototype.hasOwnProperty.call(e.response.data, key)) tempErrors[key] = e.response.data[key]
                     }
                     setUserErrors(tempErrors)
                 })
@@ -80,7 +87,11 @@ export const useUpdateUser = () => {
 
     if (status === 200) {
         toast.success('Actualizacion correcta, redireccionando...')
-        setTimeout(redirect("/auth/me"), 3000)
+        redirect("/auth/login")
+    } else if (status === 401) {
+        if (!authContext) return null
+        const { unauthorizedState } = authContext
+        unauthorizedState(true)
     }
 
     return {

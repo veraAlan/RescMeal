@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 
 export function useBusinessFoods() {
    const [page, setPage] = useState<number>()
-   const [size, setSize] = useState<number>(5)
+   const [size, setSize] = useState<number>(50)
    const [businessFoods, setBusinessFoods] = useState<FoodPage | null>()
 
    useEffect(() => {

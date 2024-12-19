@@ -49,10 +49,11 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long userId, SignupRequest updateUser) {
+    public User updateUser(Long userId, UpdateRequest updateUser) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found."));
         user.setEmail(updateUser.getEmail());
         user.setUsername(updateUser.getUsername());
+        if (updateUser.getPassword() != null) user.setPassword(updateUser.getPassword());
         return userRepository.save(user);
     }
 }

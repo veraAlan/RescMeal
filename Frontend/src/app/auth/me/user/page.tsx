@@ -39,6 +39,17 @@ const UpdateUser: React.FC = () => {
                         />
                         {userErrors.email && <p className="text-red-500">{userErrors.email}</p>}
                     </div>
+                    <div>
+                        <label className="block mb-1 font-medium">Contraseña:</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={userForm.password}
+                            onChange={handleChangeUpdate}
+                            className="border rounded-lg p-2 w-full"
+                        />
+                        {userErrors.password && <p className="text-red-500">{userErrors.password}</p>}
+                    </div>
                     <button type="submit" className="bg-blue-500 text-white p-3 rounded-lg w-full hover:bg-blue-600 transition duration-300">
                         Modificar
                     </button>

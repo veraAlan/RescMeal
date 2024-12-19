@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 interface AuthContextType {
    isLoggedIn: boolean
    sessionRole: string | null
+   unauthorizedState: (state: boolean) => void
    login: (token: string) => void
    logout: () => void
 }
@@ -60,7 +61,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
    }
 
    const logout = () => {
-      axiosConfig.get('/api/auth/signout')
+      localStorage.removeItem('token')
+      axiosConfig.get('/api/auth/signout', { withCredentials: false })
          .then(() => {
             localStorage.removeItem('token')
             localStorage.removeItem('role')
@@ -75,7 +77,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                progress: undefined,
                theme: "dark"
             })
-            redirect("/")
          })
          .catch(e => {
             toast.error(e, {
@@ -89,10 +90,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                theme: "dark"
             })
          })
+      redirect("/")
+   }
+
+   const unauthorizedState = (state: boolean) => {
+      setIsLoggedIn(!state)
+      redirect("/auth/login")
    }
 
    return (
-      <AuthContext.Provider value={{ isLoggedIn, sessionRole, login, logout }}>
+      <AuthContext.Provider value={{ isLoggedIn, sessionRole, login, logout, unauthorizedState }}>
          <ToastContainer />
          {children}
       </AuthContext.Provider>

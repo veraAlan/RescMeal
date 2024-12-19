@@ -42,7 +42,10 @@ export default function UserProfile() {
                <div className="w-full flex flex-col items-start text-center">
                   <strong> Email: </strong><span className="text-gray-900">{profileInfo.email}</span>
                </div>
-               <div className="flex justify-center w-full mt-4">
+               <div className="flex justify-center">
+                  <a href='/auth/me/user'>
+                     <button className='border border-gray-300 rounded-lg px-6 py-2 font-bold bg-blue-600 text-white hover:bg-blue-700 transition duration-300'>Modificar Datos</button>
+                  </a>
                </div>
             </div>
          ) : (

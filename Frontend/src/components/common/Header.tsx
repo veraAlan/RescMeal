@@ -26,6 +26,7 @@ const Header: React.FC = () => {
     }, [])
 
     const handleLogout = () => {
+        localStorage.removeItem('token')
         logout()
         window.location.href = '/'
     }

@@ -70,7 +70,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/purchase/**").permitAll()
                                 // User
-                                .requestMatchers(HttpMethod.POST, "/api/*/valid").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/*/valid", "/api/*/validUpdate").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/api/auth/update").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/user/me").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/review/list/*").hasAnyRole("CLIENT", "BUSINESS", "CARRIER", "ADMIN")
                                 // Food

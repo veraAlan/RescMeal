@@ -54,6 +54,11 @@ public class AuthController {
         return ResponseEntity.ok().body(signupRequest);
     }
 
+    @PostMapping("/validUpdate")
+    public ResponseEntity<UpdateRequest> validateUserForm(@Valid @RequestBody UpdateRequest updateRequest) {
+        return ResponseEntity.ok().body(updateRequest);
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // Log in with either email or username.
@@ -166,15 +171,15 @@ public class AuthController {
         return ResponseEntity.status(403).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(null);
     }
 
-    // TODO revisar y probar la funcion
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody SignupRequest updateUser) {
+    public ResponseEntity<?> updateUser(HttpServletRequest request, @Valid @RequestBody UpdateRequest updateUser) {
         String jwt = jwtUtils.getJwtFromCookies(request);
         if (jwtUtils.validateJwtToken(jwt)) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            User updatedUser = userService.updateUser(userDetails.getId(), updateUser);
-            return ResponseEntity.ok().body(updatedUser);
+            if (updateUser.getPassword() != null) updateUser.setPassword(encoder.encode(updateUser.getPassword()));
+            userService.updateUser(userDetails.getId(), updateUser);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, "").build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT token");
         }
