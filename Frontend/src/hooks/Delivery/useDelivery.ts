@@ -130,17 +130,23 @@ const useDelivery = () => {
             navigator.geolocation.getCurrentPosition(
                 position => {
                     const { latitude, longitude } = position.coords;
-                    setCoords({ lat: latitude, lon: longitude });
+                    console.log(`Latitud: ${latitude}, Longitud: ${longitude}`);
+                    setCoords({ lat: latitude, lon: longitude }); // Guardar coordenadas en el estado
                 },
-                err => {
-                    console.error('Error obteniendo la ubicación:', err);
-                    toast.error('Error obteniendo la ubicación');
+                error => {
+                    console.error(`Error obteniendo la ubicación: ${error.message}`);
+                    toast.error(`Error obteniendo la ubicación: ${error.message}`);
+                },
+                {
+                    enableHighAccuracy: true, // Para mayor precisión de ubicación
+                    timeout: 10000, // Tiempo máximo de espera
+                    maximumAge: 0 // No usar caché de ubicación
                 }
             );
         } else {
             console.error('La geolocalización no es compatible con este navegador.');
             toast.error('La geolocalización no es compatible con este navegador.');
-        }
+        }        
     }, []);
 
     const fetchData = useCallback(async () => {

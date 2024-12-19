@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_web_view);
 
         WebView webView = findViewById(R.id.root_webview);
+        WebView.setWebContentsDebuggingEnabled(true); // Habilitar el modo de depuración
         WebSettings webSettings = webView.getSettings();
         webSettings.setDomStorageEnabled(true);
         webSettings.setUseWideViewPort(true);
@@ -43,16 +45,20 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setAllowFileAccess(true);
         webSettings.setAllowContentAccess(true);
 
+        // Permitir contenido mixto (HTTP y HTTPS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(String.valueOf(request.getUrl()));
+                view.loadUrl(request.getUrl().toString());
                 return true;
             }
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                // Log or modify the request here
                 return super.shouldInterceptRequest(view, request);
             }
         });
@@ -83,9 +89,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Cargar tu URL local HTTP
         webView.loadUrl("http://10.0.2.2:3000/");
 
-        // Solicitar Permisos de Ubicación y Almacenamiento
+        requestPermissions();
+    }
+
+    private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -115,13 +125,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Asegurarse de llamar a la superclase
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "Permisos concedidos");
-                // Reintentar obtener la ubicación o acceso al archivo
             } else {
-                Log.d(TAG, "Permisos denegados");
                 Toast.makeText(this, "Permisos denegados. Para habilitar los permisos, ve a Configuración > Aplicaciones > TuApp > Permisos y actívalos.", Toast.LENGTH_LONG).show();
             }
         }
